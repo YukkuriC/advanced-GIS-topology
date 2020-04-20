@@ -108,6 +108,7 @@
             this.Name = "MainForm";
             this.ShowIcon = false;
             this.Text = "Topology Mini";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rendererPort)).EndInit();

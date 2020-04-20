@@ -35,5 +35,11 @@ namespace MiniGIS.Data
             X = _x; Y = _y;
             arcs = new HashSet<GeomArc>();
         }
+
+        // 字符串化
+        public override string ToString()
+        {
+            return String.Format("#{0}({1},{2})={3}", id, X, Y, value);
+        }
     }
 }

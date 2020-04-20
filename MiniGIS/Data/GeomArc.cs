@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using MiniGIS.Render;
 using System.Linq;
@@ -48,6 +49,15 @@ namespace MiniGIS.Data
         {
             points = new List<GeomPoint>(_data);
             foreach (GeomPoint p in points) p.arcs.Add(this);
+        }
+
+        // 字符串化
+        public override string ToString()
+        {
+            return String.Format("#{0}({1})={2}",
+                id,
+                String.Join(",", (from p in points select p.id)),
+                value);
         }
     }
 }

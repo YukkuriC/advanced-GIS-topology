@@ -59,8 +59,16 @@ namespace MiniGIS.Data
                 // 首个弧段
                 GeomArc arc1 = arc_raw[0], arc2 = arc_raw.Last();
                 bool reversed; GeomPoint pt_end;
-                if ((pt_end = arc1.points[0]) == arc2.points[0] || pt_end == arc2.points.Last()) reversed = true;
-                else if ((pt_end = arc1.points.Last()) == arc2.points[0] || pt_end == arc2.points.Last()) reversed = false;
+                if ((pt_end = arc1.points[0]) == arc2.points[0] || pt_end == arc2.points.Last())
+                {
+                    pt_end = arc1.points.Last();
+                    reversed = false;
+                }
+                else if ((pt_end = arc1.points.Last()) == arc2.points[0] || pt_end == arc2.points.Last())
+                {
+                    pt_end = arc1.points[0];
+                    reversed = true;
+                }
                 else throw new TypeLoadException("弧段不闭合");
                 arcs.Add(new Tuple<GeomArc, bool>(arc1, reversed));
 
