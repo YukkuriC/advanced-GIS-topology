@@ -9,10 +9,10 @@ namespace MiniGIS.Render
 {
     /// <summary>
     /// 矢量渲染层
-    /// 参数:
-    ///     color1: 点上色 
-    ///     color2: 弧段上色 
-    ///     color3: 多边形填充色 
+    /// 颜色参数:
+    ///     point: 点上色
+    ///     arc: 弧段上色
+    ///     polygon: 多边形填充色
     /// </summary>
     class GeomLayer : Layer
     {
@@ -35,28 +35,48 @@ namespace MiniGIS.Render
 
         public override void Render(ViewPort port, Graphics canvas)
         {
+            base.Render(port, canvas);
+
             // 创建画笔
-            Pen pen = new Pen(color3);
+            Color clr = Color.Empty;
+            bool randColor = !colors.TryGetValue("polygon", out clr);
+            Pen pen = new Pen(clr);
             pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
             // 填色多边形
-            if (polygons != null) foreach (var x in polygons) x.Render(port, canvas, pen);
+            if (polygons != null) foreach (var x in polygons)
+                {
+                    if (randColor) pen.Color = ColorOps.Random();
+                    x.Render(port, canvas, pen);
+                }
 
             // 绘制弧段
             if (arcs != null)
             {
-                pen.Color = color2;
+                clr = Color.Empty;
+                randColor = !colors.TryGetValue("arc", out clr);
+                pen.Color = clr;
                 pen.Width = size_arc;
-                foreach (var x in arcs) x.Render(port, canvas, pen);
+                foreach (var x in arcs)
+                {
+                    if (randColor) pen.Color = ColorOps.Random();
+                    x.Render(port, canvas, pen);
+                }
             }
 
             // 绘制点
             if (points != null)
             {
-                pen.Color = color1;
+                clr = Color.Empty;
+                randColor = !colors.TryGetValue("point", out clr);
+                pen.Color = clr;
                 pen.Width = size_pt;
-                foreach (var x in points) x.Render(port, canvas, pen);
+                foreach (var x in points)
+                {
+                    if (randColor) pen.Color = ColorOps.Random();
+                    x.Render(port, canvas, pen);
+                }
             }
         }
 

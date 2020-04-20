@@ -18,11 +18,13 @@ namespace MiniGIS
 
         public static ViewPort port;
         public static ControlManager controlManager;
+        public static Random random;
 
         public MainForm()
         {
             InitializeComponent();
             MainForm.instance = this;
+            random = new Random();
 
             // 绑定事件
             port = new ViewPort(rendererPort, layerView.Nodes.Cast<Layer>());

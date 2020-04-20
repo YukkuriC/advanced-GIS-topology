@@ -15,6 +15,7 @@ namespace MiniGIS.Render
         // 图层属性
         public virtual string layerType { get { return "图层"; } }
         public string name;
+        public int seed;
 
         // 控制参数
         public Byte visible_mask = 0b111;
@@ -31,14 +32,18 @@ namespace MiniGIS.Render
         }
 
         // 渲染样式
-        public Color color1 = Color.Red, color2 = Color.Black, color3 = Color.Green, color_annotation = Color.Black;
+        public Dictionary<string, Color> colors;
         public float size_pt = 5, size_arc = 2, size_annotation = 10;
 
         #endregion
 
-        public virtual void Render(ViewPort port, Graphics canvas) { }
-
         #region method
+
+        // 渲染基类方法，用于初始化
+        public virtual void Render(ViewPort port, Graphics canvas)
+        {
+            ColorOps.Init(seed);
+        }
 
         // 更新图层显示
         public void UpdateText()
@@ -84,6 +89,12 @@ namespace MiniGIS.Render
         {
             name = _name;
             NodeFont = MainForm.instance.Font;
+            seed = MainForm.random.Next(int.MinValue, int.MaxValue);
+            colors = new Dictionary<string, Color>
+            {
+                ["point"] = Color.Red,
+                ["arc"] = Color.Black,
+            };
 
             // 插入右键菜单
             new LayerContext(this);
