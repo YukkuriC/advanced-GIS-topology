@@ -48,7 +48,7 @@ namespace MiniGIS.Control
             if (dragging)
             {
                 float dx = (lastScreen.X - e.X) / MainForm.port.zoom,
-                      dy = (lastScreen.Y - e.Y) / MainForm.port.zoom;
+                      dy = -(lastScreen.Y - e.Y) / MainForm.port.zoom; // 屏幕坐标向下为正
                 MainForm.port.center = new PointF(
                     lastWorld.X + dx,
                     lastWorld.Y + dy

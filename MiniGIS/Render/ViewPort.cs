@@ -27,22 +27,15 @@ namespace MiniGIS.Render
         {
             return new PointF(
                 (float)(target.Width / 2f + zoom * (worldX - center.X)),
-                (float)(target.Height / 2f + zoom * (worldY - center.Y))
+                (float)(target.Height / 2f - zoom * (worldY - center.Y))
             );
-        }
-
-        public void Reset()
-        {
-            zoom = 1;
-            center = new PointF(0, 0);
-            Render();
         }
 
         // 屏幕坐标换算为世界坐标
         public void WorldCoord(float screenX, float screenY, out float worldX, out float worldY)
         {
             worldX = center.X + (screenX - target.Width / 2f) / zoom;
-            worldY = center.Y + (screenY - target.Height / 2f) / zoom;
+            worldY = center.Y - (screenY - target.Height / 2f) / zoom;
         }
 
         // 渲染所有图层
@@ -54,6 +47,13 @@ namespace MiniGIS.Render
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
             foreach (Layer l in (from l in layers where l.visible select l)) l.Render(this, canvas);
             target.Image = bmp;
+        }
+
+        public void Reset()
+        {
+            zoom = 1;
+            center = new PointF(0, 0);
+            Render();
         }
 
         #endregion
