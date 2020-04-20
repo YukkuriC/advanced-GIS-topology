@@ -45,7 +45,7 @@ namespace MiniGIS.Render
             Bitmap bmp = new Bitmap(target.Width, target.Height);
             Graphics canvas = Graphics.FromImage(bmp);
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
-            foreach (Layer l in (from l in layers where l.visible select l)) l.Render(this, canvas);
+            foreach (Layer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
             target.Image = bmp;
         }
 

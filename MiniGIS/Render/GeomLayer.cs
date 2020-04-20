@@ -16,6 +16,18 @@ namespace MiniGIS.Render
     /// </summary>
     class GeomLayer : Layer
     {
+        // 显示图层类型
+        public override string layerType
+        {
+            get
+            {
+                if (polygons != null) return "多边形";
+                if (arcs != null) return "弧段";
+                if (points != null) return "多点";
+                return "矢量图层";
+            }
+        }
+
         // 数据容器
         public List<GeomPoint> points;
         public List<GeomArc> arcs;
