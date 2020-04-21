@@ -78,12 +78,6 @@ namespace MiniGIS.Widget
             BindSize(numericUpDown2, "arc");
         }
 
-        public new void Dispose()
-        {
-            instances.Remove(origin);
-            base.Dispose();
-        }
-
         private void layerName_TextChanged(object sender, EventArgs e)
         {
             origin.Name = layerName.Text;

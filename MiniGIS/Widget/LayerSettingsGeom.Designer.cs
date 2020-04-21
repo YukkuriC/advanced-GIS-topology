@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            instances.Remove(origin);
             base.Dispose(disposing);
         }
 
