@@ -39,10 +39,7 @@ namespace MiniGIS.Render
         #region method
 
         // 渲染基类方法，用于初始化
-        public virtual void Render(ViewPort port, Graphics canvas)
-        {
-            ColorOps.Init(seed);
-        }
+        public virtual void Render(ViewPort port, Graphics canvas) { }
 
         // 获取默认参数
         public Color GetColor(string key) { Color res = Color.Empty; colors.TryGetValue(key, out res); return res; }

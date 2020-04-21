@@ -86,6 +86,16 @@ namespace MiniGIS
                 }
                 tmp.Add();
             }
+
+            Grid grid = new Grid(-300, 300, -300, 300, 30, 20);
+            for (int i = 0; i <= grid.XSplit; i++)
+            {
+                for (int j = 0; j <= grid.YSplit; j++)
+                {
+                    grid[i, j] = i * 30 + j * j;
+                }
+            }
+            new GridLayer(grid).Add();
         }
     }
 }

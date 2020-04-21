@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\Utils.cs" />
     <Compile Include="Control\ControlManager.cs" />
     <Compile Include="Control\MapControl.cs" />
     <Compile Include="Control\Viewer.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Data\GeomArc.cs" />
     <Compile Include="Data\GeomPoint.cs" />
     <Compile Include="Data\GeomPoly.cs" />
+    <Compile Include="Data\Grid.cs" />
     <Compile Include="Data\LineSegment.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -61,11 +63,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\ColorOps.cs" />
     <Compile Include="Render\GeomLayer.cs" />
+    <Compile Include="Render\GridLayer.cs" />
     <Compile Include="Render\Layer.cs" />
     <Compile Include="Widget\LayerContext.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Render\ViewPort.cs" />
+    <Compile Include="Widget\LayerSettings.cs" />
+    <Compile Include="Widget\LayerSettingsGrid.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\LayerSettingsGrid.Designer.cs">
+      <DependentUpon>LayerSettingsGrid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\LayerSettingsGeom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +94,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Widget\LayerSettingsGrid.resx">
+      <DependentUpon>LayerSettingsGrid.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widget\LayerSettingsGeom.resx">
       <DependentUpon>LayerSettingsGeom.cs</DependentUpon>
     </EmbeddedResource>

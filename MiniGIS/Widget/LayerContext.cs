@@ -59,7 +59,8 @@ namespace MiniGIS.Widget
             btnMoveDown.Click += MoveDown;
             btnSettings.Click += (object sender, EventArgs args) =>
             {
-                LayerSettingsGeom.ShowSettings(node).Show();
+                if (node is GeomLayer) LayerSettings.ShowSettings<LayerSettingsGeom>(node).Show();
+                else if (node is GridLayer) LayerSettings.ShowSettings<LayerSettingsGrid>(node).Show();
             };
             UpdateText();
         }

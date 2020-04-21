@@ -38,7 +38,8 @@ namespace MiniGIS.Render
 
         public override void Render(ViewPort port, Graphics canvas)
         {
-            base.Render(port, canvas);
+            // 初始化随机颜色
+            ColorOps.InitRandom(seed);
 
             // 创建画笔
             Color clr = GetColor("polygon");
