@@ -94,7 +94,6 @@
             this.rendererPort.TabIndex = 0;
             this.rendererPort.TabStop = false;
             this.rendererPort.SizeChanged += new System.EventHandler(this.rendererPort_SizeChanged);
-            this.rendererPort.MouseHover += new System.EventHandler(this.rendererPort_MouseHover);
             // 
             // MainForm
             // 

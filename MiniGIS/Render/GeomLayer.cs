@@ -13,6 +13,9 @@ namespace MiniGIS.Render
     ///     point: 点上色
     ///     arc: 弧段上色
     ///     polygon: 多边形填充色
+    /// 尺寸参数:
+    ///     point: 点大小
+    ///     arc: 弧段粗细
     /// </summary>
     class GeomLayer : Layer
     {
@@ -38,8 +41,8 @@ namespace MiniGIS.Render
             base.Render(port, canvas);
 
             // 创建画笔
-            Color clr = Color.Empty;
-            bool randColor = !colors.TryGetValue("polygon", out clr);
+            Color clr = GetColor("polygon");
+            bool randColor = clr == Color.Empty;
             Pen pen = new Pen(clr);
             pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
@@ -54,10 +57,10 @@ namespace MiniGIS.Render
             // 绘制弧段
             if (arcs != null)
             {
-                clr = Color.Empty;
-                randColor = !colors.TryGetValue("arc", out clr);
+                clr = GetColor("arc");
+                randColor = clr == Color.Empty;
                 pen.Color = clr;
-                pen.Width = size_arc;
+                pen.Width = GetSize("arc");
                 foreach (var x in arcs)
                 {
                     if (randColor) pen.Color = ColorOps.Random();
@@ -68,10 +71,10 @@ namespace MiniGIS.Render
             // 绘制点
             if (points != null)
             {
-                clr = Color.Empty;
-                randColor = !colors.TryGetValue("point", out clr);
+                clr = GetColor("point");
+                randColor = clr == Color.Empty;
                 pen.Color = clr;
-                pen.Width = size_pt;
+                pen.Width = GetSize("point");
                 foreach (var x in points)
                 {
                     if (randColor) pen.Color = ColorOps.Random();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using MiniGIS.Data;
+using MiniGIS.Widget;
 
 namespace MiniGIS.Render
 {
@@ -14,7 +14,6 @@ namespace MiniGIS.Render
 
         // 图层属性
         public virtual string layerType { get { return "图层"; } }
-        public string name;
         public int seed;
 
         // 控制参数
@@ -33,7 +32,7 @@ namespace MiniGIS.Render
 
         // 渲染样式
         public Dictionary<string, Color> colors;
-        public float size_pt = 5, size_arc = 2, size_annotation = 10;
+        public Dictionary<string, float> sizes;
 
         #endregion
 
@@ -45,11 +44,15 @@ namespace MiniGIS.Render
             ColorOps.Init(seed);
         }
 
+        // 获取默认参数
+        public Color GetColor(string key) { Color res = Color.Empty; colors.TryGetValue(key, out res); return res; }
+        public float GetSize(string key) { float res = 0.1f; sizes.TryGetValue(key, out res); return res; }
+
         // 更新图层显示
         public void UpdateText()
         {
             // 更新图层名称
-            string res = String.Format("[{0}] {1}", layerType, name);
+            string res = String.Format("[{0}] {1}", layerType, Name);
             if (Visible) NodeFont = new Font(NodeFont, FontStyle.Bold);
             else
             {
@@ -87,7 +90,7 @@ namespace MiniGIS.Render
 
         public Layer(string _name = "图层")
         {
-            name = _name;
+            Name = _name;
             NodeFont = MainForm.instance.Font;
             seed = MainForm.random.Next(int.MinValue, int.MaxValue);
             colors = new Dictionary<string, Color>
@@ -95,65 +98,14 @@ namespace MiniGIS.Render
                 ["point"] = Color.Red,
                 ["arc"] = Color.Black,
             };
+            sizes = new Dictionary<string, float>
+            {
+                ["point"] = 5,
+                ["arc"] = 2,
+            };
 
             // 插入右键菜单
             new LayerContext(this);
-        }
-    }
-
-    // 图层右键菜单
-    class LayerContext : ContextMenuStrip
-    {
-        ToolStripMenuItem btnToggleVisible, btnMove, btnMoveUp, btnMoveDown, btnDelete;
-        Layer origin;
-
-        #region method
-
-        // 控制图层隐藏显示
-        public void TriggerVisible(object sender, EventArgs args)
-        {
-            origin.Visible = !origin.Visible;
-            UpdateText();
-        }
-
-        // 删除图层
-        public void Delete(object sender, EventArgs args)
-        {
-            origin.Remove();
-        }
-
-        // 图层移动
-        public void MoveUp(object sender, EventArgs args) { origin.Reorder(origin.Index - 1); }
-        public void MoveDown(object sender, EventArgs args) { origin.Reorder(origin.Index + 1); }
-
-        // 更新文本
-        public void UpdateText(object sender = null, EventArgs args = null)
-        {
-            btnToggleVisible.Text = origin.Visible ? "隐藏图层" : "显示图层";
-            origin.UpdateText();
-        }
-
-        #endregion
-
-        // 绑定右键菜单至图层
-        public LayerContext(Layer node)
-        {
-            origin = node;
-            node.ContextMenuStrip = this;
-            Items.AddRange(new ToolStripMenuItem[]{
-                btnToggleVisible = new ToolStripMenuItem(),
-                btnMove = new ToolStripMenuItem { Text = "调整顺序" },
-                btnDelete = new ToolStripMenuItem { Text = "删除图层" },
-            });
-            btnMove.DropDownItems.AddRange(new ToolStripMenuItem[]{
-                btnMoveUp = new ToolStripMenuItem { Text = "上移一层" },
-                btnMoveDown = new ToolStripMenuItem { Text = "下移一层" },
-            });
-            btnToggleVisible.Click += TriggerVisible;
-            btnDelete.Click += Delete;
-            btnMoveUp.Click += MoveUp;
-            btnMoveDown.Click += MoveDown;
-            UpdateText();
         }
     }
 }

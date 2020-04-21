@@ -40,11 +40,6 @@ namespace MiniGIS
             port.Render();
         }
 
-        private void rendererPort_MouseHover(object sender, EventArgs e)
-        {
-            rendererPort.Focus();
-        }
-
         private void MainForm_Load(object sender, EventArgs e)
         {
             // 测试数据
