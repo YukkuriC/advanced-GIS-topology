@@ -29,11 +29,14 @@
         private void InitializeComponent()
         {
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.menuLoad = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuLoadCSV = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel2 = new System.Windows.Forms.Panel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
+            this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rendererPort)).BeginInit();
@@ -42,11 +45,29 @@
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuLoad});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(926, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // menuLoad
+            // 
+            this.menuLoad.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuLoadCSV});
+            this.menuLoad.Name = "menuLoad";
+            this.menuLoad.Size = new System.Drawing.Size(45, 22);
+            this.menuLoad.Text = "加载";
+            // 
+            // menuLoadCSV
+            // 
+            this.menuLoadCSV.Name = "menuLoadCSV";
+            this.menuLoadCSV.Size = new System.Drawing.Size(152, 22);
+            this.menuLoadCSV.Text = "导入CSV";
+            this.menuLoadCSV.Click += new System.EventHandler(this.menuLoadCSV_Click);
             // 
             // panel1
             // 
@@ -108,6 +129,8 @@
             this.ShowIcon = false;
             this.Text = "Topology Mini";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rendererPort)).EndInit();
@@ -124,6 +147,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox rendererPort;
         public System.Windows.Forms.TreeView layerView;
+        private System.Windows.Forms.ToolStripDropDownButton menuLoad;
+        private System.Windows.Forms.ToolStripMenuItem menuLoadCSV;
     }
 }
 

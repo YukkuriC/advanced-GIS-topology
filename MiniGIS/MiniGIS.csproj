@@ -65,6 +65,12 @@
     <Compile Include="Render\GeomLayer.cs" />
     <Compile Include="Render\GridLayer.cs" />
     <Compile Include="Render\Layer.cs" />
+    <Compile Include="Widget\CSVLoader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\CSVLoader.Designer.cs">
+      <DependentUpon>CSVLoader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\LayerContext.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,6 +100,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Widget\CSVLoader.resx">
+      <DependentUpon>CSVLoader.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widget\LayerSettingsGrid.resx">
       <DependentUpon>LayerSettingsGrid.cs</DependentUpon>
     </EmbeddedResource>

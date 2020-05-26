@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using MiniGIS.Render;
 using MiniGIS.Data;
 using MiniGIS.Control;
+using MiniGIS.Widget;
 
 namespace MiniGIS
 {
@@ -96,6 +97,11 @@ namespace MiniGIS
                 }
             }
             new GridLayer(grid).Add();
+        }
+
+        private void menuLoadCSV_Click(object sender, EventArgs e)
+        {
+            new CSVLoader().Show();
         }
     }
 }
