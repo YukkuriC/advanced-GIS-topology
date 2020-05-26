@@ -52,7 +52,7 @@ namespace MiniGIS.Render
                     if (j > 0) y1 -= ystep / 2;
                     if (j < data.YSplit) y2 += ystep / 2;
                     p1 = MainForm.port.ScreenCoord(x1, y2); p2 = MainForm.port.ScreenCoord(x2, y1);
-                    Color clr = ColorOps.Linear(cmin, cmax, Utils.Lerp(data[i, j], valmin, valmax));
+                    Color clr = ColorOps.Linear(cmin, cmax, data[i, j].Lerp(valmin, valmax));
                     canvas.FillRectangle(new SolidBrush(clr), new RectangleF(p1, new SizeF(p2.X - p1.X, p2.Y - p1.Y)));
                 }
             }

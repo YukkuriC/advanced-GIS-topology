@@ -7,6 +7,6 @@ namespace MiniGIS.Algorithm
 {
     public static class Utils
     {
-        public static double Lerp(double v, double min, double max) => (v - min) / (max - min);
+        public static double Lerp(this double v, double min, double max) => (v - min) / (max - min);
     }
 }
