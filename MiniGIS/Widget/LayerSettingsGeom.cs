@@ -22,22 +22,12 @@ namespace MiniGIS.Widget
         public void BindLayer(Layer layer)
         {
             origin = layer;
-            layerName.Text = layer.Name;
-        }
-
-        public void BindControls()
-        {
-            LayerSettings.BindColor(origin, button1, "point", splitContainer1.Panel1);
-            LayerSettings.BindColor(origin, button2, "arc", splitContainer2.Panel1);
-            LayerSettings.BindColor(origin, button3, "polygon", splitContainer3.Panel1);
-            LayerSettings.BindSize(origin, numericUpDown1, "point");
-            LayerSettings.BindSize(origin, numericUpDown2, "arc");
-        }
-
-        private void layerName_TextChanged(object sender, EventArgs e)
-        {
-            origin.Name = layerName.Text;
-            origin.UpdateText();
+            LayerSettings.BindTitle(layer, layerName, this);
+            LayerSettings.BindColor(layer, button1, "point", splitContainer1.Panel1);
+            LayerSettings.BindColor(layer, button2, "arc", splitContainer2.Panel1);
+            LayerSettings.BindColor(layer, button3, "polygon", splitContainer3.Panel1);
+            LayerSettings.BindSize(layer, numericUpDown1, "point");
+            LayerSettings.BindSize(layer, numericUpDown2, "arc");
         }
     }
 }

@@ -22,23 +22,13 @@ namespace MiniGIS.Widget
         public void BindLayer(Layer layer)
         {
             origin = layer;
-            layerName.Text = layer.Name;
-        }
-
-        public void BindControls()
-        {
-            LayerSettings.BindColor(origin, button1, "low", splitContainer1.Panel1);
-            LayerSettings.BindColor(origin, button2, "high", splitContainer2.Panel1);
-            LayerSettings.BindColor(origin, button3, "grid", splitContainer3.Panel1);
-            LayerSettings.BindSize(origin, numericUpDown1, "low");
-            LayerSettings.BindSize(origin, numericUpDown2, "high");
-            LayerSettings.BindSize(origin, numericUpDown3, "grid");
-        }
-
-        private void layerName_TextChanged(object sender, EventArgs e)
-        {
-            origin.Name = layerName.Text;
-            origin.UpdateText();
+            LayerSettings.BindTitle(layer, layerName, this);
+            LayerSettings.BindColor(layer, button1, "low", splitContainer1.Panel1);
+            LayerSettings.BindColor(layer, button2, "high", splitContainer2.Panel1);
+            LayerSettings.BindColor(layer, button3, "grid", splitContainer3.Panel1);
+            LayerSettings.BindSize(layer, numericUpDown1, "low");
+            LayerSettings.BindSize(layer, numericUpDown2, "high");
+            LayerSettings.BindSize(layer, numericUpDown3, "grid");
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

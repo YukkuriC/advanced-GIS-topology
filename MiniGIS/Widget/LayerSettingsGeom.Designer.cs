@@ -345,7 +345,6 @@
             this.layerName.Name = "layerName";
             this.layerName.Size = new System.Drawing.Size(191, 21);
             this.layerName.TabIndex = 0;
-            this.layerName.TextChanged += new System.EventHandler(this.layerName_TextChanged);
             // 
             // LayerSettingsGeom
             // 
@@ -357,6 +356,8 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LayerSettingsGeom";
             this.Text = "设置";
             this.TopMost = true;

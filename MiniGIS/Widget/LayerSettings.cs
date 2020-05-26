@@ -11,10 +11,9 @@ namespace MiniGIS.Widget
     public interface ILayerSettings
     {
         void BindLayer(Layer layer); // 绑定待控制图层
-        void BindControls(); // 数据绑定控件
     }
 
-    public static class LayerSettings
+    public class LayerSettings
     {
         public static Dictionary<Layer, ILayerSettings> instances;
 
@@ -25,12 +24,23 @@ namespace MiniGIS.Widget
             if (!instances.TryGetValue(layer, out ILayerSettings form))
                 instances[layer] = form = new T();
             form.BindLayer(layer);
-            form.BindControls();
             (form as Form).Focus();
             return (T)form;
         }
 
         #region method
+
+        // 绑定标题设置
+        public static void BindTitle(Layer origin, TextBox input, Form form)
+        {
+            input.TextChanged += (object s, EventArgs e) =>
+            {
+                origin.Name = input.Text;
+                origin.UpdateText();
+                form.Text = "设置: " + input.Text;
+            };
+            input.Text = origin.Name;
+        }
 
         // 绑定选择颜色按钮
         public static void BindColor(Layer origin, Button btnChange, string key, Panel neon)
@@ -42,13 +52,12 @@ namespace MiniGIS.Widget
             btnChange.Click += (object s, EventArgs e) =>
             {
                 ColorDialog dlg = new ColorDialog();
-                Color clr = Color.Empty;
+                dlg.Color = origin.GetColor(key);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    clr = dlg.Color;
+                    neon.BackColor = origin.colors[key] = dlg.Color;
+                    MainForm.port.Render();
                 }
-                neon.BackColor = origin.colors[key] = dlg.Color;
-                MainForm.port.Render();
             };
         }
 
