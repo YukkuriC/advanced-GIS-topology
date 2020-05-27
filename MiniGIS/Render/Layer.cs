@@ -41,6 +41,9 @@ namespace MiniGIS.Render
         // 渲染基类方法，用于初始化
         public virtual void Render(ViewPort port, Graphics canvas) { }
 
+        // 聚焦至该图层
+        public virtual void Focus(ViewPort port) { }
+
         // 获取默认参数
         public Color GetColor(string key) { Color res = Color.Empty; colors.TryGetValue(key, out res); return res; }
         public float GetSize(string key) { float res = 0.1f; sizes.TryGetValue(key, out res); return res; }

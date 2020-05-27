@@ -7,7 +7,7 @@ namespace MiniGIS.Widget
     // 图层右键菜单
     class LayerContext : ContextMenuStrip
     {
-        ToolStripMenuItem btnToggleVisible, btnMove, btnMoveUp, btnMoveDown, btnDelete, btnSettings;
+        ToolStripMenuItem btnToggleVisible, btnMove, btnFocus, btnMoveUp, btnMoveDown, btnDelete, btnSettings;
         Layer origin;
 
         #region method
@@ -24,6 +24,9 @@ namespace MiniGIS.Widget
         {
             origin.Remove();
         }
+
+        // 聚焦图层
+        public void Focus(object sender, EventArgs args) { origin.Focus(MainForm.port); }
 
         // 图层移动
         public void MoveUp(object sender, EventArgs args) { origin.Reorder(origin.Index - 1); }
@@ -46,6 +49,7 @@ namespace MiniGIS.Widget
             Items.AddRange(new ToolStripMenuItem[]{
                 btnToggleVisible = new ToolStripMenuItem(),
                 btnMove = new ToolStripMenuItem { Text = "调整顺序" },
+                btnFocus = new ToolStripMenuItem { Text = "聚焦图层" },
                 btnDelete = new ToolStripMenuItem { Text = "删除图层" },
                 btnSettings = new ToolStripMenuItem { Text = "图层设置" },
             });
@@ -57,6 +61,7 @@ namespace MiniGIS.Widget
             btnDelete.Click += Delete;
             btnMoveUp.Click += MoveUp;
             btnMoveDown.Click += MoveDown;
+            btnFocus.Click += Focus;
             btnSettings.Click += (object sender, EventArgs args) =>
             {
                 if (node is GeomLayer) LayerSettings.ShowSettings<LayerSettingsGeom>(node).Show();

@@ -36,10 +36,13 @@
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel2 = new System.Windows.Forms.Panel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
+            this.labelInfo = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rendererPort)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -65,7 +68,7 @@
             // menuLoadCSV
             // 
             this.menuLoadCSV.Name = "menuLoadCSV";
-            this.menuLoadCSV.Size = new System.Drawing.Size(152, 22);
+            this.menuLoadCSV.Size = new System.Drawing.Size(123, 22);
             this.menuLoadCSV.Text = "导入CSV";
             this.menuLoadCSV.Click += new System.EventHandler(this.menuLoadCSV_Click);
             // 
@@ -99,7 +102,7 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel2.Controls.Add(this.rendererPort);
+            this.panel2.Controls.Add(this.tableLayoutPanel1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(287, 25);
             this.panel2.Name = "panel2";
@@ -109,12 +112,36 @@
             // rendererPort
             // 
             this.rendererPort.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rendererPort.Location = new System.Drawing.Point(0, 0);
+            this.rendererPort.Location = new System.Drawing.Point(3, 3);
             this.rendererPort.Name = "rendererPort";
-            this.rendererPort.Size = new System.Drawing.Size(635, 475);
+            this.rendererPort.Size = new System.Drawing.Size(629, 453);
             this.rendererPort.TabIndex = 0;
             this.rendererPort.TabStop = false;
             this.rendererPort.SizeChanged += new System.EventHandler(this.rendererPort_SizeChanged);
+            // 
+            // labelInfo
+            // 
+            this.labelInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelInfo.Location = new System.Drawing.Point(3, 459);
+            this.labelInfo.Name = "labelInfo";
+            this.labelInfo.Size = new System.Drawing.Size(629, 16);
+            this.labelInfo.TabIndex = 1;
+            this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.rendererPort, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelInfo, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(635, 475);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // MainForm
             // 
@@ -134,6 +161,7 @@
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rendererPort)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -149,6 +177,8 @@
         public System.Windows.Forms.TreeView layerView;
         private System.Windows.Forms.ToolStripDropDownButton menuLoad;
         private System.Windows.Forms.ToolStripMenuItem menuLoadCSV;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        public System.Windows.Forms.Label labelInfo;
     }
 }
 

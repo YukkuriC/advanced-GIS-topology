@@ -11,7 +11,7 @@ namespace MiniGIS.Control
     {
         PointF lastScreen, lastWorld;
         bool dragging = false;
-        int zoomLevel = 0;
+        double zoomLevel;
 
         public void MouseDown(object sender, MouseEventArgs e)
         {
@@ -24,7 +24,6 @@ namespace MiniGIS.Control
                     break;
 
                 case MouseButtons.Right:
-                    zoomLevel = 0;
                     MainForm.port.Reset();
                     break;
             }
@@ -53,7 +52,7 @@ namespace MiniGIS.Control
                     lastWorld.X + dx,
                     lastWorld.Y + dy
                 );
-                MainForm.port.Render();
+                MainForm.port.Render(true);
             }
         }
 
@@ -63,9 +62,10 @@ namespace MiniGIS.Control
             if (dragging) return;
 
             // 更新缩放等级
+            zoomLevel = Math.Log(MainForm.port.zoom, 2);
             if (e.Delta > 0) zoomLevel += 1;
             else zoomLevel -= 1;
-            zoomLevel = Math.Max(Math.Min(zoomLevel, 10), -10);
+            //zoomLevel = Math.Max(Math.Min(zoomLevel, 10), -10);
             float newZoom = (float)Math.Pow(2, zoomLevel);
 
             // 计算位置偏移
@@ -77,7 +77,7 @@ namespace MiniGIS.Control
             // 更新窗口位置
             MainForm.port.center.X += oldX - newX;
             MainForm.port.center.Y += oldY - newY;
-            MainForm.port.Render();
+            MainForm.port.Render(true);
         }
     }
 }

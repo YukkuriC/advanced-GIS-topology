@@ -10,6 +10,7 @@ namespace MiniGIS.Data
     public class BaseGeom
     {
         public int id;
+        public string name;
         public double value;
 
         public virtual void Render(ViewPort port, Graphics canvas, Pen pen) { }

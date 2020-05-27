@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using MiniGIS.Algorithm;
 
 namespace MiniGIS.Render
 {
@@ -39,7 +40,7 @@ namespace MiniGIS.Render
         }
 
         // 渲染所有图层
-        public void Render()
+        public void Render(bool updateText=false)
         {
             if (target.Width <= 0 || target.Height <= 0) return;
             Bitmap bmp = new Bitmap(target.Width, target.Height);
@@ -47,13 +48,44 @@ namespace MiniGIS.Render
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
             foreach (Layer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
             target.Image = bmp;
+            if (updateText) ShowText();
+        }
+
+        // 
+        public void ShowText()
+        {
+            string text = String.Format("坐标: ({0}, {1}); 缩放等级: {2}",
+                Utils.SciString(center.X, 6), Utils.SciString(center.Y, 6),
+                Utils.SciString(zoom, 2)
+            );
+            MainForm.instance.labelInfo.Text = text;
+        }
+
+        // 聚焦至区域
+        public void Focus(float xMin, float yMin, float xMax, float yMax)
+        {
+            center = new PointF((xMin + xMax) / 2, (yMin + yMax) / 2);
+            bool validZoom = false;
+            float newZoom = float.MaxValue;
+            if (xMin < xMax && target.Width > 0)
+            {
+                validZoom = true;
+                newZoom = Math.Min(newZoom, target.Width / (xMax - xMin));
+            }
+            if (yMin < yMax && target.Height > 0)
+            {
+                validZoom = true;
+                newZoom = Math.Min(newZoom, target.Height / (yMax - yMin));
+            }
+            if (validZoom) zoom = newZoom;
+            Render(true);
         }
 
         public void Reset()
         {
             zoom = 1;
             center = new PointF(0, 0);
-            Render();
+            Render(true);
         }
 
         #endregion

@@ -84,6 +84,21 @@ namespace MiniGIS.Render
             }
         }
 
+        // 计算外包矩形并设置镜头
+        public override void Focus(ViewPort port)
+        {
+            if (points == null || points.Count == 0) return;
+            double xMin = double.MaxValue, xMax = double.MinValue, yMin = double.MaxValue, yMax = double.MinValue;
+            foreach (GeomPoint pt in points)
+            {
+                xMin = Math.Min(xMin, pt.X);
+                xMax = Math.Max(xMax, pt.X);
+                yMin = Math.Min(yMin, pt.Y);
+                yMax = Math.Max(yMax, pt.Y);
+            }
+            port.Focus((float)xMin, (float)yMin, (float)xMax, (float)yMax);
+        }
+
         public GeomLayer(GeomType type = GeomType.Point, string name = "矢量图层") : base(name)
         {
             if (type >= GeomType.Point) points = new List<GeomPoint>();
