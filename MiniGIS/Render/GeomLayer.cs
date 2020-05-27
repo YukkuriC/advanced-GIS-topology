@@ -31,6 +31,17 @@ namespace MiniGIS.Render
             }
         }
 
+        // 外包矩形
+        Rect _mbr;
+        public Rect MBR
+        {
+            get
+            {
+                if (_mbr == null) _mbr = new Rect(points);
+                return _mbr;
+            }
+        }
+
         // 数据容器
         public List<GeomPoint> points;
         public List<GeomArc> arcs;
@@ -88,15 +99,7 @@ namespace MiniGIS.Render
         public override void Focus(ViewPort port)
         {
             if (points == null || points.Count == 0) return;
-            double xMin = double.MaxValue, xMax = double.MinValue, yMin = double.MaxValue, yMax = double.MinValue;
-            foreach (GeomPoint pt in points)
-            {
-                xMin = Math.Min(xMin, pt.X);
-                xMax = Math.Max(xMax, pt.X);
-                yMin = Math.Min(yMin, pt.Y);
-                yMax = Math.Max(yMax, pt.Y);
-            }
-            port.Focus((float)xMin, (float)yMin, (float)xMax, (float)yMax);
+            port.Focus(MBR);
         }
 
         public GeomLayer(GeomType type = GeomType.Point, string name = "矢量图层") : base(name)

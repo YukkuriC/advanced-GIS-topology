@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 using MiniGIS.Algorithm;
+using MiniGIS.Data;
 
 namespace MiniGIS.Render
 {
@@ -40,7 +41,7 @@ namespace MiniGIS.Render
         }
 
         // 渲染所有图层
-        public void Render(bool updateText=false)
+        public void Render(bool updateText = false)
         {
             if (target.Width <= 0 || target.Height <= 0) return;
             Bitmap bmp = new Bitmap(target.Width, target.Height);
@@ -80,6 +81,7 @@ namespace MiniGIS.Render
             if (validZoom) zoom = newZoom;
             Render(true);
         }
+        public void Focus(Rect rect) => Focus((float)rect.xMin, (float)rect.yMin, (float)rect.xMax, (float)rect.yMax);
 
         public void Reset()
         {
