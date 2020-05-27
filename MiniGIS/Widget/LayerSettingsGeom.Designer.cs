@@ -17,7 +17,6 @@
             {
                 components.Dispose();
             }
-            LayerSettings.instances.Remove(origin);
             base.Dispose(disposing);
         }
 

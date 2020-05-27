@@ -14,9 +14,10 @@ namespace MiniGIS.Widget
     {
         public Layer origin;
 
-        public LayerSettingsGeom()
+        public LayerSettingsGeom(Layer layer)
         {
             InitializeComponent();
+            BindLayer(layer);
         }
 
         public void BindLayer(Layer layer)

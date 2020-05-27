@@ -15,19 +15,6 @@ namespace MiniGIS.Widget
 
     public class LayerSettings
     {
-        public static Dictionary<Layer, ILayerSettings> instances;
-
-        // 去重显示图层设置
-        public static T ShowSettings<T>(Layer layer) where T : Form, ILayerSettings, new()
-        {
-            if (instances == null) instances = new Dictionary<Layer, ILayerSettings>();
-            if (!instances.TryGetValue(layer, out ILayerSettings form))
-                instances[layer] = form = new T();
-            form.BindLayer(layer);
-            (form as Form).Focus();
-            return (T)form;
-        }
-
         #region method
 
         // 绑定标题设置

@@ -61,7 +61,7 @@ namespace MiniGIS
 
         private void menuLoadCSV_Click(object sender, EventArgs e)
         {
-            new CSVLoader().Show();
+            new CSVLoader().ShowDialog();
         }
     }
 }

@@ -64,8 +64,8 @@ namespace MiniGIS.Widget
             btnFocus.Click += Focus;
             btnSettings.Click += (object sender, EventArgs args) =>
             {
-                if (node is GeomLayer) LayerSettings.ShowSettings<LayerSettingsGeom>(node).Show();
-                else if (node is GridLayer) LayerSettings.ShowSettings<LayerSettingsGrid>(node).Show();
+                if (node is GeomLayer) new LayerSettingsGeom(node).ShowDialog();
+                else if (node is GridLayer) new LayerSettingsGrid(node).ShowDialog();
             };
             UpdateText();
         }
