@@ -10,45 +10,42 @@ namespace MiniGIS.Algorithm
 {
     public static class GenGrid
     {
+        static int knear = 10;// 计入均值的最近点的个数
         static int gsplit = 3;// 方位加权各象限划分数
 
         #region methods
 
-        // 距离倒数
-        static double Z_DistRev(IEnumerable<GeomPoint> points, double x, double y)
+        // 通用k邻近加权函数
+        static double Z_KNearBase(IEnumerable<GeomPoint> points, double x, double y, string distFunc)
         {
-            double sum = 0, weight = 0;
+            double tmp;
+
+            // 创建有序表，取前k位
+            object[] distInput = new object[] { x, y };
+            SortedList<double, double> nearestPoints = new SortedList<double, double>();// 距离: 取值
             foreach (GeomPoint p in points)
             {
                 // 点重合
                 if (x == p.X && y == p.Y) return p.value;
-
-                double w = 1 / p.Distance(x, y);
-                sum += p.value * w;
-                weight += w;
+                tmp = (double)typeof(GeomPoint).GetMethod(distFunc).Invoke(p, distInput);
+                nearestPoints.Add(tmp, p.value);
             }
 
-            // 求均值
-            return sum / weight;
-        }
-
-        // 距离平方倒数
-        static double Z_DistPow2Rev(IEnumerable<GeomPoint> points, double x, double y)
-        {
+            // 计算加权平均
             double sum = 0, weight = 0;
-            foreach (GeomPoint p in points)
+            var pts = nearestPoints.ToList();
+            int size = Math.Min(nearestPoints.Count, knear);
+            for (int i = 0; i < size; i++)
             {
-                // 点重合
-                if (x == p.X && y == p.Y) return p.value;
-
-                double w = 1 / p.DistanceSq(x, y);
-                sum += p.value * w;
-                weight += w;
+                var pair = pts[i];
+                tmp = 1 / pair.Key;
+                weight += tmp;
+                sum += tmp * pair.Value;
             }
-
-            // 求均值
             return sum / weight;
         }
+        static double Z_DistRev(IEnumerable<GeomPoint> points, double x, double y) => Z_KNearBase(points, x, y, "Distance");// 距离倒数
+        static double Z_DistPow2Rev(IEnumerable<GeomPoint> points, double x, double y) => Z_KNearBase(points, x, y, "DistanceSq");// 距离平方倒数
 
         // 方位加权均值
         static double Z_DirGrouped(IEnumerable<GeomPoint> points, double x, double y)
