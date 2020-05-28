@@ -78,7 +78,7 @@ namespace MiniGIS.Widget
         }
 
         // 运行算法并创建图层
-        private void GenGrid(object sender, EventArgs e)
+        private void GenGridLayer(object sender, EventArgs e)
         {
             ValidateBorders();
             GeomLayer layer = comboLayer.SelectedItem as GeomLayer;

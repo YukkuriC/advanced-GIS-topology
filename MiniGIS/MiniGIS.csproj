@@ -74,6 +74,12 @@
     <Compile Include="Widget\CSVLoader.Designer.cs">
       <DependentUpon>CSVLoader.cs</DependentUpon>
     </Compile>
+    <Compile Include="Widget\GridInterpolationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\GridInterpolationForm.Designer.cs">
+      <DependentUpon>GridInterpolationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\GenGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,9 @@
     </Compile>
     <EmbeddedResource Include="Widget\CSVLoader.resx">
       <DependentUpon>CSVLoader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widget\GridInterpolationForm.resx">
+      <DependentUpon>GridInterpolationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widget\GenGridForm.resx">
       <DependentUpon>GenGridForm.cs</DependentUpon>

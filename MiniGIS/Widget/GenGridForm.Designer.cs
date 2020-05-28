@@ -396,7 +396,7 @@
             this.btnGen.TabIndex = 17;
             this.btnGen.Text = "生成格网模型";
             this.btnGen.UseVisualStyleBackColor = true;
-            this.btnGen.Click += new System.EventHandler(this.GenGrid);
+            this.btnGen.Click += new System.EventHandler(this.GenGridLayer);
             // 
             // GenGridForm
             // 

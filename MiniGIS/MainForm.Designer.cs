@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.menuLoad = new System.Windows.Forms.ToolStripDropDownButton();
             this.menuLoadCSV = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,6 +40,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
+            this.menuGridInterpolation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -80,8 +80,8 @@
             // 
             this.menuGridConverter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuGridConverter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuGenGrid});
-            this.menuGridConverter.Image = ((System.Drawing.Image)(resources.GetObject("menuGridConverter.Image")));
+            this.menuGenGrid,
+            this.menuGridInterpolation});
             this.menuGridConverter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.menuGridConverter.Name = "menuGridConverter";
             this.menuGridConverter.Size = new System.Drawing.Size(69, 22);
@@ -165,6 +165,13 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // menuGridInterpolation
+            // 
+            this.menuGridInterpolation.Name = "menuGridInterpolation";
+            this.menuGridInterpolation.Size = new System.Drawing.Size(152, 22);
+            this.menuGridInterpolation.Text = "格网加密";
+            this.menuGridInterpolation.Click += new System.EventHandler(this.menuGridInterpolation_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -203,6 +210,7 @@
         public System.Windows.Forms.Label labelInfo;
         private System.Windows.Forms.ToolStripDropDownButton menuGridConverter;
         private System.Windows.Forms.ToolStripMenuItem menuGenGrid;
+        private System.Windows.Forms.ToolStripMenuItem menuGridInterpolation;
     }
 }
 

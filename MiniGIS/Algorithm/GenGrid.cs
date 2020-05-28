@@ -13,6 +13,8 @@ namespace MiniGIS.Algorithm
         static int knear = 10;// 计入均值的最近点的个数
         static int gsplit = 3;// 方位加权各象限划分数
 
+        #region point to grid
+
         #region methods
 
         // 通用k邻近加权函数
@@ -100,5 +102,37 @@ namespace MiniGIS.Algorithm
         public static void GenGrid_DistRev(this Grid grid, IEnumerable<GeomPoint> points) => GenGrid_Base(grid, points, Z_DistRev);// 距离倒数
         public static void GenGrid_DistPow2Rev(this Grid grid, IEnumerable<GeomPoint> points) => GenGrid_Base(grid, points, Z_DistPow2Rev);// 距离平方倒数
         public static void GenGrid_DirGrouped(this Grid grid, IEnumerable<GeomPoint> points) => GenGrid_Base(grid, points, Z_DirGrouped);// 方位加权
+
+        #endregion
+
+        #region grid interpolation
+
+        public static Grid LinearInterpolation(Grid origin, uint xstep, uint ystep)
+        {
+            Grid newGrid = new Grid(origin.XMin, origin.XMax, origin.YMin, origin.YMax, origin.XSplit * xstep, origin.YSplit * ystep);
+
+            // 逐单元插值
+            for(int oldI = 0; oldI < origin.XSplit; oldI++)
+            {
+                int newI = (int)(oldI * xstep);
+                for (int oldJ = 0; oldJ < origin.YSplit; oldJ++)
+                {
+                    int newJ = (int)(oldJ * ystep);
+                    for(int i = (oldI > 0) ? 1 : 0; i <= xstep; i++)
+                    {
+                        double vI = Utils.Lerp(i, 0, xstep, origin[oldI, oldJ], origin[oldI + 1, oldJ]);// 下方
+                        double vII = Utils.Lerp(i, 0, xstep, origin[oldI, oldJ+1], origin[oldI + 1, oldJ+1]);// 上方
+                        for(int j = (oldJ > 0) ? 1 : 0; j <= ystep; j++)
+                        {
+                            newGrid[newI + i, newJ + j] = Utils.Lerp(j, 0, ystep, vI, vII);
+                        }
+                    }
+                }
+            }
+
+            return newGrid;
+        }
+
+        #endregion
     }
 }
