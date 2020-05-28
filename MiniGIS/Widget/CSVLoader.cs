@@ -151,8 +151,7 @@ namespace MiniGIS.Widget
             // 判断是否成功
             if (newLayer.points.Count > 0)
             {
-                newLayer.Add();
-                newLayer.Focus(MainForm.port);
+                newLayer.Add().Focus(MainForm.port);
             }
             else
             {

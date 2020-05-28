@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MiniGIS.Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace MiniGIS.Data
 {
-    class Grid
+    public class Grid
     {
         public double XMin, XMax, YMin, YMax;
         public uint XSplit, YSplit;
@@ -49,6 +50,10 @@ namespace MiniGIS.Data
             get { return values[i, j]; }
             set { values[i, j] = value; ResetMinMax(); }
         }
+
+        // 获取格点坐标
+        public double XCoord(int i) => Utils.Lerp(i, 0, XSplit, XMin, XMax);
+        public double YCoord(int j) => Utils.Lerp(j, 0, YSplit, YMin, YMax);
 
         public Grid(double xmin, double xmax, double ymin, double ymax, uint xsplit, uint ysplit)
         {

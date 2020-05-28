@@ -55,13 +55,17 @@ namespace MiniGIS
             var table = CSVParser.Parse(buffer);
             GeomLayer newLayer = new GeomLayer(GeomType.Point, "TEST");
             CSVParser.OutputPoints(table, newLayer.points, false, 2, 3, 4, 0, 1);
-            newLayer.Add();
-            newLayer.Focus(port);
+            newLayer.Add().Focus(port);
         }
 
         private void menuLoadCSV_Click(object sender, EventArgs e)
         {
             new CSVLoader().ShowDialog();
+        }
+
+        private void menuGenGrid_Click(object sender, EventArgs e)
+        {
+            new GenGridForm().ShowDialog();
         }
     }
 }

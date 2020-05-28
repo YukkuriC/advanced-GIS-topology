@@ -7,7 +7,8 @@ namespace MiniGIS.Algorithm
 {
     public static class Utils
     {
-        public static double Lerp(this double v, double min, double max) => (v - min) / (max - min);
+        public static double Lerp(this double v, double min, double max) => (max == min) ? 0 : (v - min) / (max - min);
+        public static double Lerp(this double v, double min, double max, double tmin, double tmax) => (tmax == tmin) ? tmin : tmin + (tmax - tmin) * v.Lerp(min, max);
         public static string SciString(this double val, uint digit = 6)
         {
             if (val < 0) return "-" + (-val).SciString(digit);

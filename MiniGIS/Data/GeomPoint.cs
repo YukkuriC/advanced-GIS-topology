@@ -21,6 +21,11 @@ namespace MiniGIS.Data
 
         #region method
 
+        // 计算距离
+        public double DistanceSq(double x, double y) => Math.Pow(x - X, 2) + Math.Pow(y - Y, 2);
+        public double Distance(double x, double y) => Math.Sqrt(DistanceSq(x, y));
+
+        // 绘制接口
         public override void Render(ViewPort port, Graphics canvas, Pen pen)
         {
             PointF pt = port.ScreenCoord(X, Y);

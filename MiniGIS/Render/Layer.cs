@@ -63,11 +63,12 @@ namespace MiniGIS.Render
         }
 
         // 添加图层
-        public void Add()
+        public Layer Add()
         {
             MainForm.instance.layerView.Nodes.Insert(0, this);
             MainForm.port.Render();
             UpdateText();
+            return this;
         }
 
         // 移除图层
