@@ -82,6 +82,12 @@ namespace MiniGIS.Widget
         {
             ValidateBorders();
             GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
+            if (layer == null)
+            {
+                MessageBox.Show("没有可用的点图层", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
             Grid result = new Grid(
                 (double)numericXMin.Value, (double)numericXMax.Value,
                 (double)numericYMin.Value, (double)numericYMax.Value,

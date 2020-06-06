@@ -8,11 +8,6 @@ using MiniGIS.Render;
 
 namespace MiniGIS.Widget
 {
-    public interface ILayerSettings
-    {
-        void BindLayer(Layer layer); // 绑定待控制图层
-    }
-
     public class LayerSettings
     {
         #region method
@@ -38,8 +33,7 @@ namespace MiniGIS.Widget
             // 绑定事件
             btnChange.Click += (object s, EventArgs e) =>
             {
-                ColorDialog dlg = new ColorDialog();
-                dlg.Color = origin.GetColor(key);
+                ColorDialog dlg = new ColorDialog { Color = origin.GetColor(key) };
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     neon.BackColor = origin.colors[key] = dlg.Color;

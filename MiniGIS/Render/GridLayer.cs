@@ -19,8 +19,11 @@ namespace MiniGIS.Render
     ///     low: 低值
     ///     high: 高值
     ///     grid: 网格边缘粗细
+    /// 可见性参数:
+    ///     border: 网格边缘
+    ///     fill: 网格上色
     /// </summary>
-    class GridLayer : Layer
+    public class GridLayer : Layer
     {
         public override string layerType
         {
@@ -39,25 +42,28 @@ namespace MiniGIS.Render
             double cx, cy, x1, x2, y1, y2;
             PointF p1, p2;
             // 栅格填色
-            float valmin = GetSize("low"), valmax = GetSize("high");
-            Color cmin = GetColor("low"), cmax = GetColor("high");
-            for (int i = 0; i <= data.XSplit; i++)
+            if (GetPartVisible("fill"))
             {
-                x1 = x2 = cx = data.XMin + i * xstep;
-                if (i > 0) x1 -= xstep / 2;
-                if (i < data.XSplit) x2 += xstep / 2;
-                for (int j = 0; j <= data.YSplit; j++)
+                float valmin = GetSize("low"), valmax = GetSize("high");
+                Color cmin = GetColor("low"), cmax = GetColor("high");
+                for (int i = 0; i <= data.XSplit; i++)
                 {
-                    y1 = y2 = cy = data.YMin + j * ystep;
-                    if (j > 0) y1 -= ystep / 2;
-                    if (j < data.YSplit) y2 += ystep / 2;
-                    p1 = MainForm.port.ScreenCoord(x1, y2); p2 = MainForm.port.ScreenCoord(x2, y1);
-                    Color clr = ColorOps.Linear(cmin, cmax, data[i, j].Lerp(valmin, valmax));
-                    canvas.FillRectangle(new SolidBrush(clr), new RectangleF(p1, new SizeF(p2.X - p1.X, p2.Y - p1.Y)));
+                    x1 = x2 = cx = data.XMin + i * xstep;
+                    if (i > 0) x1 -= xstep / 2;
+                    if (i < data.XSplit) x2 += xstep / 2;
+                    for (int j = 0; j <= data.YSplit; j++)
+                    {
+                        y1 = y2 = cy = data.YMin + j * ystep;
+                        if (j > 0) y1 -= ystep / 2;
+                        if (j < data.YSplit) y2 += ystep / 2;
+                        p1 = MainForm.port.ScreenCoord(x1, y2); p2 = MainForm.port.ScreenCoord(x2, y1);
+                        Color clr = ColorOps.Linear(cmin, cmax, data[i, j].Lerp(valmin, valmax));
+                        canvas.FillRectangle(new SolidBrush(clr), new RectangleF(p1, new SizeF(p2.X - p1.X, p2.Y - p1.Y)));
+                    }
                 }
             }
             // 绘制边界
-            if (GetSize("grid") > 0)
+            if (GetPartVisible("border") && GetSize("grid") > 0 )
             {
                 Pen pen = new Pen(GetColor("grid"), GetSize("grid"));
                 pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;

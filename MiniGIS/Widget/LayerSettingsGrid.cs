@@ -10,18 +10,13 @@ using MiniGIS.Render;
 
 namespace MiniGIS.Widget
 {
-    public partial class LayerSettingsGrid : Form, ILayerSettings
+    public partial class LayerSettingsGrid : Form
     {
         public Layer origin;
 
-        public LayerSettingsGrid(Layer layer)
+        public LayerSettingsGrid(GridLayer layer)
         {
             InitializeComponent();
-            BindLayer(layer);
-        }
-
-        public void BindLayer(Layer layer)
-        {
             origin = layer;
             LayerSettings.BindTitle(layer, layerName, this);
             LayerSettings.BindColor(layer, button1, "low", splitContainer1.Panel1);

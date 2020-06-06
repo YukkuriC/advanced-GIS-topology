@@ -50,7 +50,7 @@ namespace MiniGIS.Algorithm
 
             // 迭代字符
             int i = 0;
-            foreach (char c in raw)
+            foreach (char c in raw) // test
             {
                 if (!ParseChar(c))
                 {
@@ -60,8 +60,7 @@ namespace MiniGIS.Algorithm
             }
 
             // 是否读入最后一行
-            switch (status)
-            {
+            switch (status) { // test
                 case ParserStatus.InQuote:
                     throw new InvalidCastException("引号内容未结束");
                 case ParserStatus.RowStart:

@@ -17,8 +17,6 @@ namespace MiniGIS.Render
         public int seed;
 
         // 控制参数
-        public Byte visible_mask = 0b111;
-        public Byte annotation_mask = 0b000;
         bool _visible = true;
         public bool Visible
         {
@@ -29,6 +27,9 @@ namespace MiniGIS.Render
                 MainForm.port.Render();
             }
         }
+        Dictionary<string, bool> _visibleParts;
+        public bool GetPartVisible(string key) => !_visibleParts.ContainsKey(key) || _visibleParts[key]; // 默认全部可见
+        public void SetPartVisible(string key, bool val) { _visibleParts[key] = val; }
 
         // 渲染样式
         public Dictionary<string, Color> colors;
@@ -94,6 +95,7 @@ namespace MiniGIS.Render
             Name = _name;
             NodeFont = MainForm.instance.Font;
             seed = MainForm.random.Next(int.MinValue, int.MaxValue);
+            _visibleParts = new Dictionary<string, bool>();
             colors = new Dictionary<string, Color>
             {
                 ["point"] = Color.Red,

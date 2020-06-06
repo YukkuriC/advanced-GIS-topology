@@ -16,8 +16,10 @@ namespace MiniGIS.Render
     /// 尺寸参数:
     ///     point: 点大小
     ///     arc: 弧段粗细
+    /// 可见性参数:
+    ///     point; arc; polygon
     /// </summary>
-    class GeomLayer : Layer
+    public class GeomLayer : Layer
     {
         // 显示图层类型
         public override string layerType
@@ -60,14 +62,14 @@ namespace MiniGIS.Render
             pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 
             // 填色多边形
-            if (polygons != null) foreach (var x in polygons)
+            if (polygons != null && GetPartVisible("polygon")) foreach (var x in polygons)
                 {
                     if (randColor) pen.Color = ColorOps.Random();
                     x.Render(port, canvas, pen);
                 }
 
             // 绘制弧段
-            if (arcs != null)
+            if (arcs != null && GetPartVisible("arc"))
             {
                 clr = GetColor("arc");
                 randColor = clr == Color.Empty;
@@ -81,7 +83,7 @@ namespace MiniGIS.Render
             }
 
             // 绘制点
-            if (points != null)
+            if (points != null && GetPartVisible("point"))
             {
                 clr = GetColor("point");
                 randColor = clr == Color.Empty;

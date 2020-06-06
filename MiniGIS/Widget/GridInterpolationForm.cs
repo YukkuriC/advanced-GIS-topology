@@ -38,6 +38,12 @@ namespace MiniGIS.Widget
         private void GenGridLayer(object sender, EventArgs e)
         {
             GridLayer oldLayer = comboLayer.SelectedItem as GridLayer;
+            if (oldLayer == null)
+            {
+                MessageBox.Show("没有可用的栅格图层", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
             uint xstep = (uint)numericXStep.Value, ystep = (uint)numericYStep.Value;
             Grid newGrid = GenGrid.LinearInterpolation(oldLayer.data, xstep, ystep);
             new GridLayer(newGrid, oldLayer.Name + String.Format("_{0}x{1}加密", xstep, ystep)).Add().Focus(MainForm.port);
