@@ -78,6 +78,7 @@
             this.MinimizeBox = false;
             this.Name = "LayerVisibleChecklist";
             this.Text = "可见性";
+            this.Load += new System.EventHandler(this.UpdateControls);
             this.groupVisible.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

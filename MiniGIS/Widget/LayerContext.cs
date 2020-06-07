@@ -7,6 +7,7 @@ namespace MiniGIS.Widget
     // 图层右键菜单
     class LayerContext : ContextMenuStrip
     {
+        ToolStripMenuItem btnVis;
         Layer origin;
 
         // 绑定右键菜单至图层
@@ -16,6 +17,10 @@ namespace MiniGIS.Widget
             node.ContextMenuStrip = this;
             Items.AddRange(new ToolStripMenuItem[]{
                 _("查看", null,
+                    btnVis = _("切换显示/隐藏", (object s, EventArgs a) => {
+                        origin.Visible = !origin.Visible;
+                        UpdateControls();
+                    }),
                     _("聚焦图层", (object s, EventArgs a) => origin.Focus(MainForm.port)),
                     _("可见性设置", (object s, EventArgs a) => new LayerVisibleChecklist(node).ShowDialog())
                 ),
@@ -37,6 +42,13 @@ namespace MiniGIS.Widget
                     if (settings != null) (settings as Form).ShowDialog();
                 }),
             });
+            Opening += UpdateControls;
+        }
+
+        // 右键菜单更新文字
+        void UpdateControls(object o = null, EventArgs e = null)
+        {
+            btnVis.Text = (origin.Visible ? "隐藏" : "显示") + "图层";
         }
 
         // 创建右键菜单helper

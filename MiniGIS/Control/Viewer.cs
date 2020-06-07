@@ -10,7 +10,7 @@ namespace MiniGIS.Control
     class Viewer : MapControl
     {
         PointF lastScreen, lastWorld;
-        bool dragging = false;
+        bool dragging = false, dragging2 = false;
         double zoomLevel;
 
         public void MouseDown(object sender, MouseEventArgs e)
@@ -18,13 +18,22 @@ namespace MiniGIS.Control
             switch (e.Button)
             {
                 case MouseButtons.Left:
+                    if (dragging2) return;
                     dragging = true;
                     lastScreen = new PointF(e.X, e.Y);
                     lastWorld = MainForm.port.center;
                     break;
 
                 case MouseButtons.Right:
-                    MainForm.port.Reset();
+                    if (dragging) return;
+                    dragging2 = true;
+                    lastScreen = new PointF(e.X, e.Y);
+                    zoomLevel = MainForm.port.zoom;
+                    break;
+
+                case MouseButtons.None: // 默认记录初始
+                    lastScreen = new PointF(e.X, e.Y);
+                    lastWorld = MainForm.port.center;
                     break;
             }
         }
@@ -38,10 +47,15 @@ namespace MiniGIS.Control
                     MouseMove(sender, e);
                     dragging = false;
                     break;
+                case MouseButtons.Right:
+                    MouseMove(sender, e);
+                    dragging2 = false;
+                    zoomLevel = MainForm.port.zoom;
+                    break;
             }
         }
 
-        // (拖拽模式下)移动中心点
+        // (拖拽模式下)移动中心点、平滑缩放
         public void MouseMove(object sender, MouseEventArgs e)
         {
             if (dragging)
@@ -54,12 +68,18 @@ namespace MiniGIS.Control
                 );
                 MainForm.port.Render(true);
             }
+            else if (dragging2)
+            {
+                float dDrag = (lastScreen.Y - e.Y)/100;
+                MainForm.port.zoom = (float)(zoomLevel * Math.Pow(2, dDrag));
+                MainForm.port.Render(true);
+            }
         }
 
         // (非拖拽模式下)以鼠标位置为基准缩放
         public void MouseWheel(object sender, MouseEventArgs e)
         {
-            if (dragging) return;
+            if (dragging || dragging2) return;
 
             // 更新缩放等级
             zoomLevel = Math.Log(MainForm.port.zoom, 2);
