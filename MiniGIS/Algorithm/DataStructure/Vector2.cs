@@ -29,8 +29,12 @@ namespace MiniGIS.Algorithm
                     return X == v.X && Y == v.Y;
             }
         }
-        public static bool operator ==(Vector2 a, Vector2 b) => a.Equals(b);
-        public static bool operator !=(Vector2 a, Vector2 b) => !a.Equals(b);
+        public static bool operator ==(Vector2 a, Vector2 b)
+        {
+            if ((object)a == null) return (object)b == null;
+            return a.Equals(b);
+        }
+        public static bool operator !=(Vector2 a, Vector2 b) => !(a == b);
 
         // 大小关系
         public int CompareTo(Vector2 other)
@@ -66,6 +70,12 @@ namespace MiniGIS.Algorithm
     public static class Vector2Ext
     {
         // 角度
+        public static double CosAngle(this Vector2 a , Vector2 b)
+        {
+            double lab = a.Length() * b.Length();
+            if (lab == 0) return 1;
+            return a.Dot(b) / lab;
+        }
         public static double Rotation(this Vector2 a) => Math.Atan2(a.Y, a.X);
 
         // 长度

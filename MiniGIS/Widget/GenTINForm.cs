@@ -42,7 +42,8 @@ namespace MiniGIS.Widget
             }
 
             // 运行算法
-            GeomLayer result = GenDelaunay.DelaunayScan(layer.points);
+            //GeomLayer result = GenDelaunay.DelaunayScan(layer.points);
+            GeomLayer result = GenDelaunay.DelaunayConvex(layer.points);
 
             // 创建图层
             result.Name = layer.Name + "_TIN";
