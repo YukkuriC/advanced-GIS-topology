@@ -33,6 +33,9 @@
             this.menuLoadCSV = new System.Windows.Forms.ToolStripMenuItem();
             this.menuGridConverter = new System.Windows.Forms.ToolStripDropDownButton();
             this.menuGenGrid = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuGridInterpolation = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuTIN = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuGenTIN = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -40,7 +43,6 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.menuGridInterpolation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -53,7 +55,8 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuLoad,
-            this.menuGridConverter});
+            this.menuGridConverter,
+            this.menuTIN});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(926, 25);
@@ -93,6 +96,30 @@
             this.menuGenGrid.Size = new System.Drawing.Size(152, 22);
             this.menuGenGrid.Text = "生成格网模型";
             this.menuGenGrid.Click += new System.EventHandler(this.menuGenGrid_Click);
+            // 
+            // menuGridInterpolation
+            // 
+            this.menuGridInterpolation.Name = "menuGridInterpolation";
+            this.menuGridInterpolation.Size = new System.Drawing.Size(152, 22);
+            this.menuGridInterpolation.Text = "格网加密";
+            this.menuGridInterpolation.Click += new System.EventHandler(this.menuGridInterpolation_Click);
+            // 
+            // menuTIN
+            // 
+            this.menuTIN.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuTIN.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuGenTIN});
+            this.menuTIN.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuTIN.Name = "menuTIN";
+            this.menuTIN.Size = new System.Drawing.Size(66, 22);
+            this.menuTIN.Text = "TIN模型";
+            // 
+            // menuGenTIN
+            // 
+            this.menuGenTIN.Name = "menuGenTIN";
+            this.menuGenTIN.Size = new System.Drawing.Size(152, 22);
+            this.menuGenTIN.Text = "生成TIN";
+            this.menuGenTIN.Click += new System.EventHandler(this.menuGenTIN_Click);
             // 
             // panel1
             // 
@@ -165,13 +192,6 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // menuGridInterpolation
-            // 
-            this.menuGridInterpolation.Name = "menuGridInterpolation";
-            this.menuGridInterpolation.Size = new System.Drawing.Size(152, 22);
-            this.menuGridInterpolation.Text = "格网加密";
-            this.menuGridInterpolation.Click += new System.EventHandler(this.menuGridInterpolation_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -211,6 +231,8 @@
         private System.Windows.Forms.ToolStripDropDownButton menuGridConverter;
         private System.Windows.Forms.ToolStripMenuItem menuGenGrid;
         private System.Windows.Forms.ToolStripMenuItem menuGridInterpolation;
+        private System.Windows.Forms.ToolStripDropDownButton menuTIN;
+        private System.Windows.Forms.ToolStripMenuItem menuGenTIN;
     }
 }
 

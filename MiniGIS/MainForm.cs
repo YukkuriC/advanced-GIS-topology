@@ -72,5 +72,10 @@ namespace MiniGIS
         {
             new GridInterpolationForm().ShowDialog();
         }
+
+        private void menuGenTIN_Click(object sender, EventArgs e)
+        {
+            new GenTINForm().ShowDialog();
+        }
     }
 }

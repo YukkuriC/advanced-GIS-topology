@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiniGIS.Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,5 +26,8 @@ namespace MiniGIS.Data
             xMin = x1; xMax = x2;
             yMin = y1; yMax = y2;
         }
+
+        public bool Inside(double x, double y) => xMin <= x && x <= xMax && yMin <= y && y <= yMax;
+        public bool Inside(Vector2 v) => Inside(v.X,v.Y);
     }
 }

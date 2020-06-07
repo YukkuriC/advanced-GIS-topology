@@ -10,9 +10,6 @@ namespace MiniGIS.Data
     {
         #region prop
 
-        // 拓扑关系
-        public HashSet<GeomArc> arcs;
-
         // 继承访问接口
         public double X;
         public double Y;
@@ -38,8 +35,8 @@ namespace MiniGIS.Data
         public GeomPoint(double _x, double _y, int _id = 0, double _value = 0) : base(_id, _value)
         {
             X = _x; Y = _y;
-            arcs = new HashSet<GeomArc>();
         }
+        public GeomPoint Copy() => new GeomPoint(X, Y, id, value);
 
         // 字符串化
         public override string ToString()

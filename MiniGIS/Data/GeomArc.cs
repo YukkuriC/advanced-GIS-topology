@@ -14,10 +14,6 @@ namespace MiniGIS.Data
         // 数据
         public List<GeomPoint> points;
 
-        // 拓扑关系
-        public GeomPoly left;
-        public GeomPoly right;
-
         #endregion
 
         #region method
@@ -48,7 +44,6 @@ namespace MiniGIS.Data
         public GeomArc(IEnumerable<GeomPoint> _data, int _id = 0, double _value = 0) : base(_id, _value)
         {
             points = new List<GeomPoint>(_data);
-            foreach (GeomPoint p in points) p.arcs.Add(this);
         }
 
         // 字符串化
