@@ -14,7 +14,7 @@ namespace MiniGIS.Widget
     {
         public Layer origin;
 
-        public LayerSettingsGrid(GridLayer layer)
+        public LayerSettingsGrid(GridLayerBase layer)
         {
             InitializeComponent();
             origin = layer;

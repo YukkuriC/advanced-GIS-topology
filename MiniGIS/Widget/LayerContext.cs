@@ -37,7 +37,7 @@ namespace MiniGIS.Widget
                     switch (node)
                     {
                         case GeomLayer n1: settings = new LayerSettingsGeom(n1); break;
-                        case GridLayer n1: settings = new LayerSettingsGrid(n1); break;
+                        case GridLayerBase n1: settings = new LayerSettingsGrid(n1); break;
                     }
                     if (settings != null) (settings as Form).ShowDialog();
                 }),

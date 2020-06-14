@@ -280,7 +280,7 @@
             this.groupBox3.Size = new System.Drawing.Size(197, 77);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "网格";
+            this.groupBox3.Text = "边框";
             // 
             // tableLayoutPanel3
             // 

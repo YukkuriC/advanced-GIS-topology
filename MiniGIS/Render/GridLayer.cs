@@ -63,7 +63,7 @@ namespace MiniGIS.Render
                 }
             }
             // 绘制边界
-            if (GetPartVisible("border") && GetSize("grid") > 0 )
+            if (GetPartVisible("border") && GetSize("grid") > 0)
             {
                 Pen pen = new Pen(GetColor("grid"), GetSize("grid"));
                 pen.StartCap = pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
@@ -88,18 +88,8 @@ namespace MiniGIS.Render
         public GridLayer(Grid _data, string name = "栅格图层") : base(name)
         {
             data = _data;
-            colors = new Dictionary<string, Color>
-            {
-                ["low"] = Color.Blue,
-                ["high"] = Color.Yellow,
-                ["grid"] = Color.Black,
-            };
-            sizes = new Dictionary<string, float>
-            {
-                ["low"] = (float)data.Min,
-                ["high"] = (float)data.Max,
-                ["grid"] = 1,
-            };
+            sizes["low"] = (float)data.Min;
+            sizes["high"] = (float)data.Max;
         }
     }
 }

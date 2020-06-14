@@ -100,15 +100,22 @@ namespace MiniGIS.Render
             {
                 ["point"] = Color.Red,
                 ["arc"] = Color.Black,
+                ["low"] = Color.Blue,
+                ["high"] = Color.Yellow,
+                ["grid"] = Color.Black,
             };
             sizes = new Dictionary<string, float>
             {
                 ["point"] = 5,
                 ["arc"] = 2,
+                ["grid"] = 1,
             };
 
             // 插入右键菜单
             new LayerContext(this);
         }
     }
+
+    // 栅格图层与TIN图层通用父类
+    public class GridLayerBase : Layer { }
 }

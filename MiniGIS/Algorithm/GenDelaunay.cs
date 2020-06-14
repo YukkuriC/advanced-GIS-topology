@@ -13,7 +13,7 @@ namespace MiniGIS.Algorithm
         // 计算生成点集凸包
         // 分割凸包生成初始三角
         // 通过递归调整生成TIN
-        public static GeomLayer DelaunayConvex(List<GeomPoint> points)
+        public static void DelaunayConvex(List<GeomPoint> points, out HashSet<Triangle> triangles, out Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides)
         {
             // 获取基准点并排序
             Vector2 bp = null;
@@ -47,7 +47,7 @@ namespace MiniGIS.Algorithm
             }
 
             // 凸包划分为三角
-            var triangles = new HashSet<Triangle>();
+            triangles = new HashSet<Triangle>();
             //for (int i = 2; i < stack.Count; i++) firstpass.Add(new Triangle(stack[0], stack[i - 1], stack[i]));
             var next = new Dictionary<Vector2, Vector2>();
             for (int i = 0; i < stack.Count; i++) next[stack[i]] = stack[(i + 1) % stack.Count]; // 创建循环链表
@@ -88,7 +88,9 @@ namespace MiniGIS.Algorithm
                                 triangles.Add(new Triangle(border.Item1, border.Item2, pos));
                             break;
                         default: // 边上
-                            System.Windows.Forms.MessageBox.Show(string.Format("{0} {1} {2}", tri, pos, containStat));
+                            var pts = tri.Points().ToArray();
+                            triangles.Add(new Triangle(pts[containStat], pts[(containStat + 2) % 3], pos));
+                            triangles.Add(new Triangle(pts[(containStat + 1) % 3], pts[(containStat + 2) % 3], pos));
                             break;
                     }
 
@@ -99,15 +101,12 @@ namespace MiniGIS.Algorithm
             }
 
             // 创建边邻接字典
-            var edgeSides = new Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>>();
+            edgeSides = new Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>>();
             foreach (var tri in triangles) tri.AddToPool(edgeSides, null);
 
             // 逐边检查Delaunay合法性
             var initEdges = edgeSides.Keys.ToArray();
             foreach (var edge in initEdges) DelaunayCheck(edge, edgeSides, triangles);
-
-            // 返回列表
-            return FromTriangles(triangles, points);
         }
 
         // 在大三角形内按X坐标增加顺序逐点扫描并创建TIN
@@ -185,6 +184,7 @@ namespace MiniGIS.Algorithm
 
         #region helpers
 
+        // 添加三角至当前集合
         static void AddToPool(this Triangle tri, Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
         {
             // 各边添加
@@ -245,8 +245,10 @@ namespace MiniGIS.Algorithm
             }
         }
 
+        // 翻转边元组
         static Tuple<Vector2, Vector2> ReverseEdge(this Tuple<Vector2, Vector2> edge) => new Tuple<Vector2, Vector2>(edge.Item2, edge.Item1);
 
+        // 从三角序列创建矢量图层
         static GeomLayer FromTriangles(IEnumerable<Triangle> triangles, List<GeomPoint> originalPoints)
         {
             // 创建字典用于反查
@@ -297,97 +299,6 @@ namespace MiniGIS.Algorithm
             return result;
         }
 
-        static bool HasEdge(HashSet<Tuple<Vector2, Vector2>> pool, Vector2 a, Vector2 b)
-        {
-            if (pool.Contains(new Tuple<Vector2, Vector2>(a, b))) return true;
-            if (pool.Contains(new Tuple<Vector2, Vector2>(b, a))) return true;
-            return false;
-        }
-
         #endregion
-    }
-
-    // 包含三点的三角组合，默认按逆时针序
-    class Triangle
-    {
-        public Vector2 p1, p2, p3;
-        public Vector2 center;
-        public double radius;
-        public Rect MBR;
-
-        public Triangle(Vector2 pt1, Vector2 pt2, Vector2 pt3)
-        {
-            p1 = pt1; p2 = pt2; p3 = pt3;
-        }
-
-        // 计算外接圆圆心、半径、MBR
-        public void CalcCircum()
-        {
-            if (center != null) return; // 已完成计算
-
-            Vector2 dp2 = p2 - p1, dp3 = p3 - p1;// 减小计算误差
-            double dom = Utils.CalcDeterminant(0, 0, 1,
-                                               dp2.X, dp2.Y, 1,
-                                               dp3.X, dp3.Y, 1);
-            if (Math.Abs(dom) < Utils.EPSILON) // 分母为0
-            {
-                center = p1;
-                radius = double.MaxValue;
-                return;
-            }
-            double l2 = dp2.LengthSq(), l3 = dp3.LengthSq();
-            double dx = Utils.CalcDeterminant(0, 0, 1,
-                                              l2, dp2.Y, 1,
-                                              l3, dp3.Y, 1) / 2;
-            double dy = Utils.CalcDeterminant(0, 0, 1,
-                                              dp2.X, l2, 1,
-                                              dp3.X, l3, 1) / 2;
-            Vector2 dcenter = new Vector2(dx / dom, dy / dom);
-            center = p1 + dcenter;
-            radius = dcenter.Length();
-        }
-        public void CalcMBR()
-        {
-            if (MBR != null) return;
-            MBR = new Rect(from p in Points() select (GeomPoint)p);
-        }
-
-        // 迭代器
-        public IEnumerable<Vector2> Points()
-        {
-            yield return p1;
-            yield return p2;
-            yield return p3;
-        }
-        public IEnumerable<Tuple<Vector2, Vector2>> Edges() // 固定返回(小点, 大点)
-        {
-            yield return edge_helper(p1, p2);
-            yield return edge_helper(p1, p3);
-            yield return edge_helper(p2, p3);
-        }
-        Tuple<Vector2, Vector2> edge_helper(Vector2 p1, Vector2 p2) => (p1 < p2) ? new Tuple<Vector2, Vector2>(p1, p2) : new Tuple<Vector2, Vector2>(p2, p1);
-
-        // 检查点是否在三角形内
-        // -1: 内部; 0: 外部; 1-3: p{i}-p{i+1}边上
-        public int Contains(Vector2 pos)
-        {
-            CalcMBR();
-            if (!MBR.Inside(pos)) return 0;
-            Vector2[] tmp = Points().ToArray();
-            int res = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                int crosser = Math.Sign(CheckCross(pos, tmp[i], tmp[(i + 1) % 3]));
-                if (crosser == 0) return i;
-                res += crosser;
-            }
-            return Math.Abs(res) == 3 ? -1 : 0;
-        }
-
-        // 辅助检查点朝向
-        public static double CheckCross(Vector2 p1, Vector2 p2, Vector2 p3) => (p1 - p2).Cross(p1 - p3);
-
-        // 检查三角是否位于矩形内
-        public bool Inside(Rect MBR) => (MBR.Inside(p1) && MBR.Inside(p2) && MBR.Inside(p3));
     }
 }
