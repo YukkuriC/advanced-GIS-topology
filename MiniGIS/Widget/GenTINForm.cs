@@ -19,27 +19,16 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            GeomLayer tmp;
-            List<GeomLayer> layers = new List<GeomLayer>();
-            foreach (Layer l in MainForm.instance.layerView.Nodes)
-            {
-                tmp = l as GeomLayer;
-                if (tmp != null && tmp.points != null && tmp.points.Count >= 3) layers.Add(tmp);
-            }
-            comboLayer.DataSource = layers;
-            comboLayer.DisplayMember = "Text";
+            var layers = Utils.BindLayers<GeomLayer>(comboLayer);
+
+            // 初状态
+            btnGen.Enabled = layers.Count > 0;
         }
 
         // 运行算法并创建图层
         private void GenTINLayer(object sender, EventArgs e)
         {
             GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
-            if (layer == null)
-            {
-                MessageBox.Show("没有可用的点图层", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                return;
-            }
 
             // 创建图层
             new TINLayer(layer.points, layer.Name + "_TIN").Add().Focus(MainForm.port);

@@ -291,7 +291,6 @@
             this.comboMethod.Name = "comboMethod";
             this.comboMethod.Size = new System.Drawing.Size(207, 20);
             this.comboMethod.TabIndex = 9;
-            this.comboMethod.SelectedIndexChanged += new System.EventHandler(this.comboMethod_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -389,7 +388,6 @@
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.btnGen, 2);
             this.btnGen.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnGen.Enabled = false;
             this.btnGen.Location = new System.Drawing.Point(3, 243);
             this.btnGen.Name = "btnGen";
             this.btnGen.Size = new System.Drawing.Size(134, 26);

@@ -23,15 +23,10 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            GridLayer tmp;
-            List<GridLayer> layers = new List<GridLayer>();
-            foreach (Layer l in MainForm.instance.layerView.Nodes)
-            {
-                tmp = l as GridLayer;
-                if (tmp != null) layers.Add(tmp);
-            }
-            comboLayer.DataSource = layers;
-            comboLayer.DisplayMember = "Text";
+            var layers = Utils.BindLayers<GridLayer>(comboLayer);
+
+            // 初状态
+            btnGen.Enabled = layers.Count > 0;
         }
 
         // 运行算法并创建图层

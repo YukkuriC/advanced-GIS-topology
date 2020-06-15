@@ -54,16 +54,11 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            GeomLayer tmp;
-            List<GeomLayer> layers = new List<GeomLayer>();
-            foreach (Layer l in MainForm.instance.layerView.Nodes)
-            {
-                tmp = l as GeomLayer;
-                if (tmp != null && tmp.points != null && tmp.points.Count >= 1) layers.Add(tmp);
-            }
-            comboLayer.DataSource = layers;
-            comboLayer.DisplayMember = "Text";
-            //comboLayer.ValueMember = "points";
+            var layers = Utils.BindLayers<GeomLayer>(comboLayer);
+
+            // 初状态
+            comboMethod.SelectedIndex = 0;
+            btnGen.Enabled = btnReset.Enabled = layers.Count > 0;
         }
 
         // 读取图层边界，设置默认值
@@ -82,12 +77,6 @@ namespace MiniGIS.Widget
         {
             ValidateBorders();
             GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
-            if (layer == null)
-            {
-                MessageBox.Show("没有可用的点图层", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                return;
-            }
             Grid result = new Grid(
                 (double)numericXMin.Value, (double)numericXMax.Value,
                 (double)numericYMin.Value, (double)numericYMax.Value,
@@ -103,12 +92,6 @@ namespace MiniGIS.Widget
             // 创建图层
             new GridLayer(result, layer.Name + "_" + comboMethod.SelectedItem.ToString()).Add().Focus(MainForm.port);
             Close();
-        }
-
-        // 启用按钮
-        private void comboMethod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnGen.Enabled = true;
         }
     }
 }
