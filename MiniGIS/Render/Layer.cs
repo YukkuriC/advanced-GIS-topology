@@ -43,6 +43,7 @@ namespace MiniGIS.Render
         public virtual void Render(ViewPort port, Graphics canvas) { }
 
         // 聚焦至该图层
+        public void Focus() => Focus(MainForm.port);
         public virtual void Focus(ViewPort port) { }
 
         // 获取默认参数
@@ -67,8 +68,8 @@ namespace MiniGIS.Render
         public Layer Add()
         {
             MainForm.instance.layerView.Nodes.Insert(0, this);
-            MainForm.port.Render();
             UpdateText();
+            Focus(MainForm.port);
             return this;
         }
 
@@ -117,5 +118,10 @@ namespace MiniGIS.Render
     }
 
     // 栅格图层与TIN图层通用父类
-    public class ValueLayer : Layer { public ValueLayer(string name = "数值图层") : base(name) { } }
+    public abstract class ValueLayer : Layer
+    {
+        public abstract double Max { get; }
+        public abstract double Min { get; }
+        public ValueLayer(string name = "数值图层") : base(name) { }
+    }
 }

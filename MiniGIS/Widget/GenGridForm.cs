@@ -90,7 +90,7 @@ namespace MiniGIS.Widget
             }
 
             // 创建图层
-            new GridLayer(result, layer.Name + "_" + comboMethod.SelectedItem.ToString()).Add().Focus(MainForm.port);
+            new GridLayer(result, layer.Name + "_" + comboMethod.SelectedItem.ToString()).Add();
             Close();
         }
     }

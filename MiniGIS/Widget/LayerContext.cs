@@ -21,7 +21,7 @@ namespace MiniGIS.Widget
                         origin.Visible = !origin.Visible;
                         UpdateControls();
                     }),
-                    _("聚焦图层", (object s, EventArgs a) => origin.Focus(MainForm.port)),
+                    _("聚焦图层", (object s, EventArgs a) => origin.Focus()),
                     _("可见性设置", (object s, EventArgs a) => new LayerVisibleChecklist(node).ShowDialog())
                 ),
                 _("调整顺序", null,

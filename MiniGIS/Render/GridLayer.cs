@@ -35,6 +35,9 @@ namespace MiniGIS.Render
         }
         public Grid data;
 
+        public override double Max { get => data.Max; }
+        public override double Min { get => data.Min; }
+
         public override void Render(ViewPort port, Graphics canvas)
         {
             double xstep = (data.XMax - data.XMin) / data.XSplit,

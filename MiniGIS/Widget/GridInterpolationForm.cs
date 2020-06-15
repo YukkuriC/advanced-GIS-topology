@@ -41,7 +41,7 @@ namespace MiniGIS.Widget
             }
             uint xstep = (uint)numericXStep.Value, ystep = (uint)numericYStep.Value;
             Grid newGrid = GenGrid.LinearInterpolation(oldLayer.data, xstep, ystep);
-            new GridLayer(newGrid, oldLayer.Name + String.Format("_{0}x{1}加密", xstep, ystep)).Add().Focus(MainForm.port);
+            new GridLayer(newGrid, oldLayer.Name + String.Format("_{0}x{1}加密", xstep, ystep)).Add();
             Close();
         }
     }

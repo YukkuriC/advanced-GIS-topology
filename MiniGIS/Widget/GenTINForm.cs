@@ -31,7 +31,7 @@ namespace MiniGIS.Widget
             GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
 
             // 创建图层
-            new TINLayer(layer.points, layer.Name + "_TIN").Add().Focus(MainForm.port);
+            new TINLayer(layer.points, layer.Name + "_TIN").Add();
 
             // 结束
             Close();

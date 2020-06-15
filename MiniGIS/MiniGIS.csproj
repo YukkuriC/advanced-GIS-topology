@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithm\Contour.cs" />
     <Compile Include="Algorithm\CSVParser.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />
     <Compile Include="Algorithm\GenGrid.cs" />
@@ -72,6 +73,12 @@
     <Compile Include="Render\GridLayer.cs" />
     <Compile Include="Render\Layer.cs" />
     <Compile Include="Render\TINLayer.cs" />
+    <Compile Include="Widget\GenContourForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\GenContourForm.Designer.cs">
+      <DependentUpon>GenContourForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\CSVLoader.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +139,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Widget\GenContourForm.resx">
+      <DependentUpon>GenContourForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widget\CSVLoader.resx">
       <DependentUpon>CSVLoader.cs</DependentUpon>
     </EmbeddedResource>

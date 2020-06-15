@@ -20,6 +20,11 @@ namespace MiniGIS.Render
             get { return "TIN"; }
         }
 
+        // 最值
+        double _max, _min;
+        public override double Max { get => _max; }
+        public override double Min { get => _min; }
+
         // 外包矩形
         Rect _mbr;
         public Rect MBR
@@ -97,7 +102,7 @@ namespace MiniGIS.Render
 
             // 映射坐标取值+求最值
             values = new Dictionary<Vector2, double>();
-            double _max = double.MinValue, _min = double.MaxValue;
+            _max = double.MinValue; _min = double.MaxValue;
             foreach (GeomPoint tmp in points)
             {
                 values[tmp] = tmp.value;

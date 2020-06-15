@@ -36,6 +36,8 @@
             this.menuGridInterpolation = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTIN = new System.Windows.Forms.ToolStripDropDownButton();
             this.menuGenTIN = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuContour = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuGenContour = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -56,7 +58,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuLoad,
             this.menuGridConverter,
-            this.menuTIN});
+            this.menuTIN,
+            this.menuContour});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(926, 25);
@@ -93,14 +96,14 @@
             // menuGenGrid
             // 
             this.menuGenGrid.Name = "menuGenGrid";
-            this.menuGenGrid.Size = new System.Drawing.Size(152, 22);
+            this.menuGenGrid.Size = new System.Drawing.Size(148, 22);
             this.menuGenGrid.Text = "生成格网模型";
             this.menuGenGrid.Click += new System.EventHandler(this.menuGenGrid_Click);
             // 
             // menuGridInterpolation
             // 
             this.menuGridInterpolation.Name = "menuGridInterpolation";
-            this.menuGridInterpolation.Size = new System.Drawing.Size(152, 22);
+            this.menuGridInterpolation.Size = new System.Drawing.Size(148, 22);
             this.menuGridInterpolation.Text = "格网加密";
             this.menuGridInterpolation.Click += new System.EventHandler(this.menuGridInterpolation_Click);
             // 
@@ -117,9 +120,26 @@
             // menuGenTIN
             // 
             this.menuGenTIN.Name = "menuGenTIN";
-            this.menuGenTIN.Size = new System.Drawing.Size(152, 22);
+            this.menuGenTIN.Size = new System.Drawing.Size(121, 22);
             this.menuGenTIN.Text = "生成TIN";
             this.menuGenTIN.Click += new System.EventHandler(this.menuGenTIN_Click);
+            // 
+            // menuContour
+            // 
+            this.menuContour.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuContour.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuGenContour});
+            this.menuContour.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuContour.Name = "menuContour";
+            this.menuContour.Size = new System.Drawing.Size(57, 22);
+            this.menuContour.Text = "等值线";
+            // 
+            // menuGenContour
+            // 
+            this.menuGenContour.Name = "menuGenContour";
+            this.menuGenContour.Size = new System.Drawing.Size(152, 22);
+            this.menuGenContour.Text = "生成等值线";
+            this.menuGenContour.Click += new System.EventHandler(this.menuContourGrid_Click);
             // 
             // panel1
             // 
@@ -233,6 +253,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuGridInterpolation;
         private System.Windows.Forms.ToolStripDropDownButton menuTIN;
         private System.Windows.Forms.ToolStripMenuItem menuGenTIN;
+        private System.Windows.Forms.ToolStripDropDownButton menuContour;
+        private System.Windows.Forms.ToolStripMenuItem menuGenContour;
     }
 }
 

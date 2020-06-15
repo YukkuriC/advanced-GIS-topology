@@ -55,7 +55,7 @@ namespace MiniGIS
             var table = CSVParser.Parse(buffer);
             GeomLayer newLayer = new GeomLayer(GeomType.Point, "TEST");
             CSVParser.OutputPoints(table, newLayer.points, false, 2, 3, 4, 0, 1);
-            newLayer.Add().Focus(port);
+            newLayer.Add();
         }
 
         private void menuLoadCSV_Click(object sender, EventArgs e)
@@ -76,6 +76,11 @@ namespace MiniGIS
         private void menuGenTIN_Click(object sender, EventArgs e)
         {
             new GenTINForm().ShowDialog();
+        }
+
+        private void menuContourGrid_Click(object sender, EventArgs e)
+        {
+            new GenContourForm().ShowDialog();
         }
     }
 }
