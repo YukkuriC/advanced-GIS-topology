@@ -84,6 +84,9 @@ namespace MiniGIS.Widget
                 case GridLayer layer:
                     Contour.GenContourGrid(layer.data, targetSplits, out points, out arcs);
                     break;
+                case TINLayer layer:
+                    Contour.GenContourTIN(layer.edgeSides, layer.values, targetSplits, out points, out arcs);
+                    break;
                 default:
                     MessageBox.Show("图层类型不支持", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;

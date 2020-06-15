@@ -1,4 +1,5 @@
 ﻿using MiniGIS.Data;
+using MiniGIS.Render;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,18 +11,29 @@ namespace MiniGIS.Algorithm
     {
         #region globals
 
-        // 当前转化对象
         static double currValue;
-        static Grid currGrid;
 
+        #region grid
+        // 当前转化对象
+        static Grid currGrid;
         // 最大横纵下标
         static int nx, ny;
-
         // 记录插值位置数组
         static double[,] splitV, splitH;
-
         // 已追踪等值线
         static List<Vector2> trackedPoints;
+        #endregion
+
+        #region TIN
+        // 当前转化对象
+        static Dictionary<Edge, HashSet<Triangle>> currEdges;
+        // 边内插位置
+        static Dictionary<Edge, double> splitEdges;
+        // 起始搜索边
+        static HashSet<Edge> edgeOuter, edgeInner;
+        // 已追踪等值线
+        static List<Tuple<Edge, double>> trackedEdges;
+        #endregion
 
         // 转化等值线为矢量图形
         static int idxPoint, idxArc;
@@ -81,6 +93,52 @@ namespace MiniGIS.Algorithm
             cArcs = geomArcs;
         }
 
+        public static void GenContourTIN(
+            Dictionary<Edge, HashSet<Triangle>> edges, Dictionary<Vector2, double> triValues,
+            IEnumerable<double> values, out List<GeomPoint> cPoints, out List<GeomArc> cArcs)
+        {
+            // 初始化全局变量
+            currEdges = edges;
+            splitEdges = new Dictionary<Edge, double>();
+            edgeOuter = new HashSet<Edge>();
+            edgeInner = new HashSet<Edge>();
+            geomPoints = new List<GeomPoint>();
+            geomArcs = new List<GeomArc>();
+
+            // 查找边内外关系
+            foreach (var edge_tri in edges)
+            {
+                var edge = edge_tri.Key; var tri = edge_tri.Value;
+                if (edge.Ordered()) continue; // 每边只计算一次
+                (tri.Count == 1 ? edgeOuter : edgeInner).Add(edge); // 外层每边连接1个三角；内层2个
+            }
+
+            // 逐数值查找
+            foreach (double val in values)
+            {
+                currValue = val;
+
+                // 迭代计算所有边插值
+                foreach (var edge in edges.Keys)
+                {
+                    if (edge.Ordered()) continue; // 每边只计算一次
+                    splitEdges[edge] = ContourLerp(val, triValues[edge.Item1], triValues[edge.Item2]);
+                }
+
+                // 初始化追踪数组
+                trackedEdges = new List<Tuple<Edge, double>>();
+
+                // 递归追踪外部等值线
+                foreach (var edge in edgeOuter) TrackContour(edge);
+
+                // 递归追踪内部等值线
+                foreach (var edge in edgeInner) TrackContour(edge);
+            }
+
+            cPoints = geomPoints;
+            cArcs = geomArcs;
+        }
+
         #region helper
 
         // 计算内插位置+排除奇点
@@ -98,6 +156,7 @@ namespace MiniGIS.Algorithm
             return res;
         }
 
+        #region grid
         // 各方向对应偏移量
         // 搜索方向: 0-i++; 1-j++; 2-i--; 3-j--
         static readonly int[] offsetI = new int[] { 0, 0, 1, 0 }; // 数组下标
@@ -189,6 +248,70 @@ namespace MiniGIS.Algorithm
 
             trackedPoints = new List<Vector2>();
         }
+        #endregion
+
+        #region TIN
+        // TIN递归搜索等值线
+        static void TrackContour(Edge edge, Triangle from = null)
+        {
+            // 获取当前位置插值
+            if (edge.Ordered()) edge = edge.Reverse();
+            double val = splitEdges[edge];
+            if (double.IsNaN(val)) return;
+
+            // 已追踪序列加入当前点
+            trackedEdges.Add(new Tuple<Edge, double>(edge, val));
+            splitEdges[edge] = double.NaN;
+
+            // 查找下一三角形
+            var tmp = currEdges[edge].ToArray();
+            Triangle tri2 = tmp[0];
+            if (tri2 == from)
+            {
+                if (tmp.Length == 1) // 追踪至边界
+                {
+                    DumpContourTIN();
+                    return;
+                }
+                else tri2 = tmp[1];
+            }
+
+            // 递归搜索
+            foreach (Edge e in tri2.Edges())
+            {
+                Edge nextEdge = e.Ordered() ? e.Reverse() : e;
+                if (!double.IsNaN(splitEdges[nextEdge])) // 递归进入下一边
+                {
+                    TrackContour(nextEdge, tri2);
+                    return;
+                }
+            }
+
+            // 递归出口
+            DumpContourTIN();
+        }
+        // TIN输出等值线
+        static void DumpContourTIN()
+        {
+            List<GeomPoint> newPoints = new List<GeomPoint>();
+            foreach (var edge_val in trackedEdges)
+            {
+                Edge edge = edge_val.Item1; double val = edge_val.Item2;
+                Vector2 pos = edge.Item1 * (1 - val) + edge.Item2 * val;
+                GeomPoint newPt = new GeomPoint(pos.X, pos.Y, idxPoint++, currValue);
+                geomPoints.Add(newPt);
+                newPoints.Add(newPt);
+            }
+
+            // 成环判断
+            var tmp = currEdges[trackedEdges[0].Item1].Intersect(currEdges[trackedEdges.Last().Item1]);
+            if (tmp.Count() > 0) newPoints.Add(newPoints[0]);
+
+            // 创建弧段并重置
+            geomArcs.Add(new GeomArc(newPoints, idxArc++, currValue));
+            trackedEdges = new List<Tuple<Edge, double>>();
+        }
+        #endregion
 
         #endregion
     }
