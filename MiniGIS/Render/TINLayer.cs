@@ -77,15 +77,12 @@ namespace MiniGIS.Render
             {
                 Pen pen = new Pen(GetColor("grid"), GetSize("grid"));
                 pen.StartCap = pen.EndCap = LineCap.Round;
-                foreach (Triangle tri in triangles)
+                foreach (var edge in edgeSides.Keys)
                 {
-                    var pts = tri.Points().ToArray();
-                    for (int i = 0; i < 3; i++)
-                    {
-                        p1 = port.ScreenCoord(pts[i].X, pts[i].Y);
-                        p2 = port.ScreenCoord(pts[(i + 1) % 3].X, pts[(i + 1) % 3].Y);
-                        canvas.DrawLine(pen, p1.X, p1.Y, p2.X, p2.Y);
-                    }
+                    if (edge.Item1 > edge.Item2) continue; // 每边只绘制一次
+                    p1 = port.ScreenCoord(edge.Item1);
+                    p2 = port.ScreenCoord(edge.Item2);
+                    canvas.DrawLine(pen, p1.X, p1.Y, p2.X, p2.Y);
                 }
             }
         }

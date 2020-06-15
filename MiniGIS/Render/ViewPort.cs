@@ -25,6 +25,7 @@ namespace MiniGIS.Render
         #region method
 
         // 世界坐标换算为屏幕坐标
+        public PointF ScreenCoord(Vector2 v) => ScreenCoord(v.X, v.Y);
         public PointF ScreenCoord(double worldX, double worldY)
         {
             return new PointF(

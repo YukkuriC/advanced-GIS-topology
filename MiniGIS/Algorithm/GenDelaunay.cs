@@ -232,6 +232,7 @@ namespace MiniGIS.Algorithm
                     foreach (var triEdge in tri.Edges()) edgeSides[triEdge].Remove(tri);
                 }
                 edgeSides.Remove(edge);
+                edgeSides.Remove(edge.ReverseEdge()); // 移除双向引用
 
                 // 创建新三角
                 new Triangle(pc, pd, pa).AddToPool(edgeSides, allTriangles);
