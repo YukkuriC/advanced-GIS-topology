@@ -53,22 +53,28 @@ namespace MiniGIS.Render
                 Color cmin = GetColor("low"), cmax = GetColor("high");
                 foreach (Triangle tri in triangles)
                 {
-                    var colors = (from p in tri.Points() select ColorOps.Linear(cmin, cmax, values[p].Lerp(valmin, valmax))).ToArray();
+                    Vector2[] raw = tri.Points().ToArray();
 
-                    // 计算中心颜色
+                    // 计算颜色+坐标
+                    Color[] colors = new Color[3];
+                    PointF[] verts = new PointF[3];
+                    PointF[] mids = new PointF[3];
                     double tmp = 0;
-                    foreach (var p in tri.Points()) tmp += values[p];
-                    var cmid = ColorOps.Linear(cmin, cmax, (tmp / 3).Lerp(valmin, valmax));
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Vector2 vec = raw[i];
+                        double val = values[vec];
+                        tmp += val;
+                        verts[i] = port.ScreenCoord(vec);
+                        colors[i] = ColorOps.Linear(cmin, cmax, val.Lerp(valmin, valmax));
+                        mids[i] = port.ScreenCoord((raw[(i + 1) % 3] + raw[(i + 2) % 3]) / 2);
+                    }
+                    Color cmid = ColorOps.Linear(cmin, cmax, (tmp / 3).Lerp(valmin, valmax));
 
-                    // 创建渐变笔刷
-                    GraphicsPath path = new GraphicsPath(
-                        (from p in tri.Points() select port.ScreenCoord(p.X, p.Y)).ToArray(),
-                        new byte[] { (byte)PathPointType.Line, (byte)PathPointType.Line, (byte)PathPointType.Line }
-                    );
-                    var brush = new PathGradientBrush(path);
-                    brush.CenterColor = cmid;
-                    brush.SurroundColors = (from p in tri.Points() select ColorOps.Linear(cmin, cmax, values[p].Lerp(valmin, valmax))).ToArray();
-                    canvas.FillPath(brush, path);
+                    // 实心填充
+                    canvas.FillPolygon(new SolidBrush(cmid), mids);
+                    for (int i = 0; i < 3; i++)
+                        canvas.FillPolygon(new SolidBrush(colors[i]), (from j in Enumerable.Range(0, 3) select (i == j ? verts : mids)[j]).ToArray());
                 }
             }
 
