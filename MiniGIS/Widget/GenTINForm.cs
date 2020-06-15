@@ -42,9 +42,7 @@ namespace MiniGIS.Widget
             }
 
             // 创建图层
-            TINLayer result = new TINLayer(layer.points);
-            result.Name = layer.Name + "_TIN";
-            result.Add().Focus(MainForm.port);
+            new TINLayer(layer.points, layer.Name + "_TIN").Add().Focus(MainForm.port);
 
             // 结束
             Close();

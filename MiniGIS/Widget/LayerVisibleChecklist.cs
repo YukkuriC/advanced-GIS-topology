@@ -32,7 +32,7 @@ namespace MiniGIS.Widget
                     if (n1.polygons != null) tmp.Add("polygon");
                     parts = tmp;
                     break;
-                case GridLayerBase n1:
+                case ValueLayer n1:
                     parts = new string[] { "border", "fill" };
                     break;
             }

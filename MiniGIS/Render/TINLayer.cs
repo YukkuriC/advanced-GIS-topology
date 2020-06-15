@@ -13,7 +13,7 @@ namespace MiniGIS.Render
     /// TIN渲染层
     /// 渲染参数同GridLayer
     /// </summary>
-    class TINLayer : GridLayerBase
+    class TINLayer : ValueLayer
     {
         public override string layerType
         {
@@ -90,7 +90,7 @@ namespace MiniGIS.Render
             port.Focus(MBR);
         }
 
-        public TINLayer(List<GeomPoint> points)
+        public TINLayer(List<GeomPoint> points, string name = "TIN图层") : base(name)
         {
             // 创建三角网
             GenDelaunay.DelaunayConvex(points, out triangles, out edgeSides);

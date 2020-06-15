@@ -117,5 +117,5 @@ namespace MiniGIS.Render
     }
 
     // 栅格图层与TIN图层通用父类
-    public class GridLayerBase : Layer { }
+    public class ValueLayer : Layer { public ValueLayer(string name = "数值图层") : base(name) { } }
 }

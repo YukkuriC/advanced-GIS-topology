@@ -23,7 +23,7 @@ namespace MiniGIS.Render
     ///     border: 网格边缘
     ///     fill: 网格上色
     /// </summary>
-    public class GridLayer : Layer
+    public class GridLayer : ValueLayer
     {
         public override string layerType
         {
