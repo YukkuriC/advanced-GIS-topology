@@ -82,7 +82,7 @@ namespace MiniGIS.Render
             if (validZoom) zoom = newZoom;
             Render(true);
         }
-        public void Focus(Rect rect) => Focus((float)rect.xMin, (float)rect.yMin, (float)rect.xMax, (float)rect.yMax);
+        public void Focus(Rect rect) => Focus((float)rect.XMin, (float)rect.YMin, (float)rect.XMax, (float)rect.YMax);
 
         public void Reset()
         {

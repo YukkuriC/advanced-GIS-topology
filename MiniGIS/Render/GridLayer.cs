@@ -83,10 +83,7 @@ namespace MiniGIS.Render
             }
         }
 
-        public override void Focus(ViewPort port)
-        {
-            port.Focus((float)data.XMin, (float)data.YMin, (float)data.XMax, (float)data.YMax);
-        }
+        public override void Focus(ViewPort port) => port.Focus(data);
 
         public GridLayer(Grid _data, string name = "栅格图层") : base(name)
         {

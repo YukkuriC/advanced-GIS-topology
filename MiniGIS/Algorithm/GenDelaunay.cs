@@ -13,7 +13,7 @@ namespace MiniGIS.Algorithm
         // 计算生成点集凸包
         // 分割凸包生成初始三角
         // 通过递归调整生成TIN
-        public static void DelaunayConvex(List<GeomPoint> points, out HashSet<Triangle> triangles, out Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides)
+        public static void DelaunayConvex(List<GeomPoint> points, out HashSet<Triangle> triangles, out Dictionary<Edge, HashSet<Triangle>> edgeSides)
         {
             // 获取基准点并排序
             Vector2 bp = null;
@@ -101,7 +101,7 @@ namespace MiniGIS.Algorithm
             }
 
             // 创建边邻接字典
-            edgeSides = new Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>>();
+            edgeSides = new Dictionary<Edge, HashSet<Triangle>>();
             foreach (var tri in triangles) tri.AddToPool(edgeSides, null);
 
             // 逐边检查Delaunay合法性
@@ -122,19 +122,19 @@ namespace MiniGIS.Algorithm
             List<Triangle> targets = new List<Triangle>(); // 扫描完成的Delaunay三角
             List<Vector2> scanned_points = new List<Vector2>(); // 已扫描的点
             Rect MBR = new Rect(points);
-            double ymin = (MBR.yMin * 10 - MBR.yMax) / 9;
+            double ymin = (MBR.YMin * 10 - MBR.YMax) / 9;
             Triangle init = new Triangle(
-                new Vector2((MBR.xMin + MBR.xMax) / 2, MBR.yMax * 2 - MBR.yMin),
-                new Vector2((MBR.xMin * 3.2 - MBR.xMax) / 2.2, ymin),
-                new Vector2((MBR.xMax * 3.2 - MBR.xMin) / 2.2, ymin)
+                new Vector2((MBR.XMin + MBR.XMax) / 2, MBR.YMax * 2 - MBR.YMin),
+                new Vector2((MBR.XMin * 3.2 - MBR.XMax) / 2.2, ymin),
+                new Vector2((MBR.XMax * 3.2 - MBR.XMin) / 2.2, ymin)
             );
             unknown.Add(init);
 
             // 扫描所有点
             for (int idx = 0; idx < scanner.Count; idx++)
             {
-                var edges = new HashSet<Tuple<Vector2, Vector2>>(); // 仅出现1次的散边
-                var edges_multi = new HashSet<Tuple<Vector2, Vector2>>(); // 多次出现的散边
+                var edges = new HashSet<Edge>(); // 仅出现1次的散边
+                var edges_multi = new HashSet<Edge>(); // 多次出现的散边
                 Vector2 cur_point = scanner[idx]; // 当前点
                 List<Triangle> newUnknown = new List<Triangle>(); // 下轮迭代三角
 
@@ -185,7 +185,7 @@ namespace MiniGIS.Algorithm
         #region helpers
 
         // 添加三角至当前集合
-        static void AddToPool(this Triangle tri, Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
+        static void AddToPool(this Triangle tri, Dictionary<Edge, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
         {
             // 各边添加
             foreach (var edge in tri.Edges())
@@ -196,7 +196,7 @@ namespace MiniGIS.Algorithm
                 else
                 {
                     edgeGroup = new HashSet<Triangle>();
-                    edgeSides[edge] = edgeSides[edge.ReverseEdge()] = edgeGroup;
+                    edgeSides[edge] = edgeSides[edge.Reverse()] = edgeGroup;
                 }
 
                 // 添加三角
@@ -208,7 +208,7 @@ namespace MiniGIS.Algorithm
         }
 
         // 递归检查Delaunay合法性
-        static void DelaunayCheck(Tuple<Vector2, Vector2> edge, Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
+        static void DelaunayCheck(Edge edge, Dictionary<Edge, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
         {
             // 判断边是否合法
             if (!edgeSides.ContainsKey(edge)) return;
@@ -232,22 +232,19 @@ namespace MiniGIS.Algorithm
                     foreach (var triEdge in tri.Edges()) edgeSides[triEdge].Remove(tri);
                 }
                 edgeSides.Remove(edge);
-                edgeSides.Remove(edge.ReverseEdge()); // 移除双向引用
+                edgeSides.Remove(edge.Reverse()); // 移除双向引用
 
                 // 创建新三角
                 new Triangle(pc, pd, pa).AddToPool(edgeSides, allTriangles);
                 new Triangle(pc, pd, pb).AddToPool(edgeSides, allTriangles);
 
                 // 递归检查四边形
-                DelaunayCheck(new Tuple<Vector2, Vector2>(pa, pc), edgeSides, allTriangles);
-                DelaunayCheck(new Tuple<Vector2, Vector2>(pa, pd), edgeSides, allTriangles);
-                DelaunayCheck(new Tuple<Vector2, Vector2>(pb, pc), edgeSides, allTriangles);
-                DelaunayCheck(new Tuple<Vector2, Vector2>(pb, pd), edgeSides, allTriangles);
+                DelaunayCheck(new Edge(pa, pc), edgeSides, allTriangles);
+                DelaunayCheck(new Edge(pa, pd), edgeSides, allTriangles);
+                DelaunayCheck(new Edge(pb, pc), edgeSides, allTriangles);
+                DelaunayCheck(new Edge(pb, pd), edgeSides, allTriangles);
             }
         }
-
-        // 翻转边元组
-        static Tuple<Vector2, Vector2> ReverseEdge(this Tuple<Vector2, Vector2> edge) => new Tuple<Vector2, Vector2>(edge.Item2, edge.Item1);
 
         // 从三角序列创建矢量图层
         static GeomLayer FromTriangles(IEnumerable<Triangle> triangles, List<GeomPoint> originalPoints)
@@ -259,7 +256,7 @@ namespace MiniGIS.Algorithm
             // 构造矢量图层
             GeomLayer result = new GeomLayer(GeomType.Polygon);
             var g_points = new Dictionary<Vector2, GeomPoint>();
-            var g_arcs = new Dictionary<Tuple<Vector2, Vector2>, GeomArc>();
+            var g_arcs = new Dictionary<Edge, GeomArc>();
             int point_cnt = 0, arc_cnt = 0, poly_cnt = 0;
             foreach (Triangle tri in triangles)
             {
@@ -283,7 +280,7 @@ namespace MiniGIS.Algorithm
                     else
                     {
                         cur_arc = new GeomArc(new GeomPoint[] { g_points[tmp.Item1], g_points[tmp.Item2] }, ++arc_cnt);
-                        g_arcs[tmp] = g_arcs[tmp.ReverseEdge()] = cur_arc;
+                        g_arcs[tmp] = g_arcs[tmp.Reverse()] = cur_arc;
                     }
                     arcs.Add(cur_arc);
                 }

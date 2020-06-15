@@ -65,10 +65,10 @@ namespace MiniGIS.Widget
         private void SetLayerDefaults(object sender, EventArgs e)
         {
             Rect mbr = (comboLayer.SelectedItem as GeomLayer).MBR;
-            numericXMin.Value = (decimal)mbr.xMin;
-            numericXMax.Value = (decimal)mbr.xMax;
-            numericYMin.Value = (decimal)mbr.yMin;
-            numericYMax.Value = (decimal)mbr.yMax;
+            numericXMin.Value = (decimal)mbr.XMin;
+            numericXMax.Value = (decimal)mbr.XMax;
+            numericYMin.Value = (decimal)mbr.YMin;
+            numericYMax.Value = (decimal)mbr.YMax;
             ValidateBorders();
         }
 

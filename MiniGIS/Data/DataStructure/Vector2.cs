@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MiniGIS.Algorithm
+namespace MiniGIS.Data
 {
+    // 二维向量
     public class Vector2 : IComparable<Vector2>
     {
         // XY坐标
@@ -70,7 +71,7 @@ namespace MiniGIS.Algorithm
     public static class Vector2Ext
     {
         // 角度
-        public static double CosAngle(this Vector2 a , Vector2 b)
+        public static double CosAngle(this Vector2 a, Vector2 b)
         {
             double lab = a.Length() * b.Length();
             if (lab == 0) return 1;

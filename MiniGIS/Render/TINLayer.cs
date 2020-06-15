@@ -38,7 +38,7 @@ namespace MiniGIS.Render
 
         // 数据容器
         public HashSet<Triangle> triangles; // 各三角
-        public Dictionary<Tuple<Vector2, Vector2>, HashSet<Triangle>> edgeSides; // 三角邻接关系
+        public Dictionary<Edge, HashSet<Triangle>> edgeSides; // 三角邻接关系
         public Dictionary<Vector2, double> values; // 坐标取值
 
         // 图层接口
@@ -79,7 +79,7 @@ namespace MiniGIS.Render
                 pen.StartCap = pen.EndCap = LineCap.Round;
                 foreach (var edge in edgeSides.Keys)
                 {
-                    if (edge.Item1 > edge.Item2) continue; // 每边只绘制一次
+                    if (edge.Ordered()) continue; // 每边只绘制一次
                     p1 = port.ScreenCoord(edge.Item1);
                     p2 = port.ScreenCoord(edge.Item2);
                     canvas.DrawLine(pen, p1.X, p1.Y, p2.X, p2.Y);

@@ -6,9 +6,9 @@ using System.Text;
 
 namespace MiniGIS.Data
 {
-    public class Grid
+    // 二维网格数据结构
+    public class Grid : Rect
     {
-        public double XMin, XMax, YMin, YMax;
         public uint XSplit, YSplit;
         public double[,] values;
 
@@ -55,7 +55,7 @@ namespace MiniGIS.Data
         public double XCoord(int i) => Utils.Lerp(i, 0, XSplit, XMin, XMax);
         public double YCoord(int j) => Utils.Lerp(j, 0, YSplit, YMin, YMax);
 
-        public Grid(double xmin, double xmax, double ymin, double ymax, uint xsplit, uint ysplit)
+        public Grid(double xmin, double xmax, double ymin, double ymax, uint xsplit, uint ysplit) : base(xmin, xmax, ymin, ymax)
         {
             XMin = xmin; XMax = xmax; YMin = ymin; YMax = ymax;
             XSplit = xsplit; YSplit = ysplit;

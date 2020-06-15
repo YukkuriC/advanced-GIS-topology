@@ -45,21 +45,22 @@
   <ItemGroup>
     <Compile Include="Algorithm\Contour.cs" />
     <Compile Include="Algorithm\CSVParser.cs" />
+    <Compile Include="Data\DataStructure\Edge.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />
     <Compile Include="Algorithm\GenGrid.cs" />
     <Compile Include="Algorithm\Utils.cs" />
     <Compile Include="Control\ControlManager.cs" />
     <Compile Include="Control\MapControl.cs" />
     <Compile Include="Control\Viewer.cs" />
-    <Compile Include="Data\BaseGeom.cs" />
-    <Compile Include="Data\GeomArc.cs" />
-    <Compile Include="Data\GeomPoint.cs" />
-    <Compile Include="Data\GeomPoly.cs" />
-    <Compile Include="Data\Grid.cs" />
+    <Compile Include="Data\Geom\BaseGeom.cs" />
+    <Compile Include="Data\Geom\GeomArc.cs" />
+    <Compile Include="Data\Geom\GeomPoint.cs" />
+    <Compile Include="Data\Geom\GeomPoly.cs" />
+    <Compile Include="Data\DataStructure\Grid.cs" />
     <Compile Include="Data\LineSegment.cs" />
-    <Compile Include="Data\Rect.cs" />
-    <Compile Include="Algorithm\DataStructure\Vector2.cs" />
-    <Compile Include="Data\Triangle.cs" />
+    <Compile Include="Data\DataStructure\Rect.cs" />
+    <Compile Include="Data\DataStructure\Vector2.cs" />
+    <Compile Include="Data\DataStructure\Triangle.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

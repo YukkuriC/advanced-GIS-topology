@@ -58,13 +58,13 @@ namespace MiniGIS.Data
             yield return p2;
             yield return p3;
         }
-        public IEnumerable<Tuple<Vector2, Vector2>> Edges() // 固定返回(小点, 大点)
+        public IEnumerable<Edge> Edges() // 固定返回(小点, 大点)
         {
             yield return edge_helper(p1, p2);
             yield return edge_helper(p1, p3);
             yield return edge_helper(p2, p3);
         }
-        Tuple<Vector2, Vector2> edge_helper(Vector2 p1, Vector2 p2) => (p1 < p2) ? new Tuple<Vector2, Vector2>(p1, p2) : new Tuple<Vector2, Vector2>(p2, p1);
+        Edge edge_helper(Vector2 p1, Vector2 p2) => (p1 < p2) ? new Edge(p1, p2) : new Edge(p2, p1);
 
         // 检查点是否在三角形内
         // -1: 内部; 0: 外部; 1-3: p{i}-p{i+1}边上
