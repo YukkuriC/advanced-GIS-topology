@@ -17,12 +17,12 @@ namespace MiniGIS.Algorithm
         {
             // 获取基准点并排序
             Vector2 bp = null;
-            foreach (GeomPoint p in points) if (bp == null || p.Y < bp.Y || (p.Y == bp.Y && p.X < bp.X)) bp = p;
+            foreach (GeomPoint p in points) if (bp == null || p < bp) bp = p;
             List<Vector2> ordered = new List<Vector2>(from p in points select (Vector2)p);
             ordered.Sort((Vector2 a, Vector2 b) =>
             {
-                if (a == bp) return -1;
-                if (b == bp) return 1;
+                if (a == bp) return 1;
+                if (b == bp) return -1;
                 return Math.Sign((a - bp).Rotation() - (b - bp).Rotation());
             });
 
@@ -48,7 +48,7 @@ namespace MiniGIS.Algorithm
 
             // 凸包划分为三角
             triangles = new HashSet<Triangle>();
-            //for (int i = 2; i < stack.Count; i++) firstpass.Add(new Triangle(stack[0], stack[i - 1], stack[i]));
+            //for (int i = 2; i < stack.Count; i++) triangles.Add(new Triangle(stack[0], stack[i - 1], stack[i]));
             var next = new Dictionary<Vector2, Vector2>();
             for (int i = 0; i < stack.Count; i++) next[stack[i]] = stack[(i + 1) % stack.Count]; // 创建循环链表
             Vector2 p1 = stack[0], p2 = stack[1];
@@ -88,8 +88,9 @@ namespace MiniGIS.Algorithm
                                 triangles.Add(new Triangle(border.Item1, border.Item2, pos));
                             break;
                         default: // 边上
+                            goto case -1; // TODO: 正确处理共线情况
                             var pts = tri.Points().ToArray();
-                            triangles.Add(new Triangle(pts[containStat], pts[(containStat + 2) % 3], pos));
+                            triangles.Add(new Triangle(pts[containStat % 3], pts[(containStat + 2) % 3], pos));
                             triangles.Add(new Triangle(pts[(containStat + 1) % 3], pts[(containStat + 2) % 3], pos));
                             break;
                     }
@@ -187,6 +188,9 @@ namespace MiniGIS.Algorithm
         // 添加三角至当前集合
         static void AddToPool(this Triangle tri, Dictionary<Edge, HashSet<Triangle>> edgeSides, HashSet<Triangle> allTriangles)
         {
+            // 不添加包含0边三角
+            if (tri.p1 == tri.p2 || tri.p2 == tri.p3 || tri.p3 == tri.p1) return;
+
             // 各边添加
             foreach (var edge in tri.Edges())
             {

@@ -150,8 +150,7 @@ namespace MiniGIS.Algorithm
             // 计算内插位置
             double res = (value - start) / (end - start);
             if (res < 0 || res > 1) return double.NaN;
-            else if (res == 0) return 1e-6;
-            else if (res == 1) return 1 - 1e-6;
+            else if (res == 0 || res == 1) res += 1e-6;
 
             return res;
         }
