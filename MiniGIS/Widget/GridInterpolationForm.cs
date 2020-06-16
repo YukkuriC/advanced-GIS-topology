@@ -23,7 +23,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = Utils.BindLayers<GridLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<GridLayer>(comboLayer);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -32,16 +32,7 @@ namespace MiniGIS.Widget
         // 运行算法并创建图层
         private void GenGridLayer(object sender, EventArgs e)
         {
-            GridLayer oldLayer = comboLayer.SelectedItem as GridLayer;
-            if (oldLayer == null)
-            {
-                MessageBox.Show("没有可用的栅格图层", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                return;
-            }
-            uint xstep = (uint)numericXStep.Value, ystep = (uint)numericYStep.Value;
-            Grid newGrid = GenGrid.LinearInterpolation(oldLayer.data, xstep, ystep);
-            new GridLayer(newGrid, oldLayer.Name + String.Format("_{0}x{1}加密", xstep, ystep)).Add();
+            API.GridInterpolation(comboLayer.SelectedItem as GridLayer, (uint)numericXStep.Value, (uint)numericYStep.Value).Add();
             Close();
         }
     }

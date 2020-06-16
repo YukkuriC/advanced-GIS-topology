@@ -19,7 +19,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = Utils.BindLayers<GeomLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -28,19 +28,8 @@ namespace MiniGIS.Widget
         // 运行算法并创建图层
         private void GenTINLayer(object sender, EventArgs e)
         {
-            GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
-
-            // 创建图层
-            new TINLayer(layer.points, layer.Name + "_TIN").Add();
-
-            // 结束
+            API.Point2TIN(comboLayer.SelectedItem as GeomLayer).Add();
             Close();
-        }
-
-        // 启用按钮
-        private void comboMethod_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            btnGen.Enabled = true;
         }
     }
 }

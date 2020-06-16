@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +26,13 @@ namespace MiniGIS.Algorithm
             res = Math.Round(val / Math.Pow(10, exp), (int)digit).ToString();
             if (exp != 0) res += "e" + exp.ToString();
             return res;
+        }
+
+        // 输出等分点
+        public static IEnumerable<double> Linear(double start, double step, int s1, int s2)
+        {
+            for (int i = s1; i <= s2; i++)
+                yield return start + step * i;
         }
 
         // 行列式求值

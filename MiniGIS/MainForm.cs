@@ -36,6 +36,13 @@ namespace MiniGIS
             rendererPort.MouseUp += controlManager.MouseUp;
             rendererPort.MouseMove += controlManager.MouseMove;
             rendererPort.MouseWheel += controlManager.MouseWheel;
+
+            // 绑定选框
+            BindForm<CSVLoader>(menuLoadCSV);
+            BindForm<GenGridForm>(menuGenGrid);
+            BindForm<GridInterpolationForm>(menuGridInterpolation);
+            BindForm<GenTINForm>(menuGenTIN);
+            BindForm<GenContourForm>(menuGenContour);
         }
 
         private void rendererPort_SizeChanged(object sender, EventArgs e)
@@ -56,31 +63,17 @@ namespace MiniGIS
             GeomLayer newLayer = new GeomLayer(GeomType.Point, "TEST");
             CSVParser.OutputPoints(table, newLayer.points, false, 2, 3, 4, 0, 1);
             newLayer.Add();
+            // 测试TIN
+            TINLayer newTIN = new TINLayer(newLayer.points, "TIN") { Visible = false };
+            newTIN.Add();
+            // 测试等值线
+            API.Value2Contour(newTIN, Utils.Linear(-10, -20, 0, 27)).Add();
         }
 
-        private void menuLoadCSV_Click(object sender, EventArgs e)
+        // 用于绑定弹出对话框按钮
+        void BindForm<T>(ToolStripItem btn) where T : Form, new()
         {
-            new CSVLoader().ShowDialog();
-        }
-
-        private void menuGenGrid_Click(object sender, EventArgs e)
-        {
-            new GenGridForm().ShowDialog();
-        }
-
-        private void menuGridInterpolation_Click(object sender, EventArgs e)
-        {
-            new GridInterpolationForm().ShowDialog();
-        }
-
-        private void menuGenTIN_Click(object sender, EventArgs e)
-        {
-            new GenTINForm().ShowDialog();
-        }
-
-        private void menuContourGrid_Click(object sender, EventArgs e)
-        {
-            new GenContourForm().ShowDialog();
+            btn.Click += (object o, EventArgs e) => new T().ShowDialog();
         }
     }
 }

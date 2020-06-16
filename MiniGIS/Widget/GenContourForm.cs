@@ -22,17 +22,10 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = Utils.BindLayers<ValueLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<ValueLayer>(comboLayer);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
-        }
-
-        // 输出等分点
-        IEnumerable<double> Linear(double start, double step, int s1, int s2)
-        {
-            for (int i = s1; i <= s2; i++)
-                yield return start + step * i;
         }
 
         // 根据图层生成等分位置
@@ -47,7 +40,7 @@ namespace MiniGIS.Widget
             int s1 = (int)Math.Ceiling((layer.Min - splitBase) / splitSize);
             int s2 = (int)Math.Floor((layer.Max - splitBase) / splitSize);
             N = Math.Max(s2 - s1 + 1, 0);
-            targetSplits = Linear(splitBase, splitSize, s1, s2);
+            targetSplits = Utils.Linear(splitBase, splitSize, s1, s2);
             double sMin = splitBase + splitSize * s1;
             double sMax = splitBase + splitSize * s2;
 
@@ -75,40 +68,9 @@ namespace MiniGIS.Widget
                 return;
             }
 
-            List<GeomPoint> points = null;
-            List<GeomArc> arcs = null;
-
-            // 执行搜索算法
-            switch (comboLayer.SelectedItem)
-            {
-                case GridLayer layer:
-                    Contour.GenContourGrid(layer.data, targetSplits, out points, out arcs);
-                    break;
-                case TINLayer layer:
-                    Contour.GenContourTIN(layer.edgeSides, layer.values, targetSplits, out points, out arcs);
-                    break;
-                default:
-                    MessageBox.Show("图层类型不支持", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-            }
-
             // 创建图层
-            var result = new GeomLayer(
-                GeomType.Arc,
-                (comboLayer.SelectedItem as Layer).Name +
-                String.Format("_等值线({0},{1})", (double)inputSplitBase.Value, (double)inputSplitSize.Value)
-            )
-            {
-                points = points,
-                arcs = arcs
-            };
-
-            // 配置默认样式
-            result.colors["arc"] = Color.Orange;
-            result.SetPartVisible("point", false);
-
-            // 添加图层
-            result.Add();
+            API.Value2Contour(comboLayer.SelectedItem as ValueLayer, targetSplits,
+                String.Format("_等值线({0},{1})", (double)inputSplitBase.Value, (double)inputSplitSize.Value)).Add();
 
             // 结束
             Close();

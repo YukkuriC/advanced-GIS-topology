@@ -13,7 +13,7 @@ namespace MiniGIS.Render
     /// TIN渲染层
     /// 渲染参数同GridLayer
     /// </summary>
-    class TINLayer : ValueLayer
+    public class TINLayer : ValueLayer
     {
         public override string layerType
         {

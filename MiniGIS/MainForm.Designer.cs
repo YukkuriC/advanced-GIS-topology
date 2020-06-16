@@ -80,7 +80,6 @@
             this.menuLoadCSV.Name = "menuLoadCSV";
             this.menuLoadCSV.Size = new System.Drawing.Size(123, 22);
             this.menuLoadCSV.Text = "导入CSV";
-            this.menuLoadCSV.Click += new System.EventHandler(this.menuLoadCSV_Click);
             // 
             // menuGridConverter
             // 
@@ -98,14 +97,12 @@
             this.menuGenGrid.Name = "menuGenGrid";
             this.menuGenGrid.Size = new System.Drawing.Size(148, 22);
             this.menuGenGrid.Text = "生成格网模型";
-            this.menuGenGrid.Click += new System.EventHandler(this.menuGenGrid_Click);
             // 
             // menuGridInterpolation
             // 
             this.menuGridInterpolation.Name = "menuGridInterpolation";
             this.menuGridInterpolation.Size = new System.Drawing.Size(148, 22);
             this.menuGridInterpolation.Text = "格网加密";
-            this.menuGridInterpolation.Click += new System.EventHandler(this.menuGridInterpolation_Click);
             // 
             // menuTIN
             // 
@@ -122,7 +119,6 @@
             this.menuGenTIN.Name = "menuGenTIN";
             this.menuGenTIN.Size = new System.Drawing.Size(121, 22);
             this.menuGenTIN.Text = "生成TIN";
-            this.menuGenTIN.Click += new System.EventHandler(this.menuGenTIN_Click);
             // 
             // menuContour
             // 
@@ -139,7 +135,6 @@
             this.menuGenContour.Name = "menuGenContour";
             this.menuGenContour.Size = new System.Drawing.Size(152, 22);
             this.menuGenContour.Text = "生成等值线";
-            this.menuGenContour.Click += new System.EventHandler(this.menuContourGrid_Click);
             // 
             // panel1
             // 

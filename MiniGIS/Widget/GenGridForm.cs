@@ -54,7 +54,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = Utils.BindLayers<GeomLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer);
 
             // 初状态
             comboMethod.SelectedIndex = 0;
@@ -76,21 +76,12 @@ namespace MiniGIS.Widget
         private void GenGridLayer(object sender, EventArgs e)
         {
             ValidateBorders();
-            GeomLayer layer = comboLayer.SelectedItem as GeomLayer;
-            Grid result = new Grid(
+
+            API.Point2Grid(comboLayer.SelectedItem as GeomLayer, comboMethod.SelectedItem.ToString(),
                 (double)numericXMin.Value, (double)numericXMax.Value,
                 (double)numericYMin.Value, (double)numericYMax.Value,
-                (uint)numericXSplit.Value, (uint)numericYSplit.Value
-            );
-            switch (comboMethod.SelectedIndex)
-            {
-                case 0: result.GenGrid_DirGrouped(layer.points); break;// 方位加权
-                case 1: result.GenGrid_DistRev(layer.points); break;// 距离倒数
-                case 2: result.GenGrid_DistPow2Rev(layer.points); break;// 距离平方倒数
-            }
+                (uint)numericXSplit.Value, (uint)numericYSplit.Value).Add();
 
-            // 创建图层
-            new GridLayer(result, layer.Name + "_" + comboMethod.SelectedItem.ToString()).Add();
             Close();
         }
     }

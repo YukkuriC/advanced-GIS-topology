@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace MiniGIS.Widget
 {
-    public static class Utils
+    public static class FormUtils
     {
         // 绑定指定类型图层至选框
         public static List<T> BindLayers<T>(ComboBox comboBox, IEnumerable<Layer> origin = null) where T : Layer
