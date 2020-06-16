@@ -2,6 +2,7 @@
 using MiniGIS.Render;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -64,6 +65,40 @@ namespace MiniGIS.Algorithm
 
             // 默认样式
             result.colors["arc"] = ColorOps.Random();
+            result.SetPartVisible("point", false);
+
+            return result;
+        }
+
+        // 等值线光滑
+        public static GeomLayer ContourSmooth(GeomLayer layer)
+        {
+            // 逐个平滑转换
+            List<double> values = new List<double>();
+            List<List<Vector2>> raw_arcs = new List<List<Vector2>>();
+            foreach (var arc in layer.arcs)
+            {
+                raw_arcs.Add(Spline2D.Smooth(from v in arc.points select (Vector2)v, 20));
+                values.Add(arc.value);
+            }
+
+            // TODO: 处理相交
+
+            // 输出至图层
+            GeomLayer result = new GeomLayer(GeomType.Arc, layer.Name + "_平滑");
+            int idxPoint = 0, idxArc = 0;
+            for (int i = 0; i < values.Count; i++)
+            {
+                var currValue = values[i];
+                var newPoints = new List<GeomPoint>();
+                foreach (var v in raw_arcs[i]) newPoints.Add(new GeomPoint(v.X, v.Y, ++idxPoint, currValue));
+                result.points.AddRange(newPoints);
+                result.arcs.Add(new GeomArc(newPoints, ++idxArc, currValue));
+            }
+
+            // 默认样式
+            result.colors["arc"] = Color.Red;
+            result.sizes["arc"] = 1;
             result.SetPartVisible("point", false);
 
             return result;

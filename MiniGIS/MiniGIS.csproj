@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -46,6 +46,7 @@
     <Compile Include="Algorithm\API.cs" />
     <Compile Include="Algorithm\Contour.cs" />
     <Compile Include="Algorithm\CSVParser.cs" />
+    <Compile Include="Algorithm\Spline.cs" />
     <Compile Include="Data\DataStructure\Edge.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />
     <Compile Include="Algorithm\GenGrid.cs" />
@@ -75,6 +76,12 @@
     <Compile Include="Render\GridLayer.cs" />
     <Compile Include="Render\Layer.cs" />
     <Compile Include="Render\TINLayer.cs" />
+    <Compile Include="Widget\ContourSmoothForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\ContourSmoothForm.Designer.cs">
+      <DependentUpon>ContourSmoothForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Widget\GenContourForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,7 +135,7 @@
     <Compile Include="Widget\LayerVisibleChecklist.Designer.cs">
       <DependentUpon>LayerVisibleChecklist.cs</DependentUpon>
     </Compile>
-    <Compile Include="Widget\Utils.cs" />
+    <Compile Include="Widget\FormUtils.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -141,6 +148,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Widget\ContourSmoothForm.resx">
+      <DependentUpon>ContourSmoothForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Widget\GenContourForm.resx">
       <DependentUpon>GenContourForm.cs</DependentUpon>
     </EmbeddedResource>

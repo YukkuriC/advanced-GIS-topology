@@ -45,6 +45,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
+            this.menuContourSmooth = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -124,7 +125,8 @@
             // 
             this.menuContour.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuContour.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuGenContour});
+            this.menuGenContour,
+            this.menuContourSmooth});
             this.menuContour.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.menuContour.Name = "menuContour";
             this.menuContour.Size = new System.Drawing.Size(57, 22);
@@ -207,6 +209,12 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // menuContourSmooth
+            // 
+            this.menuContourSmooth.Name = "menuContourSmooth";
+            this.menuContourSmooth.Size = new System.Drawing.Size(152, 22);
+            this.menuContourSmooth.Text = "等值线平滑";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -250,6 +258,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuGenTIN;
         private System.Windows.Forms.ToolStripDropDownButton menuContour;
         private System.Windows.Forms.ToolStripMenuItem menuGenContour;
+        private System.Windows.Forms.ToolStripMenuItem menuContourSmooth;
     }
 }
 

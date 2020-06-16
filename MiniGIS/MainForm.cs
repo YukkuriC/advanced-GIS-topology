@@ -43,6 +43,7 @@ namespace MiniGIS
             BindForm<GridInterpolationForm>(menuGridInterpolation);
             BindForm<GenTINForm>(menuGenTIN);
             BindForm<GenContourForm>(menuGenContour);
+            BindForm<ContourSmoothForm>(menuContourSmooth);
         }
 
         private void rendererPort_SizeChanged(object sender, EventArgs e)
@@ -67,7 +68,9 @@ namespace MiniGIS
             TINLayer newTIN = new TINLayer(newLayer.points, "TIN") { Visible = false };
             newTIN.Add();
             // 测试等值线
-            API.Value2Contour(newTIN, Utils.Linear(-10, -20, 0, 27)).Add();
+            API.ContourSmooth(
+                (GeomLayer)API.Value2Contour(newTIN, Utils.Linear(-10, -20, 0, 27)).Add()
+            ).Add();
         }
 
         // 用于绑定弹出对话框按钮
