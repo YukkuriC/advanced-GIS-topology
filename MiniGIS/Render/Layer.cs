@@ -24,6 +24,7 @@ namespace MiniGIS.Render
             set
             {
                 _visible = value;
+                UpdateText();
                 MainForm.port.Render();
             }
         }
@@ -38,6 +39,9 @@ namespace MiniGIS.Render
         #endregion
 
         #region method
+
+        // 在图层列表中选中
+        public void GetSelected() => MainForm.instance.layerView.SelectedNode = this;
 
         // 渲染基类方法，用于初始化
         public virtual void Render(ViewPort port, Graphics canvas) { }
@@ -69,6 +73,7 @@ namespace MiniGIS.Render
         {
             MainForm.instance.layerView.Nodes.Insert(0, this);
             UpdateText();
+            GetSelected();
             Focus(MainForm.port);
             return this;
         }
@@ -85,6 +90,7 @@ namespace MiniGIS.Render
         {
             base.Remove();
             MainForm.instance.layerView.Nodes.Insert(i, this);
+            GetSelected();
             MainForm.port.Render();
             UpdateText(); // 强制刷新文本字体更新宽度
         }

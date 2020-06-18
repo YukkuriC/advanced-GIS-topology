@@ -47,13 +47,14 @@
     <Compile Include="Algorithm\Contour.cs" />
     <Compile Include="Algorithm\CSVParser.cs" />
     <Compile Include="Algorithm\Spline.cs" />
+    <Compile Include="Control\DataExplorer.cs" />
     <Compile Include="Data\DataStructure\Edge.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />
     <Compile Include="Algorithm\GenGrid.cs" />
     <Compile Include="Algorithm\Utils.cs" />
     <Compile Include="Control\ControlManager.cs" />
     <Compile Include="Control\MapControl.cs" />
-    <Compile Include="Control\Viewer.cs" />
+    <Compile Include="Control\MapViewer.cs" />
     <Compile Include="Data\Geom\BaseGeom.cs" />
     <Compile Include="Data\Geom\GeomArc.cs" />
     <Compile Include="Data\Geom\GeomPoint.cs" />

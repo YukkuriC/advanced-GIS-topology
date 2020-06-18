@@ -36,6 +36,10 @@ namespace MiniGIS
             rendererPort.MouseUp += controlManager.MouseUp;
             rendererPort.MouseMove += controlManager.MouseMove;
             rendererPort.MouseWheel += controlManager.MouseWheel;
+            rendererPort.MouseEnter += controlManager.MouseIn;
+            rendererPort.MouseLeave += controlManager.MouseOut;
+            controlSet.SelectedIndexChanged += (object o, EventArgs e) => controlManager.Set(controlSet.SelectedIndex);
+            controlSet.SelectedIndex = 0;
 
             // 绑定选框
             BindForm<CSVLoader>(menuLoadCSV);

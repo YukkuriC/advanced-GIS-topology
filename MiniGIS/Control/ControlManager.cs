@@ -6,48 +6,50 @@ using System.Windows.Forms;
 
 namespace MiniGIS.Control
 {
-    public class ControlManager : MapControl
+    public class ControlManager : MapSingle<ControlManager>
     {
-        public static ControlManager instance;
-
-        IDictionary<ControlIndex, MapControl> pool;
+        MapControl[] pool;
         MapControl cur;
 
-        public void Set(ControlIndex type)
+        public void Set(int index)
         {
-            cur = pool[type];
+            if (cur != null) cur.Unload();
+            cur = pool[index];
+            cur.Load();
         }
 
-        public void MouseDown(object sender, MouseEventArgs e)
+        public override void MouseDown(object sender, MouseEventArgs e)
         {
             if (cur != null) cur.MouseDown(sender, e);
         }
-        public void MouseUp(object sender, MouseEventArgs e)
+        public override void MouseUp(object sender, MouseEventArgs e)
         {
             if (cur != null) cur.MouseUp(sender, e);
         }
-        public void MouseMove(object sender, MouseEventArgs e)
+        public override void MouseMove(object sender, MouseEventArgs e)
         {
             if (cur != null) cur.MouseMove(sender, e);
         }
-        public void MouseWheel(object sender, MouseEventArgs e)
+        public override void MouseWheel(object sender, MouseEventArgs e)
         {
             if (cur != null) cur.MouseWheel(sender, e);
+        }
+        public override void MouseIn(object sender, EventArgs e)
+        {
+            if (cur != null) cur.MouseIn(sender, e);
+        }
+        public override void MouseOut(object sender, EventArgs e)
+        {
+            if (cur != null) cur.MouseOut(sender, e);
         }
 
         public ControlManager()
         {
-            instance = this;
-            pool = new Dictionary<ControlIndex, MapControl>
+            pool = new MapControl[]
             {
-                [ControlIndex.Viewer] = new Viewer()
+                MapViewer.Instance,
+                DataExplorer.Instance,
             };
-            Set(ControlIndex.Viewer);
         }
-    }
-
-    public enum ControlIndex
-    {
-        Viewer = 0,
     }
 }

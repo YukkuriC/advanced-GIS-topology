@@ -48,6 +48,7 @@ namespace MiniGIS.Widget
         // 右键菜单更新文字
         void UpdateControls(object o = null, EventArgs e = null)
         {
+            origin.GetSelected();
             btnVis.Text = (origin.Visible ? "隐藏" : "显示") + "图层";
         }
 

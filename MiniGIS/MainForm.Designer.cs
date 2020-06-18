@@ -38,6 +38,7 @@
             this.menuGenTIN = new System.Windows.Forms.ToolStripMenuItem();
             this.menuContour = new System.Windows.Forms.ToolStripDropDownButton();
             this.menuGenContour = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuContourSmooth = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -45,7 +46,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.menuContourSmooth = new System.Windows.Forms.ToolStripMenuItem();
+            this.controlSet = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -60,7 +61,8 @@
             this.menuLoad,
             this.menuGridConverter,
             this.menuTIN,
-            this.menuContour});
+            this.menuContour,
+            this.controlSet});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(926, 25);
@@ -135,8 +137,14 @@
             // menuGenContour
             // 
             this.menuGenContour.Name = "menuGenContour";
-            this.menuGenContour.Size = new System.Drawing.Size(152, 22);
+            this.menuGenContour.Size = new System.Drawing.Size(136, 22);
             this.menuGenContour.Text = "生成等值线";
+            // 
+            // menuContourSmooth
+            // 
+            this.menuContourSmooth.Name = "menuContourSmooth";
+            this.menuContourSmooth.Size = new System.Drawing.Size(136, 22);
+            this.menuContourSmooth.Text = "等值线平滑";
             // 
             // panel1
             // 
@@ -209,11 +217,15 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // menuContourSmooth
+            // controlSet
             // 
-            this.menuContourSmooth.Name = "menuContourSmooth";
-            this.menuContourSmooth.Size = new System.Drawing.Size(152, 22);
-            this.menuContourSmooth.Text = "等值线平滑";
+            this.controlSet.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.controlSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.controlSet.Items.AddRange(new object[] {
+            "拖动浏览",
+            "对象查看"});
+            this.controlSet.Name = "controlSet";
+            this.controlSet.Size = new System.Drawing.Size(121, 25);
             // 
             // MainForm
             // 
@@ -259,6 +271,7 @@
         private System.Windows.Forms.ToolStripDropDownButton menuContour;
         private System.Windows.Forms.ToolStripMenuItem menuGenContour;
         private System.Windows.Forms.ToolStripMenuItem menuContourSmooth;
+        private System.Windows.Forms.ToolStripComboBox controlSet;
     }
 }
 

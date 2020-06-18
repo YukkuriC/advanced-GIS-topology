@@ -7,13 +7,15 @@ using System.Drawing;
 
 namespace MiniGIS.Control
 {
-    class Viewer : MapControl
+    class MapViewer : MapSingle<MapViewer>
     {
+        public override string DefaultText() => "拖动鼠标左键移动查看位置；上下拖动鼠标右键/使用鼠标滚轮改变缩放倍率";
+
         PointF lastScreen, lastWorld;
         bool dragging = false, dragging2 = false;
         double zoomLevel;
 
-        public void MouseDown(object sender, MouseEventArgs e)
+        public override void MouseDown(object sender, MouseEventArgs e)
         {
             switch (e.Button)
             {
@@ -39,7 +41,7 @@ namespace MiniGIS.Control
         }
 
         // 释放拖拽模式
-        public void MouseUp(object sender, MouseEventArgs e)
+        public override void MouseUp(object sender, MouseEventArgs e)
         {
             switch (e.Button)
             {
@@ -56,7 +58,7 @@ namespace MiniGIS.Control
         }
 
         // (拖拽模式下)移动中心点、平滑缩放
-        public void MouseMove(object sender, MouseEventArgs e)
+        public override void MouseMove(object sender, MouseEventArgs e)
         {
             if (dragging)
             {
@@ -70,14 +72,14 @@ namespace MiniGIS.Control
             }
             else if (dragging2)
             {
-                float dDrag = (lastScreen.Y - e.Y)/100;
+                float dDrag = (lastScreen.Y - e.Y) / 100;
                 MainForm.port.zoom = (float)(zoomLevel * Math.Pow(2, dDrag));
                 MainForm.port.Render(true);
             }
         }
 
         // (非拖拽模式下)以鼠标位置为基准缩放
-        public void MouseWheel(object sender, MouseEventArgs e)
+        public override void MouseWheel(object sender, MouseEventArgs e)
         {
             if (dragging || dragging2) return;
 

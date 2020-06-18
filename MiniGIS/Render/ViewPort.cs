@@ -56,7 +56,7 @@ namespace MiniGIS.Render
         // 
         public void ShowText()
         {
-            string text = String.Format("坐标: ({0}, {1}); 缩放等级: {2}",
+            string text = String.Format("中心坐标: ({0}, {1}); 缩放等级: {2}",
                 Utils.SciString(center.X, 6), Utils.SciString(center.Y, 6),
                 Utils.SciString(zoom, 2)
             );
@@ -80,7 +80,7 @@ namespace MiniGIS.Render
                 newZoom = Math.Min(newZoom, target.Height / (yMax - yMin));
             }
             if (validZoom) zoom = newZoom;
-            Render(true);
+            Render();
         }
         public void Focus(Rect rect) => Focus((float)rect.XMin, (float)rect.YMin, (float)rect.XMax, (float)rect.YMax);
 
@@ -88,7 +88,7 @@ namespace MiniGIS.Render
         {
             zoom = 1;
             center = new PointF(0, 0);
-            Render(true);
+            Render();
         }
 
         #endregion
