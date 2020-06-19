@@ -78,7 +78,9 @@ namespace MiniGIS.Algorithm
             List<List<Vector2>> raw_arcs = new List<List<Vector2>>();
             foreach (var arc in layer.arcs)
             {
-                raw_arcs.Add(Spline2D.Smooth(from v in arc.points select (Vector2)v, 20));
+                var smoother = new Spline2D(from v in arc.points select (Vector2)v);
+                int nsplit = (arc.points.Count() - 1) * 40;
+                raw_arcs.Add(smoother.Smooth(nsplit));
                 values.Add(arc.value);
             }
 

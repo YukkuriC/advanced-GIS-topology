@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MiniGIS.Algorithm
 {
@@ -90,5 +91,11 @@ namespace MiniGIS.Algorithm
             return res;
         }
         #endregion
+
+        public static void Debug(string fmt = "", params object[] val)
+        {
+            var res = MessageBox.Show(String.Format(fmt, val), "", MessageBoxButtons.OKCancel);
+            if (res == DialogResult.Cancel) throw new Exception();
+        }
     }
 }

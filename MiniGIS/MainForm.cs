@@ -68,12 +68,15 @@ namespace MiniGIS
             GeomLayer newLayer = new GeomLayer(GeomType.Point, "TEST");
             CSVParser.OutputPoints(table, newLayer.points, false, 2, 3, 4, 0, 1);
             newLayer.Add();
-            // 测试TIN
-            TINLayer newTIN = new TINLayer(newLayer.points, "TIN") { Visible = false };
-            newTIN.Add();
+            //// 测试TIN
+            //TINLayer newTIN = new TINLayer(newLayer.points, "TIN") { Visible = false };
+            //newTIN.Add();
+            // 测试grid
+            var rect = newLayer.MBR;
+            GridLayer newGrid = API.Point2Grid(newLayer, "方位取点加权法", rect.XMin, rect.XMax, rect.YMin, rect.YMax, 30, 30);
             // 测试等值线
             API.ContourSmooth(
-                (GeomLayer)API.Value2Contour(newTIN, Utils.Linear(-10, -20, 0, 27)).Add()
+                (GeomLayer)API.Value2Contour(newGrid, Utils.Linear(-10, -10, 0, 54)).Add()
             ).Add();
         }
 
