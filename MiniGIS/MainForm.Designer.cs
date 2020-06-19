@@ -39,6 +39,7 @@
             this.menuContour = new System.Windows.Forms.ToolStripDropDownButton();
             this.menuGenContour = new System.Windows.Forms.ToolStripMenuItem();
             this.menuContourSmooth = new System.Windows.Forms.ToolStripMenuItem();
+            this.controlSet = new System.Windows.Forms.ToolStripComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -46,7 +47,6 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.controlSet = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -146,6 +146,16 @@
             this.menuContourSmooth.Size = new System.Drawing.Size(136, 22);
             this.menuContourSmooth.Text = "等值线平滑";
             // 
+            // controlSet
+            // 
+            this.controlSet.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.controlSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.controlSet.Items.AddRange(new object[] {
+            "拖动浏览",
+            "对象查看"});
+            this.controlSet.Name = "controlSet";
+            this.controlSet.Size = new System.Drawing.Size(121, 25);
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.layerView);
@@ -162,6 +172,7 @@
             this.layerView.Name = "layerView";
             this.layerView.Size = new System.Drawing.Size(284, 479);
             this.layerView.TabIndex = 0;
+            this.layerView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.UpdateSelection);
             // 
             // splitter1
             // 
@@ -216,16 +227,6 @@
             this.labelInfo.Size = new System.Drawing.Size(629, 16);
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // controlSet
-            // 
-            this.controlSet.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.controlSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.controlSet.Items.AddRange(new object[] {
-            "拖动浏览",
-            "对象查看"});
-            this.controlSet.Name = "controlSet";
-            this.controlSet.Size = new System.Drawing.Size(121, 25);
             // 
             // MainForm
             // 

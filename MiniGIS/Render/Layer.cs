@@ -57,14 +57,20 @@ namespace MiniGIS.Render
         // 更新图层显示
         public void UpdateText()
         {
-            // 更新图层名称
-            string res = String.Format("[{0}] {1}", layerType, Name);
-            if (Visible) NodeFont = new Font(NodeFont, FontStyle.Bold);
+            // 更新字体
+            var style = FontStyle.Regular;
+            if (!Visible) style |= FontStyle.Italic;
             else
             {
-                res += " (隐藏)";
-                NodeFont = new Font(NodeFont, FontStyle.Italic);
+                style |= FontStyle.Bold;
+                if (IsSelected) style |= FontStyle.Underline;
             }
+            NodeFont = new Font(NodeFont, style);
+
+            // 更新图层名称
+            string res = String.Format("[{0}] {1}", layerType, Name);
+            if (!Visible) res += " (隐藏)";
+            if (IsSelected) res = "*" + res;
             Text = res;
         }
 

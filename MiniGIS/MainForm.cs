@@ -82,5 +82,10 @@ namespace MiniGIS
         {
             btn.Click += (object o, EventArgs e) => new T().ShowDialog();
         }
+
+        private void UpdateSelection(object sender, TreeViewEventArgs e)
+        {
+            foreach (Layer l in layerView.Nodes.OfType<Layer>()) l.UpdateText();
+        }
     }
 }
