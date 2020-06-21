@@ -45,40 +45,29 @@ namespace MiniGIS.Algorithm
                    (a3 * b2 * c1) - (a2 * b1 * c3) - (a1 * b3 * c2);
         }
 
-        // 矩阵求解
+        // 三对角矩阵求解
         #region matrix
         public static double[] SolveMatrix(double[][] A)
         {
             int m = A.Length;
-            for (int k = 0; k < m; k++) // column
-            {
-                // pivot for column
-                int i_max = 0; double vali = double.MinValue;
-                for (int i = k; i < m; i++) if (Math.Abs(A[i][k]) > vali) { i_max = i; vali = Math.Abs(A[i][k]); }
-                var tmp = A[k]; A[k] = A[i_max]; A[i_max] = tmp;
 
-                // for all rows below pivot
-                for (int i = k + 1; i < m; i++)
-                {
-                    double cf = (A[i][k] / A[k][k]);
-                    for (int j = k; j < m + 1; j++) A[i][j] -= A[k][j] * cf;
-                }
+            // 首行
+            A[0][1] /= A[0][0];
+            A[0][m] /= A[0][0];
+
+            // 后续
+            for (int i = 1; i < m; i++)
+            {
+                var dom = A[i][i] - A[i - 1][i] * A[i][i - 1];
+                if (i < m - 1) A[i][i + 1] /= dom;
+                A[i][m] = (A[i][m] - A[i - 1][m]) / dom;
             }
 
-            var x = new double[m];
-
-            for (int i = m - 1; i >= 0; i--)    // rows = columns
-            {
-                double v = A[i][m] / A[i][i];
-                x[i] = v;
-                for (int j = i - 1; j >= 0; j--)    // rows
-                {
-                    A[j][m] -= A[j][i] * v;
-                    A[j][i] = 0;
-                }
-            }
-
-            return x;
+            // 返回结果
+            var res = new double[m];
+            res[m - 1] = A[m - 1][m];
+            for (int i = m - 2; i >= 0; i--) res[i] = A[i][m] - A[i][i + 1] * res[i + 1];
+            return res;
         }
 
         public static double[][] ZerosMat(int r, int c)
