@@ -1,4 +1,4 @@
-using MiniGIS.Data;
+﻿using MiniGIS.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -209,5 +209,97 @@ namespace MiniGIS.Algorithm
         }
 
         #endregion
+    }
+
+    // 张力样条
+    public class SplineTension : Spline
+    {
+        protected double[] sigma;
+        protected double[] Ss, Cs, Ts, sig2;
+
+        public SplineTension(double _sigma, double[] _xs, double[] _ys, bool loop = false)
+        {
+            // 写入参数
+            sigma = new double[_xs.Length];
+            for (int i = 0; i < sigma.Length; i++) sigma[i] = _sigma;
+
+            // 执行初始化
+            Init(_xs, _ys, loop);
+        }
+
+        protected override void InitParams(double[] _xs, double[] _ys)
+        {
+            base.InitParams(_xs, _ys);
+
+            // 预计算双曲函数值
+            Ss = new double[n];
+            Cs = new double[n];
+            Ts = new double[n];
+            for (int i = 0; i < n; i++)
+            {
+                Ss[i] = Math.Sinh(dx[i] * sigma[i]);
+                Cs[i] = Math.Cosh(dx[i] * sigma[i]);
+                Ts[i] = Ss[i] / Cs[i];
+            }
+        }
+
+        protected override double Eval(double x, int i)
+        {
+            double c = (sig2[i] * ms[i + 1] - Cs[i] * ms[i]) / Ss[i];
+            double b = (dy[i] + ms[i] - sig2[i] * ms[i + 1]) / dx[i];
+            double res = ys[i] - ms[i] + b * x + c * Math.Sinh(sigma[i] * x) + ms[i] * Math.Cosh(sigma[i] * x);
+
+            // TODO: 解决浮点误差
+            if (Double.IsNaN(res)) throw new Exception();
+            if (Math.Abs(res * 2 - ys[i] - ys[i + 1]) > Math.Abs(ys[i] - ys[i + 1]) * 3)
+            {
+                return x.Lerp(0, dx[i], ys[i], ys[i + 1]);
+            }
+
+            return res;
+        }
+
+        protected override double[][] InitMatrix(bool loop)
+        {
+            var A = Utils.ZerosMat(n + 1, n + 2);
+
+            // 创建缓存数组
+            sig2 = new double[n]; // (sigma[i+1] / sigma[i])^2
+            for (int i = 0; i < n; i++) sig2[i] = Math.Pow(sigma[i + 1] / sigma[i], 2);
+
+            // 写入共用矩阵
+            for (int i = 1; i < n; i++)
+            {
+                A[i][i - 1] = sigma[i - 1] * (-Cs[i - 1] * Ts[i - 1] + Ss[i - 1]) + 1 / dx[i - 1];
+                A[i][i] = sig2[i - 1] * (sigma[i - 1] * Ts[i - 1] - 1 / dx[i - 1]) + sigma[i] * Ts[i] - 1 / dx[i];
+                A[i][i + 1] = 1 / dx[i] - sigma[i] / Ss[i];
+                A[i][n + 1] = dy[i] / dx[i] - dy[i - 1] / dx[i - 1];
+            }
+
+            // TODO: 首末行
+            {
+                A[0][0] = A[n][n] = 1;
+            }
+
+            return A;
+        }
+    }
+
+    // 二维张力样条
+    public class SplineTension2D : Spline2D
+    {
+        protected double sigma;
+
+        public SplineTension2D(IEnumerable<Vector2> points) => Init(points);
+
+        protected override void LoadSplines()
+        {
+            // 计算初始sigma
+            sigma = 1.5 * (xs.Length - 1) / ls.Last();
+
+            // 设置xy样条
+            spx = new SplineTension(sigma, ls, xs, looped);
+            spy = new SplineTension(sigma, ls, ys, looped);
+        }
     }
 }

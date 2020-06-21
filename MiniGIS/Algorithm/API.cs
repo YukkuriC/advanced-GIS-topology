@@ -1,4 +1,4 @@
-﻿using MiniGIS.Data;
+using MiniGIS.Data;
 using MiniGIS.Render;
 using System;
 using System.Collections.Generic;
@@ -78,7 +78,7 @@ namespace MiniGIS.Algorithm
             List<List<Vector2>> raw_arcs = new List<List<Vector2>>();
             foreach (var arc in layer.arcs)
             {
-                var smoother = new Spline2D(from v in arc.points select (Vector2)v);
+                var smoother = new SplineTension2D(from v in arc.points select (Vector2)v);
                 int nsplit = (arc.points.Count() - 1) * 40;
                 raw_arcs.Add(smoother.Smooth(nsplit));
                 values.Add(arc.value);
