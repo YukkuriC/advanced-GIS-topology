@@ -57,6 +57,18 @@ namespace MiniGIS
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            GeomLayer tmp = new GeomLayer(GeomType.Arc, "TEST");
+            tmp.points.AddRange(new GeomPoint[]
+            {
+                new GeomPoint(0,0),
+                new GeomPoint(0,1),
+                new GeomPoint(2,0),
+                new GeomPoint(3,4),
+            });
+            tmp.arcs.Add(new GeomArc(tmp.points));
+            tmp.Add();
+            API.ContourSmooth(tmp).Add();
+            return;
             // 测试数据
             char[] buffer;
             using (StreamReader reader = File.OpenText("../../../data.txt"))

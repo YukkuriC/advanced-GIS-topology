@@ -54,7 +54,7 @@ namespace MiniGIS.Algorithm
             // 执行表达式
             return Eval(x - xs[i], i);
         }
-        
+
         // 写入公共参数
         protected virtual void InitParams(double[] _xs, double[] _ys)
         {
@@ -169,7 +169,7 @@ namespace MiniGIS.Algorithm
             }
             return res;
         }
-        
+
         // 写入公共参数
         protected void InitParams(IEnumerable<Vector2> points)
         {
@@ -214,44 +214,26 @@ namespace MiniGIS.Algorithm
     // 张力样条
     public class SplineTension : Spline
     {
-        protected double[] sigma;
-        protected double[] Ss, Cs, Ts, sig2;
+        protected double[] s1, s2, sd, Es, E2;
 
         public SplineTension(double _sigma, double[] _xs, double[] _ys, bool loop = false)
         {
             // 写入参数
-            sigma = new double[_xs.Length];
-            for (int i = 0; i < sigma.Length; i++) sigma[i] = _sigma;
+            s1 = new double[_xs.Length];
+            for (int i = 0; i < s1.Length; i++) s1[i] = _sigma;
 
             // 执行初始化
             Init(_xs, _ys, loop);
         }
 
-        protected override void InitParams(double[] _xs, double[] _ys)
-        {
-            base.InitParams(_xs, _ys);
-
-            // 预计算双曲函数值
-            Ss = new double[n];
-            Cs = new double[n];
-            Ts = new double[n];
-            for (int i = 0; i < n; i++)
-            {
-                Ss[i] = Math.Sinh(dx[i] * sigma[i]);
-                Cs[i] = Math.Cosh(dx[i] * sigma[i]);
-                Ts[i] = Ss[i] / Cs[i];
-            }
-        }
-
         protected override double Eval(double x, int i)
         {
-            double c = (sig2[i] * ms[i + 1] - Cs[i] * ms[i]) / Ss[i];
-            double b = (dy[i] + ms[i] - sig2[i] * ms[i + 1]) / dx[i];
-            double res = ys[i] - ms[i] + b * x + c * Math.Sinh(sigma[i] * x) + ms[i] * Math.Cosh(sigma[i] * x);
+            double c = 2 * (ms[i + 1] * s2[i + 1] * Es[i] - ms[i] * s2[i]) / s2[i] / (E2[i] - 1) - ms[i];
+            double b = (ms[i] + dy[i] - ms[i + 1] * s2[i + 1] / s2[i]) / dx[i];
+            double res = ys[i] - ms[i] + b * x + c * Math.Sinh(s1[i] * x) + ms[i] * Math.Cosh(s1[i] * x);
 
             // TODO: 解决浮点误差
-            if (Double.IsNaN(res)) throw new Exception();
-            if (Math.Abs(res * 2 - ys[i] - ys[i + 1]) > Math.Abs(ys[i] - ys[i + 1]) * 3)
+            if (Double.IsNaN(res) || Math.Abs(res * 2 - ys[i] - ys[i + 1]) > 1e4)
             {
                 return x.Lerp(0, dx[i], ys[i], ys[i + 1]);
             }
@@ -264,16 +246,31 @@ namespace MiniGIS.Algorithm
             var A = Utils.ZerosMat(n + 1, n + 2);
 
             // 创建缓存数组
-            sig2 = new double[n]; // (sigma[i+1] / sigma[i])^2
-            for (int i = 0; i < n; i++) sig2[i] = Math.Pow(sigma[i + 1] / sigma[i], 2);
+            s2 = new double[n + 1]; // sigma[i]^2
+            sd = new double[n]; // dx[i]*sigma[i]
+            Es = new double[n]; // exp(sd)
+            E2 = new double[n]; // Es[i]^2
+            for (int i = 0; i <= n; i++)
+            {
+                s2[i] = Math.Pow(s1[i], 2);
+                if (i < n)
+                {
+                    sd[i] = dx[i] * s1[i];
+                    Es[i] = Math.Exp(sd[i]);
+                    E2[i] = Es[i] * Es[i];
+                }
+            }
 
             // 写入共用矩阵
             for (int i = 1; i < n; i++)
             {
-                A[i][i - 1] = sigma[i - 1] * (-Cs[i - 1] * Ts[i - 1] + Ss[i - 1]) + 1 / dx[i - 1];
-                A[i][i] = sig2[i - 1] * (sigma[i - 1] * Ts[i - 1] - 1 / dx[i - 1]) + sigma[i] * Ts[i] - 1 / dx[i];
-                A[i][i + 1] = 1 / dx[i] - sigma[i] / Ss[i];
-                A[i][n + 1] = dy[i] / dx[i] - dy[i - 1] / dx[i - 1];
+                A[i][i - 1] = 1 / dx[i - 1] - 2 * s1[i - 1] * Es[i - 1] / (E2[i - 1] - 1);
+                A[i][i] = s1[i] * (1 + 2 / (E2[i] - 1)) - 1 / dx[i];
+                A[i][i + 1] = -2 * s2[i + 1] * Es[i] / s1[i] / (E2[i] - 1)
+                    + s2[i + 1] / s1[i - 1] * (1 + 2 / (E2[i - 1] - 1))
+                    + s2[i + 1] / dx[i] / s2[i]
+                    - s2[i + 1] / dx[i - 1] / s2[i - 1];
+                A[i][n + 1] = dy[i] / dx[i] - (dy[i - 1] + dy[i]) / dx[i - 1];
             }
 
             // TODO: 首末行
