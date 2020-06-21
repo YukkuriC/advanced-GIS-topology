@@ -1,4 +1,4 @@
-﻿using MiniGIS.Data;
+using MiniGIS.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +56,7 @@ namespace MiniGIS.Algorithm
         }
         
         // 写入公共参数
-        protected void InitParams(double[] _xs, double[] _ys)
+        protected virtual void InitParams(double[] _xs, double[] _ys)
         {
             xs = _xs; ys = _ys; n = xs.Length - 1;
 
@@ -138,7 +138,7 @@ namespace MiniGIS.Algorithm
     // 三次样条插值-二维点
     public class Spline2D : SplineBase<Vector2>
     {
-        Spline spx, spy;
+        protected Spline spx, spy;
 
         protected double _max;
         public override double Max() => _max;
