@@ -62,8 +62,10 @@ namespace MiniGIS
             {
                 new GeomPoint(0,0),
                 new GeomPoint(0,1),
+                new GeomPoint(1,0),
+                new GeomPoint(1,1),
                 new GeomPoint(2,0),
-                new GeomPoint(3,4),
+                new GeomPoint(2,1),
             });
             tmp.arcs.Add(new GeomArc(tmp.points));
             tmp.Add();
