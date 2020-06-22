@@ -46,6 +46,7 @@
     <Compile Include="Algorithm\API.cs" />
     <Compile Include="Algorithm\Contour.cs" />
     <Compile Include="Algorithm\CSVParser.cs" />
+    <Compile Include="Algorithm\GenTopology.cs" />
     <Compile Include="Algorithm\Spline.cs" />
     <Compile Include="Control\DataExplorer.cs" />
     <Compile Include="Data\DataStructure\Edge.cs" />
@@ -100,6 +101,12 @@
     </Compile>
     <Compile Include="Widget\GenTINForm.Designer.cs">
       <DependentUpon>GenTINForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Widget\GenTopoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\GenTopoForm.Designer.cs">
+      <DependentUpon>GenTopoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Widget\GridInterpolationForm.cs">
       <SubType>Form</SubType>
@@ -160,6 +167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Widget\GenTINForm.resx">
       <DependentUpon>GenTINForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widget\GenTopoForm.resx">
+      <DependentUpon>GenTopoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widget\GridInterpolationForm.resx">
       <DependentUpon>GridInterpolationForm.cs</DependentUpon>

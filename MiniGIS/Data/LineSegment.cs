@@ -6,36 +6,18 @@ using System.Text;
 namespace MiniGIS.Data
 {
 
-    public class LineSegment
+    public class LineSegment:Tuple<GeomPoint, GeomPoint>
     {
-        // 点数据
-        GeomPoint pt1, pt2;
-        public GeomPoint From { get { return pt1; } }
-        public GeomPoint To { get { return pt2; } }
-
-        // 坐标差
-        double dx, dy;
-        public double deltaX { get { return dx; } }
-        public double deltaY { get { return dy; } }
-
         // 长度、角度
         Lazy<double> _length;
         Lazy<double> _angle = new Lazy<double>();
         public double Length { get { return _length.Value; } }
         public double Angle { get { return _length.Value; } }
-        double CalcLength()
-        {
-            return Math.Sqrt(dx * dx + dy * dy);
-        }
-        double CalcAngle()
-        {
-            return Math.Atan2(dy, dx);
-        }
+        double CalcLength() => ((Vector2)Item1).Distance(Item2);
+        double CalcAngle() => ((Vector2)Item2 - Item1).Rotation();
 
-        public LineSegment(GeomPoint p1, GeomPoint p2)
+        public LineSegment(GeomPoint p1, GeomPoint p2) : base(p1,p2)
         {
-            pt1 = p1; pt2 = p2;
-            dx = pt2.Y - pt1.X; dy = pt2.Y - pt1.Y;
             _length = new Lazy<double>(CalcLength);
             _angle = new Lazy<double>(CalcAngle);
         }

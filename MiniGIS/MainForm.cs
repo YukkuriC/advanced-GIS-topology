@@ -48,6 +48,7 @@ namespace MiniGIS
             BindForm<GenTINForm>(menuGenTIN);
             BindForm<GenContourForm>(menuGenContour);
             BindForm<ContourSmoothForm>(menuContourSmooth);
+            BindForm<GenTopoForm>(menuGenTopology);
         }
 
         private void rendererPort_SizeChanged(object sender, EventArgs e)
@@ -75,7 +76,7 @@ namespace MiniGIS
             var rect = newLayer.MBR;
             GridLayer newGrid = API.Point2Grid(newLayer, "方位取点加权法", rect.XMin, rect.XMax, rect.YMin, rect.YMax, 30, 30);
             // 测试等值线
-            API.ContourSmooth(
+            API.Arc2Topology(
                 (GeomLayer)API.Value2Contour(newGrid, Utils.Linear(-10, -10, 0, 54)).Add()
             ).Add();
         }
