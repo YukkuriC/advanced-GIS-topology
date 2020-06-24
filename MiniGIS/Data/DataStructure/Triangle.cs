@@ -71,7 +71,7 @@ namespace MiniGIS.Data
         public int Contains(Vector2 pos)
         {
             CalcMBR();
-            if (!MBR.Inside(pos)) return 0;
+            if (!MBR.Include(pos)) return 0;
             Vector2[] tmp = Points().ToArray();
             int res = 0;
             for (int i = 0; i < 3; i++)
@@ -87,6 +87,6 @@ namespace MiniGIS.Data
         public static double CheckCross(Vector2 p1, Vector2 p2, Vector2 p3) => (p1 - p2).Cross(p1 - p3);
 
         // 检查三角是否位于矩形内
-        public bool Inside(Rect MBR) => (MBR.Inside(p1) && MBR.Inside(p2) && MBR.Inside(p3));
+        public bool Inside(Rect MBR) => (MBR.Include(p1) && MBR.Include(p2) && MBR.Include(p3));
     }
 }

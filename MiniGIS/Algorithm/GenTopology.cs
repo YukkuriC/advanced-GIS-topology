@@ -20,6 +20,7 @@ namespace MiniGIS.Algorithm
         static HashSet<GeomPoly> inners;
         static LinkedList<Tuple<GeomPoint, GeomArc>> stack;
         static HashSet<Tuple<GeomPoint, GeomArc>> arcUsed;
+        static List<Tuple<GeomPoly, HashSet<GeomPoly>>> holesGroup;
 
         // 1. 合法化并分割输入弧段
         static void SplitArcs(List<GeomArc> origin, Rect MBR)
@@ -116,6 +117,7 @@ namespace MiniGIS.Algorithm
             }
 
             // 递归搜索多边形
+            holesGroup = new List<Tuple<GeomPoly, HashSet<GeomPoly>>>();
             arcUsed = new HashSet<Tuple<GeomPoint, GeomArc>>();
             foreach (var pair in vertPool) PolyTopoGroup(pair.Key, pair.Value.Values.First());
         }
@@ -134,16 +136,20 @@ namespace MiniGIS.Algorithm
                 PolyTopoUnit(data.Value);
             }
 
+            if (inners.Count == 0) return;
+
             // 获取并删除外包多边形（面积最大）
+            GeomPoly outer = null;
             if (inners.Count > 1)
             {
-                GeomPoly outer = null;
-                foreach (var poly in inners) if (outer == null || outer.Area < poly.Area) outer = poly;
+                outer = null;
+                foreach (var poly in inners) if (outer == null || outer.OuterArea < poly.OuterArea) outer = poly;
                 inners.Remove(outer);
             }
+            else outer = inners.First();
 
-            // 处理孔洞
-            // TODO
+            // 加入待处理孔洞列表
+            holesGroup.Add(new Tuple<GeomPoly, HashSet<GeomPoly>>(outer, inners));
 
             cPoly.AddRange(inners);
         }
@@ -179,6 +185,31 @@ namespace MiniGIS.Algorithm
             // 创造多边形
             var newPoly = new GeomPoly(from pair in res select pair.Item2);
             inners.Add(newPoly);
+        }
+
+        // 3. 处理孔洞
+        static void HandleHoles()
+        {
+            holesGroup.Sort((Tuple<GeomPoly, HashSet<GeomPoly>> p1, Tuple<GeomPoly, HashSet<GeomPoly>> p2) => Math.Sign(p1.Item1.OuterArea - p2.Item1.OuterArea));
+            for (int i = 0; i < holesGroup.Count - 1; i++)
+            {
+                var hole = holesGroup[i].Item1;
+                bool binded = false;
+                for (int j = i + 1; j < holesGroup.Count; j++)
+                {
+                    var toCheck = holesGroup[j];
+                    if (!toCheck.Item1.MBR.Include(hole.MBR)) continue;
+                    foreach (var poly in toCheck.Item2) if (poly.IncludeSimple(hole)) // 找到包含该孔洞的多边形
+                        {
+                            if (poly.holes == null) poly.holes = new List<GeomPoly>();
+                            poly.holes.Add(hole);
+                            binded = true;
+                            break;
+                        }
+                    if (binded) break;
+                }
+                if (!binded) throw new Exception();
+            }
         }
 
         #region helpers
@@ -249,7 +280,7 @@ namespace MiniGIS.Algorithm
         static bool CheckCross(LineSegment s1, LineSegment s2)
         {
             var crosser = LineSegment.CheckCross(s1, s2);
-            if (crosser==null) return false;
+            if (crosser == null) return false;
             double r1 = crosser.Item1, r2 = crosser.Item2;
             if (r1 < 0 || r2 < 0 || r1 > 1 || r2 > 1) return false;
 
@@ -285,6 +316,9 @@ namespace MiniGIS.Algorithm
             vertPool[seg.Item1][seg.Angle] = arc;
         }
 
+        // 比较多边形外包面积大小
+        static int CompArea(GeomPoly p1, GeomPoly p2) => Math.Sign(p1.OuterArea - p2.OuterArea);
+
         // 列表设置递增ID
         static void ApplyID(IEnumerable<BaseGeom> geoms)
         {
@@ -304,6 +338,7 @@ namespace MiniGIS.Algorithm
             // 运行算法步骤
             SplitArcs(origin, MBR);
             CreatePoly();
+            HandleHoles();
 
             // 输出点（仅交点或全部顶点）
             if (crossingOnly)

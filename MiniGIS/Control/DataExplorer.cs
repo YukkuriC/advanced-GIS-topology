@@ -74,7 +74,7 @@ namespace MiniGIS.Control
             {
                 // 栅格图层
                 case GridLayer layer:
-                    if (!layer.data.Inside(pos)) return null;
+                    if (!layer.data.Include(pos)) return null;
                     double xstep = (layer.data.XMax - layer.data.XMin) / (layer.data.XSplit);
                     double ystep = (layer.data.YMax - layer.data.YMin) / (layer.data.YSplit);
                     int i = (int)Math.Round((pos.X - layer.data.XMin) / xstep);
@@ -91,7 +91,7 @@ namespace MiniGIS.Control
                 case GeomLayer layer:
                     foreach (var poly in layer.polygons)
                     {
-                        if (poly.Inside(pos))
+                        if (poly.Include(pos))
                         {
                             return new object[]
                             {

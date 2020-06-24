@@ -47,7 +47,8 @@ namespace MiniGIS.Data
             return new Rect(x1, x2, y1, y2);
         }
 
-        public bool Inside(double x, double y) => XMin <= x && x <= XMax && YMin <= y && y <= YMax;
-        public bool Inside(Vector2 v) => Inside(v.X, v.Y);
+        public bool Include(double x, double y) => XMin <= x && x <= XMax && YMin <= y && y <= YMax;
+        public bool Include(Vector2 v) => Include(v.X, v.Y);
+        public bool Include(Rect r) => XMin <= r.XMin && r.XMax <= XMax && YMin <= r.YMin && r.YMax <= YMax;
     }
 }
