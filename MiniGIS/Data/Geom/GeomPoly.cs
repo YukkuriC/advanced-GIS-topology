@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using MiniGIS.Render;
@@ -39,6 +39,30 @@ namespace MiniGIS.Data
                     for (int i = 0; i < arc.points.Count - 1; i++) yield return arc.points[i];
                 }
             }
+        }
+
+        // 迭代返回所有线段
+        public IEnumerable<LineSegment> IterSegments()
+        {
+            foreach (var pair in arcs)
+                foreach (var s in pair.Item1.IterSegments(pair.Item2))
+                    yield return s;
+        }
+
+        // 检查某坐标是否在多边形内部
+        public bool Inside(Vector2 pos)
+        {
+            if (!MBR.Inside(pos)) return false;
+            var checker = new LineSegment((GeomPoint)pos, new GeomPoint(MBR.XMax + 10, pos.Y));
+            int crosses = 0;
+            foreach (var seg in IterSegments())
+            {
+                var tmp = LineSegment.CheckCross(checker, seg);
+                if (tmp == null) continue; // 平行或共线
+                if (0 < tmp.Item1 && tmp.Item1 < 1 && 0 <= tmp.Item2 && tmp.Item2 < 1) crosses++; // Item2检查一端
+            }
+
+            return crosses % 2 == 1; // 射线交点为奇数
         }
 
         public override void Render(ViewPort port, Graphics canvas, Pen pen)
