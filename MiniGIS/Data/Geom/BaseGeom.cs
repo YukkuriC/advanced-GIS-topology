@@ -13,12 +13,18 @@ namespace MiniGIS.Data
         public string name;
         public double value;
 
+        // MBR
+        Lazy<Rect> _mbr;
+        public Rect MBR { get=> _mbr.Value; }
+        public virtual Rect CalcMBR() => null;
+
         public virtual void Render(ViewPort port, Graphics canvas, Pen pen) { }
 
         public BaseGeom(int _id, double _value)
         {
             id = _id;
             value = _value;
+            _mbr = new Lazy<Rect>(CalcMBR);
         }
         public BaseGeom() { }
     }

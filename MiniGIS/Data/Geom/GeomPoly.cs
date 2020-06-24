@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using MiniGIS.Render;
@@ -48,6 +48,8 @@ namespace MiniGIS.Data
         }
 
         #endregion
+
+        public override Rect CalcMBR() => new Rect(IterPoints());
 
         // 计算周长、面积
         Lazy<double> _circum, _area;

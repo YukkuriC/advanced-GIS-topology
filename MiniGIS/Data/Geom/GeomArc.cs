@@ -43,6 +43,8 @@ namespace MiniGIS.Data
 
         #endregion
 
+        public override Rect CalcMBR() => new Rect(points);
+
         // 计算长度
         Lazy<double> _length;
         public double Length { get => _length.Value; }

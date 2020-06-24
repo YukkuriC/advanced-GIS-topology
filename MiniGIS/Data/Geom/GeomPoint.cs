@@ -31,6 +31,8 @@ namespace MiniGIS.Data
 
         #endregion
 
+        public override Rect CalcMBR() => new Rect(X, X, Y, Y);
+
         // 构造函数
         public GeomPoint(double _x, double _y, int _id = 0, double _value = 0) : base(_id, _value)
         {
