@@ -248,25 +248,22 @@ namespace MiniGIS.Algorithm
         // 检查两线段相交情况，将交点加入相应线段交点数组
         static bool CheckCross(LineSegment s1, LineSegment s2)
         {
-            double
-                ax = s1.Item1.X, ay = s1.Item1.Y,
-                bx = s1.Item2.X, by = s1.Item2.Y,
-                cx = s2.Item1.X, cy = s2.Item1.Y,
-                dx = s2.Item2.X, dy = s2.Item2.Y;
-
-            // 求解
-            double dom = (ax - bx) * (cy - dy) - (ay - by) * (cx - dx);
-            if (dom == 0) return false;
-            double
-                r1 = ((ax - cx) * (cy - dy) - (ay - cy) * (cx - dx)) / dom,
-                r2 = (-(ax - bx) * (ay - cy) + (ax - cx) * (ay - by)) / dom;
+            var crosser = LineSegment.CheckCross(s1, s2);
+            if (crosser==null) return false;
+            double r1 = crosser.Item1, r2 = crosser.Item2;
             if (r1 < 0 || r2 < 0 || r1 > 1 || r2 > 1) return false;
 
             // 写入对应位置
-            if (!segSplit.ContainsKey(s1)) segSplit[s1] = new SortedSet<double>();
-            if (!segSplit.ContainsKey(s2)) segSplit[s2] = new SortedSet<double>();
-            segSplit[s1].Add(r1);
-            segSplit[s2].Add(r2);
+            if (r1 < 1)
+            {
+                if (!segSplit.ContainsKey(s1)) segSplit[s1] = new SortedSet<double>();
+                segSplit[s1].Add(r1);
+            }
+            if (r2 < 1)
+            {
+                if (!segSplit.ContainsKey(s2)) segSplit[s2] = new SortedSet<double>();
+                segSplit[s2].Add(r2);
+            }
 
             return true;
         }
