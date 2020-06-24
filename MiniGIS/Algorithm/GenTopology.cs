@@ -8,9 +8,18 @@ namespace MiniGIS.Algorithm
 {
     public static class GenTopology
     {
+        // 结果数据存储
         static Dictionary<Vector2, GeomPoint> cPoint;
         static List<GeomArc> cArc;
         static List<GeomPoly> cPoly;
+
+        // 中间变量
+        static Dictionary<LineSegment, SortedSet<double>> segSplit;
+        static Dictionary<GeomPoint, SortedDictionary<double, GeomArc>> vertPool;
+        static Dictionary<GeomPoint, Dictionary<GeomArc, GeomArc>> vertNext;
+        static HashSet<GeomPoly> inners;
+        static LinkedList<Tuple<GeomPoint, GeomArc>> stack;
+        static HashSet<Tuple<GeomPoint, GeomArc>> arcUsed;
 
         // 1. 合法化并分割输入弧段
         static void SplitArcs(List<GeomArc> origin, Rect MBR)
@@ -27,7 +36,7 @@ namespace MiniGIS.Algorithm
             // 构造数据结构：弧段->线段数组
             var arcSegs = new Dictionary<GeomArc, LineSegment[]>();
             foreach (var a in rawArcs) arcSegs[a] = a.IterSegments().ToArray();
-            var segSplit = new Dictionary<LineSegment, SortedSet<double>>();
+            segSplit = new Dictionary<LineSegment, SortedSet<double>>();
             var arcMarker = new HashSet<GeomArc>();
 
             // 线段互相求交 O(N^2*L^2)
@@ -40,7 +49,7 @@ namespace MiniGIS.Algorithm
 
                     // 线段互查
                     bool toSplit = false;
-                    foreach (var s1 in pool1) foreach (var s2 in pool2) toSplit |= CheckCross(s1, s2, segSplit);
+                    foreach (var s1 in pool1) foreach (var s2 in pool2) toSplit |= CheckCross(s1, s2);
 
                     // 标记需分割
                     if (toSplit)
@@ -87,9 +96,89 @@ namespace MiniGIS.Algorithm
         static void CreatePoly()
         {
             // 创建顶点-弧段拓扑
+            vertPool = new Dictionary<GeomPoint, SortedDictionary<double, GeomArc>>();
+            vertNext = new Dictionary<GeomPoint, Dictionary<GeomArc, GeomArc>>();
+            foreach (var a in cArc)
+            {
+                VertexTopo(a, a.IterSegments().First());
+                VertexTopo(a, a.IterSegments(true).First());
+            }
+            // TODO: 移除线头
+
+            // 创建转向映射表
+            foreach (var pair in vertPool)
+            {
+                var arcs = pair.Value.Values.ToArray();
+                int l = arcs.Length;
+                var mapper = new Dictionary<GeomArc, GeomArc>();
+                for (int i = 0; i < l; i++) mapper[arcs[i]] = arcs[(i + 1) % l];
+                vertNext[pair.Key] = mapper;
+            }
+
             // 递归搜索多边形
+            arcUsed = new HashSet<Tuple<GeomPoint, GeomArc>>();
+            foreach (var pair in vertPool) PolyTopoGroup(pair.Key, pair.Value.Values.First());
+        }
+
+        // 2.1 从指定弧段与端点开始搜索相连多边形
+        static void PolyTopoGroup(GeomPoint pt, GeomArc arc)
+        {
+            inners = new HashSet<GeomPoly>();
+            stack = new LinkedList<Tuple<GeomPoint, GeomArc>>();
+            stack.AddFirst(new Tuple<GeomPoint, GeomArc>(pt, arc));
+
+            while (stack.Count > 0)
+            {
+                var data = stack.First;
+                stack.RemoveFirst();
+                PolyTopoUnit(data.Value);
+            }
+
+            // 获取并删除外包多边形（面积最大）
+            if (inners.Count > 1)
+            {
+                GeomPoly outer = null;
+                foreach (var poly in inners) if (outer == null || outer.Area < poly.Area) outer = poly;
+                inners.Remove(outer);
+            }
+
             // 处理孔洞
             // TODO
+
+            cPoly.AddRange(inners);
+        }
+
+        // 2.1.1 搜索相连多边形：单元操作，返回当前搜索
+        static void PolyTopoUnit(Tuple<GeomPoint, GeomArc> data)
+        {
+            if (arcUsed.Contains(data)) return;
+            var res = new List<Tuple<GeomPoint, GeomArc>>();
+
+
+            ApplyID(cPoint.Values); // debug
+
+            // 搜索直到首尾相接
+            while (true)
+            {
+                // 加入当前弧段
+                res.Add(data);
+                arcUsed.Add(data);
+                // 获取下一弧段
+                GeomPoint prevPt = data.Item1;
+                GeomArc prevArc = data.Item2;
+                GeomPoint nextPt = prevArc.First;
+                if (nextPt == prevPt) nextPt = prevArc.Last;
+                GeomArc nextArc = vertNext[nextPt][data.Item2];
+                data = new Tuple<GeomPoint, GeomArc>(nextPt, prevArc); // 同弧段不同顶点
+                if (!arcUsed.Contains(data)) stack.AddFirst(data);
+                data = new Tuple<GeomPoint, GeomArc>(nextPt, nextArc);
+                // 首尾相接时跳出
+                if (data.Equals(res[0])) break;
+            }
+
+            // 创造多边形
+            var newPoly = new GeomPoly(from pair in res select pair.Item2);
+            inners.Add(newPoly);
         }
 
         #region helpers
@@ -157,7 +246,7 @@ namespace MiniGIS.Algorithm
         }
 
         // 检查两线段相交情况，将交点加入相应线段交点数组
-        static bool CheckCross(LineSegment s1, LineSegment s2, Dictionary<LineSegment, SortedSet<double>> segSplit)
+        static bool CheckCross(LineSegment s1, LineSegment s2)
         {
             double
                 ax = s1.Item1.X, ay = s1.Item1.Y,
@@ -171,7 +260,7 @@ namespace MiniGIS.Algorithm
             double
                 r1 = ((ax - cx) * (cy - dy) - (ay - cy) * (cx - dx)) / dom,
                 r2 = (-(ax - bx) * (ay - cy) + (ax - cx) * (ay - by)) / dom;
-            if (r1 < 0 || r2 < 0 || r1 >= 1 || r2 >= 1) return false;
+            if (r1 < 0 || r2 < 0 || r1 > 1 || r2 > 1) return false;
 
             // 写入对应位置
             if (!segSplit.ContainsKey(s1)) segSplit[s1] = new SortedSet<double>();
@@ -191,6 +280,14 @@ namespace MiniGIS.Algorithm
             if (newArc != null) cArc.Add(newArc);
         }
 
+        // 给定弧段计算夹角并加入拓扑结构
+        static void VertexTopo(GeomArc arc, LineSegment seg)
+        {
+            if (!vertPool.ContainsKey(seg.Item1))
+                vertPool[seg.Item1] = new SortedDictionary<double, GeomArc>();
+            vertPool[seg.Item1][seg.Angle] = arc;
+        }
+
         // 列表设置递增ID
         static void ApplyID(IEnumerable<BaseGeom> geoms)
         {
@@ -204,8 +301,8 @@ namespace MiniGIS.Algorithm
         {
             // 初始化全局变量
             cPoint = new Dictionary<Vector2, GeomPoint>();
-            cArc = new List<GeomArc>();
-            cPoly = new List<GeomPoly>();
+            arcs = cArc = new List<GeomArc>();
+            polygons = cPoly = new List<GeomPoly>();
 
             // 运行算法步骤
             SplitArcs(origin, MBR);
@@ -222,10 +319,6 @@ namespace MiniGIS.Algorithm
                 }
             }
             else points = new List<GeomPoint>(cPoint.Values);
-
-            // 输出弧段与多边形
-            arcs = cArc;
-            polygons = new List<GeomPoly>();
 
             // 指定ID顺序
             ApplyID(points);

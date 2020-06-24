@@ -12,7 +12,7 @@ namespace MiniGIS.Data
         Lazy<double> _length;
         Lazy<double> _angle = new Lazy<double>();
         public double Length { get { return _length.Value; } }
-        public double Angle { get { return _length.Value; } }
+        public double Angle { get { return _angle.Value; } }
         double CalcLength() => ((Vector2)Item1).Distance(Item2);
         double CalcAngle() => ((Vector2)Item2 - Item1).Rotation();
 

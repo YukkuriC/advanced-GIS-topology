@@ -49,8 +49,36 @@ namespace MiniGIS.Data
 
         #endregion
 
+        // 计算周长、面积
+        Lazy<double> _circum, _area;
+        public double Circum { get => _circum.Value; }
+        public double Area { get => _area.Value; }
+        double CalcCircum()
+        {
+            double res = 0;
+            foreach (var pair in arcs) res += pair.Item1.Length;
+            return res;
+        }
+        double CalcArea()
+        {
+            double res = 0;
+            var pts = IterPoints().ToArray();
+            var pt0 = (Vector2)pts[0];
+            Vector2 lastOffset = null;
+            for (int i = 1; i < pts.Length; i++)
+            {
+                var currOffset = pts[i] - pt0;
+                if (lastOffset != null) res += lastOffset.Cross(currOffset);
+                lastOffset = currOffset;
+            }
+            return Math.Abs(res);
+        }
+
         public GeomPoly(IEnumerable<GeomArc> _data, int _id = 0, double _value = 0) : base(_id, _value)
         {
+            _circum = new Lazy<double>(CalcCircum);
+            _area = new Lazy<double>(CalcArea);
+
             List<GeomArc> arc_raw = new List<GeomArc>(_data);
 
             // 判断弧段成环时反向状态
