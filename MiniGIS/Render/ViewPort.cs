@@ -40,6 +40,12 @@ namespace MiniGIS.Render
             worldX = center.X + (screenX - target.Width / 2f) / zoom;
             worldY = center.Y - (screenY - target.Height / 2f) / zoom;
         }
+        public Vector2 WorldCoord(double screenX, double screenY)
+        {
+            var res = new Vector2();
+            WorldCoord(screenX, screenY, out res.X, out res.Y);
+            return res;
+        }
 
         // 渲染所有图层
         public void Render(bool updateText = false)

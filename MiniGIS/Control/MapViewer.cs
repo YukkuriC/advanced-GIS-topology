@@ -33,11 +33,6 @@ namespace MiniGIS.Control
                     lastScreen = new Vector2(e.X, e.Y);
                     zoomLevel = MainForm.port.zoom;
                     break;
-
-                case MouseButtons.None: // 默认记录初始
-                    lastScreen = new Vector2(e.X, e.Y);
-                    lastWorld = MainForm.port.center;
-                    break;
             }
         }
 
@@ -83,24 +78,7 @@ namespace MiniGIS.Control
         public override void MouseWheel(object sender, MouseEventArgs e)
         {
             if (dragging || dragging2) return;
-
-            // 更新缩放等级
-            zoomLevel = Math.Log(MainForm.port.zoom, 2);
-            if (e.Delta > 0) zoomLevel += 1;
-            else zoomLevel -= 1;
-            //zoomLevel = Math.Max(Math.Min(zoomLevel, 10), -10);
-            float newZoom = (float)Math.Pow(2, zoomLevel);
-
-            // 计算位置偏移
-            Vector2 oldCenter = MainForm.port.center;
-            MainForm.port.WorldCoord(e.X, e.Y, out double oldX, out double oldY);
-            MainForm.port.zoom = newZoom;
-            MainForm.port.WorldCoord(e.X, e.Y, out double newX, out double newY);
-
-            // 更新窗口位置
-            MainForm.port.center.X += oldX - newX;
-            MainForm.port.center.Y += oldY - newY;
-            MainForm.port.Render(true);
+            GeneralControl.WheelScale(e);
         }
     }
 }

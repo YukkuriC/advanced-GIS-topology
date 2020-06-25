@@ -48,6 +48,7 @@
     <Compile Include="Algorithm\CSVParser.cs" />
     <Compile Include="Algorithm\GenTopology.cs" />
     <Compile Include="Algorithm\Spline.cs" />
+    <Compile Include="Control\GeneralControl.cs" />
     <Compile Include="Control\DataExplorer.cs" />
     <Compile Include="Data\DataStructure\Edge.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />

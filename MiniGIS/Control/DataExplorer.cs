@@ -26,7 +26,7 @@ namespace MiniGIS.Control
             };
         }
 
-        public override string DefaultText() => "使用鼠标查看当前选定图层数据";
+        public override string DefaultText() => "使用鼠标移动/左键点击查看当前选定图层数据；点击鼠标右键移动屏幕；使用鼠标滚轮进行缩放";
 
         public override void Load()
         {
@@ -37,9 +37,20 @@ namespace MiniGIS.Control
 
         public override void MouseDown(object sender, MouseEventArgs e)
         {
-            var text = DisplayInfo(e, true);
-            if (text != null) MessageBox.Show(text, "图层信息");
+            switch (e.Button)
+            {
+                case MouseButtons.Left: // 选定
+                    var text = DisplayInfo(e, true);
+                    if (text != null) MessageBox.Show(text, "图层信息");
+                    break;
+                case MouseButtons.Right:
+                    MainForm.port.center = MainForm.port.WorldCoord(e.X, e.Y);
+                    MainForm.port.Render(true);
+                    break;
+            }
         }
+
+        public override void MouseWheel(object sender, MouseEventArgs e) => GeneralControl.WheelScale(e);
 
         string DisplayInfo(MouseEventArgs e, bool rich)
         {
