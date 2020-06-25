@@ -92,8 +92,8 @@ namespace MiniGIS.Data
         public override void Render(ViewPort port, Graphics canvas, Pen pen)
         {
             var polyPath = new GraphicsPath();
-            polyPath.AddPolygon((from p in IterPoints() select port.ScreenCoord(p.X, p.Y)).ToArray());
-            if (holes != null) foreach (var poly in holes) polyPath.AddPolygon((from p in poly.IterPoints() select port.ScreenCoord(p.X, p.Y)).ToArray());
+            polyPath.AddPolygon((from p in IterPoints() select (PointF)port.ScreenCoord(p.X, p.Y)).ToArray());
+            if (holes != null) foreach (var poly in holes) polyPath.AddPolygon((from p in poly.IterPoints() select (PointF)port.ScreenCoord(p.X, p.Y)).ToArray());
             canvas.FillPath(pen.Brush, polyPath);
         }
 

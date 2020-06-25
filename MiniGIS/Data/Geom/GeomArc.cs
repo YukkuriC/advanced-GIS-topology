@@ -36,7 +36,7 @@ namespace MiniGIS.Data
         public override void Render(ViewPort port, Graphics canvas, Pen pen)
         {
             canvas.DrawLines(pen,
-                (from p in points select port.ScreenCoord(p.X, p.Y))
+                (from p in points select (PointF)port.ScreenCoord(p.X, p.Y))
                     .ToArray()
             );
         }

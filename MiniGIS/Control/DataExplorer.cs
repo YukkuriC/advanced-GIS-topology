@@ -47,7 +47,7 @@ namespace MiniGIS.Control
             var template = rich ? templateRich : templateSimple;
 
             // 获取当前鼠标坐标与激活图层
-            MainForm.port.WorldCoord(e.X, e.Y, out float worldX, out float worldY);
+            MainForm.port.WorldCoord(e.X, e.Y, out double worldX, out double worldY);
             Vector2 pos = new Vector2(worldX, worldY);
             Layer currLayer = MainForm.instance.layerView.SelectedNode as Layer;
 
