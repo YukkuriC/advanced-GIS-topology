@@ -2,6 +2,7 @@
 using MiniGIS.Render;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -10,6 +11,8 @@ namespace MiniGIS.Control
 {
     public class DataExplorer : MapSingle<DataExplorer>
     {
+        object selector = null;
+
         Dictionary<Type, string> templateSimple, templateRich;
 
         public DataExplorer()
@@ -24,6 +27,24 @@ namespace MiniGIS.Control
                 [typeof(GridLayer)] = "行数: #{0} (X={3})\n列数: #{1} (X={4})\n交点取值: {2}",
                 [typeof(GeomLayer)] = "ID: #{0}\n周长: {1}\n面积: {2}",
             };
+        }
+
+        public override void Render(ViewPort port, Graphics canvas)
+        {
+            if (selector == null) return;
+            switch (selector)
+            {
+                case GeomPoly poly:
+                    poly.Render(port, canvas, new Pen(Color.Yellow));
+                    Pen arcPen = new Pen(Color.Red, 2);
+                    foreach (var pair in poly.arcs)
+                        pair.Item1.Render(port, canvas, arcPen);
+                    if (poly.holes != null)
+                        foreach (var poly1 in poly.holes)
+                            foreach (var pair in poly1.arcs)
+                                pair.Item1.Render(port, canvas, arcPen);
+                    break;
+            }
         }
 
         public override string DefaultText() => "使用鼠标移动/左键点击查看当前选定图层数据；点击鼠标右键移动屏幕；使用鼠标滚轮进行缩放";
@@ -81,6 +102,7 @@ namespace MiniGIS.Control
 
         object[] LayerInfo(Layer rawLayer, Vector2 pos)
         {
+            selector = null;
             switch (rawLayer)
             {
                 // 栅格图层
@@ -104,6 +126,7 @@ namespace MiniGIS.Control
                     {
                         if (poly.Include(pos))
                         {
+                            selector = poly;
                             return new object[]
                             {
                                 poly.id,

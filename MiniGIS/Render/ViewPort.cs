@@ -55,11 +55,22 @@ namespace MiniGIS.Render
             Graphics canvas = Graphics.FromImage(bmp);
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
             foreach (Layer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
-            target.Image = bmp;
+            target.BackgroundImage = bmp;
             if (updateText) ShowText();
+            RenderTop();
         }
 
-        // 
+        // 渲染控制工具辅助线
+        public void RenderTop()
+        {
+            if (target.Width <= 0 || target.Height <= 0 || MainForm.controlManager == null) return;
+            Bitmap bmp = new Bitmap(target.Width, target.Height);
+            Graphics canvas = Graphics.FromImage(bmp);
+            MainForm.controlManager.Render(this, canvas);
+            target.Image = bmp;
+        }
+
+        // 显示位置&缩放文字
         public void ShowText()
         {
             string text = String.Format("中心坐标: ({0}, {1}); 缩放等级: {2}",

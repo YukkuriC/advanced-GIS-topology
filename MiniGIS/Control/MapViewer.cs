@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using MiniGIS.Data;
+using MiniGIS.Render;
 
 namespace MiniGIS.Control
 {
@@ -12,9 +13,21 @@ namespace MiniGIS.Control
     {
         public override string DefaultText() => "拖动鼠标左键移动查看位置；上下拖动鼠标右键/使用鼠标滚轮改变缩放倍率";
 
+        MouseEventArgs cursor;
         Vector2 lastScreen, lastWorld;
         bool dragging = false, dragging2 = false;
         double zoomLevel;
+
+        public override void Render(ViewPort port, Graphics canvas)
+        {
+            if (cursor == null) return;
+            Pen pen = new Pen(Color.FromArgb(200, 255, 255, 0), 5);
+            pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+            if (dragging)
+                canvas.DrawLine(pen, lastScreen, new PointF(cursor.X, cursor.Y));
+            else if (dragging2)
+                canvas.DrawLine(pen, lastScreen, new PointF((float)lastScreen.X, cursor.Y));
+        }
 
         public override void MouseDown(object sender, MouseEventArgs e)
         {
@@ -56,6 +69,7 @@ namespace MiniGIS.Control
         // (拖拽模式下)移动中心点、平滑缩放
         public override void MouseMove(object sender, MouseEventArgs e)
         {
+            cursor = e;
             if (dragging)
             {
                 double dx = (lastScreen.X - e.X) / MainForm.port.zoom,
