@@ -214,13 +214,13 @@ namespace MiniGIS.Algorithm
     // 张力样条
     public class SplineTension : Spline
     {
-        protected double[] s1, s2, Sh, Su;
+        protected double sigma;
+        protected double[] Sh;
 
         public SplineTension(double _sigma, double[] _xs, double[] _ys, bool loop = false)
         {
             // 写入参数
-            s1 = new double[_xs.Length];
-            for (int i = 0; i < s1.Length; i++) s1[i] = _sigma;
+            sigma = _sigma;
 
             // 执行初始化
             Init(_xs, _ys, loop);
@@ -229,10 +229,10 @@ namespace MiniGIS.Algorithm
         protected override double Eval(double x, int i)
         {
             double x1 = dx[i] - x;
-            var res = (ys[i + 1] - ms[i + 1] / s2[i + 1]) * x / dx[i] +
-                (ys[i] - ms[i] / s2[i]) * x1 / dx[i] +
-                ms[i] * Math.Sinh(s1[i] * x1) / s2[i] / Sh[i] +
-                ms[i + 1] * Math.Sinh(s1[i + 1] * x) / s2[i + 1] / Su[i];
+            double s2 = sigma * sigma;
+            var res = (ys[i + 1] - ms[i + 1] / s2) * x / dx[i] +
+                (ys[i] - ms[i] / s2) * x1 / dx[i] +
+                (ms[i] * Math.Sinh(sigma * x1) + ms[i + 1] * Math.Sinh(sigma * x)) / s2 / Sh[i];
 
             // TODO: 解决浮点误差
             if (Double.IsNaN(res) || Math.Abs(res * 2 - ys[i] - ys[i + 1]) > 1e4)
@@ -252,41 +252,34 @@ namespace MiniGIS.Algorithm
 
             // 持久缓存
             Sh = new double[n];
-            Su = new double[n];
-            s2 = new double[n + 1];
 
             // 创建缓存数组
-            for (int i = 0; i <= n; i++)
+            for (int i = 0; i < n; i++)
             {
-                s2[i] = Math.Pow(s1[i], 2);
-                if (i < n)
-                {
-                    double tstart = s1[i] * dx[i],
-                        tend = s1[i + 1] * dx[i];
-                    Sh[i] = Math.Sinh(tstart);
-                    Su[i] = Math.Sinh(tend);
-                    Ch[i] = Math.Cosh(tstart);
-                }
+                Sh[i] = Math.Sinh(sigma * dx[i]);
+                Ch[i] = Math.Cosh(sigma * dx[i]);
             }
-            throw new Exception();
 
             // 写入共用矩阵
             for (int i = 1; i < n; i++)
             {
-                A[i][i - 1] = (Ch[i - 1] / Su[i - 1] - 1 / Sh[i - 1]) / s1[i - 1];
-                A[i][i] = Ch[i] / Sh[i] / s1[i] - 1 / s2[i] / dx[i];
-                A[i][i + 1] = 1 / s2[i + 1] / dx[i] - 1 / s1[i + 1] / Su[i];
-                A[i][n + 1] = dy[i] / dx[i];
+                double
+                    s1 = 1 / sigma / dx[i - 1],
+                    s2 = 1 / sigma / dx[i];
+                A[i][i - 1] = 1 / Sh[i - 1] + s1;
+                A[i][i] = Ch[i - 1] / Sh[i - 1] - Ch[i] / Sh[i] - s1 - s2;
+                A[i][i + 1] = s2 - 1 / Sh[i];
+                A[i][n + 1] = sigma * (dy[i] / dx[i] - dy[i - 1] / dx[i - 1]);
             }
 
             // TODO: 首末行
-            if (loop)
-            {
+            //if (loop)
+            //{
 
-            }
-            else
+            //}
+            //else
             {
-                A[0][0] = A[n][n] = 50;
+                A[0][0] = A[n][n] = 1;
             }
 
             return A;
@@ -304,7 +297,6 @@ namespace MiniGIS.Algorithm
         {
             // 计算初始sigma
             sigma = 1.5 * (xs.Length - 1) / ls.Last();
-            sigma = 1;
 
             // 设置xy样条
             spx = new SplineTension(sigma, ls, xs, looped);

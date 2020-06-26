@@ -65,8 +65,8 @@ namespace MiniGIS.Algorithm
 
             // 返回结果
             var res = new double[m];
-            res[m - 1] = A[m - 1][m];
-            for (int i = m - 2; i >= 0; i--) res[i] = A[i][m] - A[i][i + 1] * res[i + 1];
+            res[m - 1] = (double)A[m - 1][m];
+            for (int i = m - 2; i >= 0; i--) res[i] = (double)A[i][m] - (double)A[i][i + 1] * res[i + 1];
             return res;
         }
 
