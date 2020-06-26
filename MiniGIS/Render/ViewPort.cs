@@ -17,28 +17,34 @@ namespace MiniGIS.Render
 
         public IEnumerable<Layer> layers;
         public PictureBox target;
-        public PointF center;
-        public float zoom = 1;
+        public Vector2 center;
+        public double zoom = 1;
 
         #endregion
 
         #region method
 
         // 世界坐标换算为屏幕坐标
-        public PointF ScreenCoord(Vector2 v) => ScreenCoord(v.X, v.Y);
-        public PointF ScreenCoord(double worldX, double worldY)
+        public Vector2 ScreenCoord(Vector2 v) => ScreenCoord(v.X, v.Y);
+        public Vector2 ScreenCoord(double worldX, double worldY)
         {
-            return new PointF(
-                (float)(target.Width / 2f + zoom * (worldX - center.X)),
-                (float)(target.Height / 2f - zoom * (worldY - center.Y))
+            return new Vector2(
+                (target.Width / 2.0 + zoom * (worldX - center.X)),
+                (target.Height / 2.0 - zoom * (worldY - center.Y))
             );
         }
 
         // 屏幕坐标换算为世界坐标
-        public void WorldCoord(float screenX, float screenY, out float worldX, out float worldY)
+        public void WorldCoord(double screenX, double screenY, out double worldX, out double worldY)
         {
             worldX = center.X + (screenX - target.Width / 2f) / zoom;
             worldY = center.Y - (screenY - target.Height / 2f) / zoom;
+        }
+        public Vector2 WorldCoord(double screenX, double screenY)
+        {
+            var res = new Vector2();
+            WorldCoord(screenX, screenY, out res.X, out res.Y);
+            return res;
         }
 
         // 渲染所有图层
@@ -49,11 +55,22 @@ namespace MiniGIS.Render
             Graphics canvas = Graphics.FromImage(bmp);
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
             foreach (Layer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
-            target.Image = bmp;
+            target.BackgroundImage = bmp;
             if (updateText) ShowText();
+            RenderTop();
         }
 
-        // 
+        // 渲染控制工具辅助线
+        public void RenderTop()
+        {
+            if (target.Width <= 0 || target.Height <= 0 || MainForm.controlManager == null) return;
+            Bitmap bmp = new Bitmap(target.Width, target.Height);
+            Graphics canvas = Graphics.FromImage(bmp);
+            MainForm.controlManager.Render(this, canvas);
+            target.Image = bmp;
+        }
+
+        // 显示位置&缩放文字
         public void ShowText()
         {
             string text = String.Format("中心坐标: ({0}, {1}); 缩放等级: {2}",
@@ -64,11 +81,11 @@ namespace MiniGIS.Render
         }
 
         // 聚焦至区域
-        public void Focus(float xMin, float yMin, float xMax, float yMax)
+        public void Focus(double xMin, double yMin, double xMax, double yMax)
         {
-            center = new PointF((xMin + xMax) / 2, (yMin + yMax) / 2);
+            center = new Vector2((xMin + xMax) / 2, (yMin + yMax) / 2);
             bool validZoom = false;
-            float newZoom = float.MaxValue;
+            double newZoom = double.MaxValue;
             if (xMin < xMax && target.Width > 0)
             {
                 validZoom = true;
@@ -87,7 +104,7 @@ namespace MiniGIS.Render
         public void Reset()
         {
             zoom = 1;
-            center = new PointF(0, 0);
+            center = new Vector2();
             Render();
         }
 

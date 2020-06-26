@@ -1,6 +1,7 @@
 ﻿using MiniGIS.Data;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -55,6 +56,7 @@ namespace MiniGIS.Data
             Y = y;
         }
 
+        public static implicit operator PointF(Vector2 v) => new PointF((float)v.X, (float)v.Y);
         public static explicit operator GeomPoint(Vector2 v) => new GeomPoint(v.X, v.Y);
         public static implicit operator Vector2(GeomPoint p) => new Vector2(p.X, p.Y);
 

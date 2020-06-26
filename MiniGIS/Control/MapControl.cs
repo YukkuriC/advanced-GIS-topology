@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MiniGIS.Render;
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace MiniGIS.Control
@@ -6,6 +8,7 @@ namespace MiniGIS.Control
     public abstract class MapControl
     {
         public virtual string DefaultText() => "";
+        public virtual void Render(ViewPort port, Graphics canvas) { }
         public virtual void MouseDown(object sender, MouseEventArgs e) { }
         public virtual void MouseUp(object sender, MouseEventArgs e) { }
         public virtual void MouseMove(object sender, MouseEventArgs e) { }

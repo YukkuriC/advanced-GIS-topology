@@ -105,5 +105,14 @@ namespace MiniGIS.Algorithm
 
             return result;
         }
+
+        // 等值线图层生成拓扑多边形
+        public static GeomLayer Arc2Topology(GeomLayer layer)
+        {
+            GeomLayer newLayer = new GeomLayer(GeomType.Polygon, layer.Name + "_拓扑");
+            GenTopology.Entry(layer.arcs, layer.MBR, out newLayer.points, out newLayer.arcs, out newLayer.polygons);
+
+            return newLayer;
+        }
     }
 }

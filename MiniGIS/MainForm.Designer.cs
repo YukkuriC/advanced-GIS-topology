@@ -47,6 +47,8 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
+            this.menuTopology = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuGenTopology = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -62,7 +64,8 @@
             this.menuGridConverter,
             this.menuTIN,
             this.menuContour,
-            this.controlSet});
+            this.controlSet,
+            this.menuTopology});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(926, 25);
@@ -137,13 +140,13 @@
             // menuGenContour
             // 
             this.menuGenContour.Name = "menuGenContour";
-            this.menuGenContour.Size = new System.Drawing.Size(136, 22);
+            this.menuGenContour.Size = new System.Drawing.Size(152, 22);
             this.menuGenContour.Text = "生成等值线";
             // 
             // menuContourSmooth
             // 
             this.menuContourSmooth.Name = "menuContourSmooth";
-            this.menuContourSmooth.Size = new System.Drawing.Size(136, 22);
+            this.menuContourSmooth.Size = new System.Drawing.Size(152, 22);
             this.menuContourSmooth.Text = "等值线平滑";
             // 
             // controlSet
@@ -228,6 +231,22 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // menuTopology
+            // 
+            this.menuTopology.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuTopology.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuGenTopology});
+            this.menuTopology.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuTopology.Name = "menuTopology";
+            this.menuTopology.Size = new System.Drawing.Size(69, 22);
+            this.menuTopology.Text = "拓扑生成";
+            // 
+            // menuGenTopology
+            // 
+            this.menuGenTopology.Name = "menuGenTopology";
+            this.menuGenTopology.Size = new System.Drawing.Size(152, 22);
+            this.menuGenTopology.Text = "生成拓扑图层";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -273,6 +292,8 @@
         private System.Windows.Forms.ToolStripMenuItem menuGenContour;
         private System.Windows.Forms.ToolStripMenuItem menuContourSmooth;
         private System.Windows.Forms.ToolStripComboBox controlSet;
+        private System.Windows.Forms.ToolStripDropDownButton menuTopology;
+        private System.Windows.Forms.ToolStripMenuItem menuGenTopology;
     }
 }
 

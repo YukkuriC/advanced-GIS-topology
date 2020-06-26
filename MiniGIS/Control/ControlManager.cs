@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using MiniGIS.Render;
 
 namespace MiniGIS.Control
 {
@@ -10,12 +12,18 @@ namespace MiniGIS.Control
     {
         MapControl[] pool;
         MapControl cur;
+        MouseEventArgs cursor = null;
 
         public void Set(int index)
         {
             if (cur != null) cur.Unload();
             cur = pool[index];
             cur.Load();
+        }
+
+        public override void Render(ViewPort port, Graphics canvas)
+        {
+            if (cur != null) cur.Render(port, canvas);
         }
 
         public override void MouseDown(object sender, MouseEventArgs e)
@@ -28,7 +36,11 @@ namespace MiniGIS.Control
         }
         public override void MouseMove(object sender, MouseEventArgs e)
         {
-            if (cur != null) cur.MouseMove(sender, e);
+            if (cur != null)
+            {
+                cur.MouseMove(sender, e);
+                MainForm.port.RenderTop();
+            }
         }
         public override void MouseWheel(object sender, MouseEventArgs e)
         {

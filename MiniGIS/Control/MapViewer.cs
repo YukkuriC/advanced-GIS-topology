@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
+using MiniGIS.Data;
+using MiniGIS.Render;
 
 namespace MiniGIS.Control
 {
@@ -11,9 +13,21 @@ namespace MiniGIS.Control
     {
         public override string DefaultText() => "拖动鼠标左键移动查看位置；上下拖动鼠标右键/使用鼠标滚轮改变缩放倍率";
 
-        PointF lastScreen, lastWorld;
+        MouseEventArgs cursor;
+        Vector2 lastScreen, lastWorld;
         bool dragging = false, dragging2 = false;
         double zoomLevel;
+
+        public override void Render(ViewPort port, Graphics canvas)
+        {
+            if (cursor == null) return;
+            Pen pen = new Pen(Color.FromArgb(200, 255, 255, 0), 5);
+            pen.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
+            if (dragging)
+                canvas.DrawLine(pen, lastScreen, new PointF(cursor.X, cursor.Y));
+            else if (dragging2)
+                canvas.DrawLine(pen, lastScreen, new PointF((float)lastScreen.X, cursor.Y));
+        }
 
         public override void MouseDown(object sender, MouseEventArgs e)
         {
@@ -22,20 +36,15 @@ namespace MiniGIS.Control
                 case MouseButtons.Left:
                     if (dragging2) return;
                     dragging = true;
-                    lastScreen = new PointF(e.X, e.Y);
+                    lastScreen = new Vector2(e.X, e.Y);
                     lastWorld = MainForm.port.center;
                     break;
 
                 case MouseButtons.Right:
                     if (dragging) return;
                     dragging2 = true;
-                    lastScreen = new PointF(e.X, e.Y);
+                    lastScreen = new Vector2(e.X, e.Y);
                     zoomLevel = MainForm.port.zoom;
-                    break;
-
-                case MouseButtons.None: // 默认记录初始
-                    lastScreen = new PointF(e.X, e.Y);
-                    lastWorld = MainForm.port.center;
                     break;
             }
         }
@@ -60,11 +69,12 @@ namespace MiniGIS.Control
         // (拖拽模式下)移动中心点、平滑缩放
         public override void MouseMove(object sender, MouseEventArgs e)
         {
+            cursor = e;
             if (dragging)
             {
-                float dx = (lastScreen.X - e.X) / MainForm.port.zoom,
+                double dx = (lastScreen.X - e.X) / MainForm.port.zoom,
                       dy = -(lastScreen.Y - e.Y) / MainForm.port.zoom; // 屏幕坐标向下为正
-                MainForm.port.center = new PointF(
+                MainForm.port.center = new Vector2(
                     lastWorld.X + dx,
                     lastWorld.Y + dy
                 );
@@ -72,7 +82,7 @@ namespace MiniGIS.Control
             }
             else if (dragging2)
             {
-                float dDrag = (lastScreen.Y - e.Y) / 100;
+                double dDrag = (lastScreen.Y - e.Y) / 100;
                 MainForm.port.zoom = (float)(zoomLevel * Math.Pow(2, dDrag));
                 MainForm.port.Render(true);
             }
@@ -82,24 +92,7 @@ namespace MiniGIS.Control
         public override void MouseWheel(object sender, MouseEventArgs e)
         {
             if (dragging || dragging2) return;
-
-            // 更新缩放等级
-            zoomLevel = Math.Log(MainForm.port.zoom, 2);
-            if (e.Delta > 0) zoomLevel += 1;
-            else zoomLevel -= 1;
-            //zoomLevel = Math.Max(Math.Min(zoomLevel, 10), -10);
-            float newZoom = (float)Math.Pow(2, zoomLevel);
-
-            // 计算位置偏移
-            PointF oldCenter = MainForm.port.center;
-            MainForm.port.WorldCoord(e.X, e.Y, out float oldX, out float oldY);
-            MainForm.port.zoom = newZoom;
-            MainForm.port.WorldCoord(e.X, e.Y, out float newX, out float newY);
-
-            // 更新窗口位置
-            MainForm.port.center.X += oldX - newX;
-            MainForm.port.center.Y += oldY - newY;
-            MainForm.port.Render(true);
+            GeneralControl.WheelScale(e);
         }
     }
 }

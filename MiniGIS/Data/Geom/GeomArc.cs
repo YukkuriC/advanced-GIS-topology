@@ -14,6 +14,9 @@ namespace MiniGIS.Data
         // 数据
         public List<GeomPoint> points;
 
+        public GeomPoint First { get => points.First(); }
+        public GeomPoint Last { get => points.Last(); }
+
         #endregion
 
         #region method
@@ -33,17 +36,30 @@ namespace MiniGIS.Data
         public override void Render(ViewPort port, Graphics canvas, Pen pen)
         {
             canvas.DrawLines(pen,
-                (from p in points select port.ScreenCoord(p.X, p.Y))
+                (from p in points select (PointF)port.ScreenCoord(p.X, p.Y))
                     .ToArray()
             );
         }
 
         #endregion
 
+        public override Rect CalcMBR() => new Rect(points);
+
+        // 计算长度
+        Lazy<double> _length;
+        public double Length { get => _length.Value; }
+        double CalcLength()
+        {
+            double res = 0;
+            foreach (var seg in IterSegments()) res += seg.Length;
+            return res;
+        }
+
         // 构造函数
         public GeomArc(IEnumerable<GeomPoint> _data, int _id = 0, double _value = 0) : base(_id, _value)
         {
             points = new List<GeomPoint>(_data);
+            _length = new Lazy<double>(CalcLength);
         }
 
         // 字符串化
