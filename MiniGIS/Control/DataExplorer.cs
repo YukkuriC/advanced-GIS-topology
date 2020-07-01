@@ -122,6 +122,7 @@ namespace MiniGIS.Control
                     };
                 // 矢量图层
                 case GeomLayer layer:
+                    if (layer.polygons == null) break;
                     foreach (var poly in layer.polygons)
                     {
                         if (poly.Include(pos))
