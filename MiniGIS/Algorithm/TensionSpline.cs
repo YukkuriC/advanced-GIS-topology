@@ -21,6 +21,7 @@ namespace MiniGIS.Algorithm
         double[] dx, dy, cumLen, lenStep;
         double[] xp, yp, a, b, c;
         double sigma;
+        TensionNode[] segments;
 
         // 构造函数，传入数据点+细节参数（默认为1200）
         public TensionSpline(IEnumerable<GeomPoint> origin, int detail = 1200)
@@ -33,6 +34,9 @@ namespace MiniGIS.Algorithm
 
             minSplit = (MBR.XMax + MBR.YMax - MBR.XMin - MBR.YMin) / detail;
             if (minSplit < 0.001) minSplit = 1;
+
+            // 创建分段列表
+            segments = (from i in Enumerable.Range(0, N - 1) select new TensionNode(this, i)).ToArray();
 
             // 计算参数
             if (longEnough)
@@ -108,6 +112,8 @@ namespace MiniGIS.Algorithm
         // 需动态计算的参数
         void CalcParams()
         {
+            foreach (var seg in segments) seg.Reset(); // 重置所有分段
+
             double ds;
             double d1, d2, q;
 
@@ -155,14 +161,21 @@ namespace MiniGIS.Algorithm
         {
             // 不够长时直接输出原始点
             if (!longEnough) return new List<Vector2>(points);
-
-            double ss, e1, e2, e3, x1, y1;
-
             // 输出曲线
             var res = new List<Vector2>();
-            res.Add(new Vector2(dataX[0], dataY[0]));
-            for (int i = 0; i < N - 1; i++)
+            res.Add(points[0]);
+            foreach (var seg in segments) res.AddRange(seg.Points(false));
+            return res;
+        }
+
+        // 计算指定分段曲线
+        public IEnumerable<Vector2> Smooth(int i, bool outStart, bool outEnd)
+        {
+            // 端点1
+            if (outStart) yield return points[i];
+            if (longEnough) // 插值段
             {
+                double ss, e1, e2, e3, x1, y1;
                 int k = (int)(lenStep[i] / minSplit);
                 for (int j = 0; j < k; j++)
                 {
@@ -176,12 +189,53 @@ namespace MiniGIS.Algorithm
                     y1 = (yp[i] * Math.Sinh(e1) + yp[i + 1] * Math.Sinh(e2)) / Math.Sinh(e3) +
                         (dataY[i] - yp[i]) * (cumLen[i + 1] - ss) / lenStep[i] +
                         (dataY[i + 1] - yp[i + 1]) * (ss - cumLen[i]) / lenStep[i];
-                    res.Add(new Vector2(x1, y1));
+                    yield return new Vector2(x1, y1);
                 }
-                res.Add(new Vector2(dataX[i + 1], dataY[i + 1]));
             }
+            // 端点2
+            if (outEnd) yield return points[i + 1];
+        }
+    }
 
-            return res;
+    // 张力样条单位
+    public class TensionNode
+    {
+        TensionSpline parent;
+        int index;
+        bool updated;
+
+        public List<Vector2> data;
+        Rect MBR;
+
+        public TensionNode(TensionSpline origin, int idx)
+        {
+            parent = origin;
+            index = idx;
+            Reset();
+        }
+
+        // 输出点
+        public IEnumerable<Vector2> Points(bool outStart = true)
+        {
+            Update();
+            for (int i = 1 - Convert.ToInt32(outStart); i < data.Count; i++) yield return data[i];
+        }
+
+        // 重置分段
+        public void Reset()
+        {
+            data = null;
+            MBR = null;
+            updated = false;
+        }
+
+        // 计算分段内容
+        public void Update()
+        {
+            if (updated) return;
+            data = new List<Vector2>(parent.Smooth(index, true, true));
+            MBR = new Rect(data.Select<Vector2, GeomPoint>(v => (GeomPoint)v));
+            updated = true;
         }
     }
 }
