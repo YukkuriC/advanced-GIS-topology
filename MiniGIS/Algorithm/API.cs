@@ -75,15 +75,30 @@ namespace MiniGIS.Algorithm
         {
             // 逐个平滑转换
             List<double> values = new List<double>();
-            List<List<Vector2>> raw_arcs = new List<List<Vector2>>();
+            var raw_arcs = new List<TensionSpline>();
             foreach (var arc in layer.arcs)
             {
-                var smoother = new TensionSpline(arc.points);
-                raw_arcs.Add(smoother.Smooth());
+                raw_arcs.Add(new TensionSpline(arc.points, 200)); // 使用低精度检查相交
                 values.Add(arc.value);
             }
 
-            // TODO: 处理相交
+            // 处理相交：整体增加张力
+            while (true)
+            {
+                var crossings = new HashSet<int>();
+                for (int i = 0; i < raw_arcs.Count; i++)
+                    for (int j = i; j < raw_arcs.Count; j++)
+                        if (raw_arcs[i].Crossing(raw_arcs[j]))
+                        {
+                            crossings.Add(i);
+                            crossings.Add(j);
+                        }
+                if (crossings.Count == 0) break;
+                foreach (int i in crossings) raw_arcs[i].IncreaseTension(3);
+            }
+
+            // 增加精度
+            foreach (var r in raw_arcs) r.SetDetail(1200);
 
             // 输出至图层
             GeomLayer result = new GeomLayer(GeomType.Arc, layer.Name + "_平滑");
@@ -92,7 +107,7 @@ namespace MiniGIS.Algorithm
             {
                 var currValue = values[i];
                 var newPoints = new List<GeomPoint>();
-                foreach (var v in raw_arcs[i]) newPoints.Add(new GeomPoint(v.X, v.Y, ++idxPoint, currValue));
+                foreach (var v in raw_arcs[i].Smooth()) newPoints.Add(new GeomPoint(v.X, v.Y, ++idxPoint, currValue));
                 result.points.AddRange(newPoints);
                 result.arcs.Add(new GeomArc(newPoints, ++idxArc, currValue));
             }

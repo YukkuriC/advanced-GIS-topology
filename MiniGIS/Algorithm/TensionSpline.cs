@@ -1,4 +1,4 @@
-using MiniGIS.Data;
+﻿using MiniGIS.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +14,14 @@ namespace MiniGIS.Algorithm
         List<Vector2> points;
         Rect MBR;
         readonly int N;
-        readonly double minSplit;
-        readonly bool longEnough;
+        double minSplit;
+        readonly bool longEnough, looping;
 
         double[] dataX, dataY;
         double[] dx, dy, cumLen, lenStep;
         double[] xp, yp, a, b, c;
-        double sigma;
-        TensionNode[] segments;
+        double sigma, sigma_param;
+        public TensionNode[] segments;
 
         // 构造函数，传入数据点+细节参数（默认为1200）
         public TensionSpline(IEnumerable<GeomPoint> origin, int detail = 1200)
@@ -30,13 +30,11 @@ namespace MiniGIS.Algorithm
             points = new List<Vector2>(from v in origin select (Vector2)v);
             MBR = new Rect(origin);
             N = points.Count;
+            looping = points[0] == points[N - 1];
             longEnough = points.Count > 2;
-
-            minSplit = (MBR.XMax + MBR.YMax - MBR.XMin - MBR.YMin) / detail;
-            if (minSplit < 0.001) minSplit = 1;
-
-            // 创建分段列表
-            segments = (from i in Enumerable.Range(0, N - 1) select new TensionNode(this, i)).ToArray();
+            sigma_param = SIGMA_DEFAULT;
+            segments = (from i in Enumerable.Range(0, N - 1) select new TensionNode(this, i)).ToArray(); // 创建分段列表
+            SetDetail(detail); // 初始化细节数
 
             // 计算参数
             if (longEnough)
@@ -45,6 +43,12 @@ namespace MiniGIS.Algorithm
                 InitParams();
                 CalcParams();
             }
+        }
+
+        // 重置所有分段
+        void ResetSegments()
+        {
+            foreach (var seg in segments) seg.Reset();
         }
 
         // 开辟内存空间
@@ -102,7 +106,7 @@ namespace MiniGIS.Algorithm
                 dv = dv2;
             }
             // 尾段（若输入点首尾循环）
-            if (points[0] == points[N - 1])
+            if (looping)
             {
                 dx[N - 1] = vStart.X - dv.X;
                 dy[N - 1] = vStart.Y - dv.Y;
@@ -112,8 +116,7 @@ namespace MiniGIS.Algorithm
         // 需动态计算的参数
         void CalcParams()
         {
-            foreach (var seg in segments) seg.Reset(); // 重置所有分段
-
+            ResetSegments();
             double ds;
             double d1, d2, q;
 
@@ -122,7 +125,7 @@ namespace MiniGIS.Algorithm
             dy.CopyTo(yp, 0);
 
             // 求解
-            sigma = SIGMA_DEFAULT * (N - 1) / cumLen[N - 1];
+            sigma = sigma_param * (N - 1) / cumLen[N - 1];
             ds = sigma * lenStep[0];
             d1 = sigma / Math.Tanh(ds) - 1 / lenStep[0];
             b[0] = d1;
@@ -154,6 +157,37 @@ namespace MiniGIS.Algorithm
                 xp[k] -= b[k] * xp[k + 1];
                 yp[k] -= b[k] * yp[k + 1];
             }
+        }
+
+        public void SetDetail(int detail)
+        {
+            minSplit = (MBR.XMax + MBR.YMax - MBR.XMin - MBR.YMin) / detail;
+            if (minSplit < 0.001) minSplit = 1;
+            ResetSegments();
+        }
+
+        // 检查相交情况
+        public bool Crossing(TensionSpline other)
+        {
+            if (this == other) // 自交检查
+            {
+                for (int i = 0; i < segments.Length - 2; i++)
+                    for (int j = i + 2; j < segments.Length; j++)
+                        if ((looping && (i != 0 || j != segments.Length - 1)) // 循环时不检查首尾
+                            && segments[i].Crossing(segments[j])) return true;
+                return false;
+            }
+            foreach (var seg1 in segments)
+                foreach (var seg2 in other.segments)
+                    if (seg1.Crossing(seg2)) return true;
+            return false;
+        }
+
+        // 整体增加曲线sigma值
+        public void IncreaseTension(double val)
+        {
+            sigma_param += val;
+            CalcParams();
         }
 
         // 由已计算参数输出平滑后曲线
@@ -217,9 +251,9 @@ namespace MiniGIS.Algorithm
         // 判断相交
         public bool Crossing(TensionNode other)
         {
+            Update(); other.Update();
             if ((MBR & other.MBR) == null) return false;
             for (int i = 0; i < data.Count - 1; i++)
-            {
                 for (int j = 0; j < other.data.Count - 1; j++)
                 {
                     var crossing = Utils.CheckCross(data[i], data[i + 1], other.data[j], other.data[j + 1]);
@@ -227,7 +261,6 @@ namespace MiniGIS.Algorithm
                         crossing.Item1 >= 0 && crossing.Item1 <= 1 &&
                         crossing.Item2 >= 0 && crossing.Item2 <= 1) return true;
                 }
-            }
             return false;
         }
 
