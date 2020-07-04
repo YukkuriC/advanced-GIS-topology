@@ -11,7 +11,7 @@ namespace MiniGIS.Data
     public class Vector2 : IComparable<Vector2>
     {
         // XY坐标
-        public double X, Y;
+        public readonly double X, Y;
 
         // 操作符
         public static Vector2 operator +(Vector2 a, Vector2 b) => new Vector2(a.X + b.X, a.Y + b.Y);

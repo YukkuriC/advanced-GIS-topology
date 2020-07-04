@@ -26,8 +26,7 @@ namespace MiniGIS.Control
             MainForm.port.WorldCoord(e.X, e.Y, out double newX, out double newY);
 
             // 更新窗口位置
-            MainForm.port.center.X += oldX - newX;
-            MainForm.port.center.Y += oldY - newY;
+            MainForm.port.center += new Vector2(oldX - newX, oldY - newY);
             MainForm.port.Render(true);
         }
     }
