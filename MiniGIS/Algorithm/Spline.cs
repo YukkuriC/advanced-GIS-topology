@@ -45,11 +45,8 @@ namespace MiniGIS.Algorithm
             if (x <= xs[0]) return ys[0];
             if (x >= xs[n]) return ys[n];
 
-            // 查找对应区间
-            // TODO: 二分查找
-            var i = 1;
-            while (xs[i] < x) i++;
-            i--;
+            // 获取区间下标
+            int i = x.GetInterval(xs);
 
             // 执行表达式
             return Eval(x - xs[i], i);

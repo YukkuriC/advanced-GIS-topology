@@ -29,6 +29,36 @@ namespace MiniGIS.Algorithm
             return res;
         }
 
+        // 获取指定数在有序表内区间
+        public static int GetInterval(this double v, double[] values)
+        {
+            if (v <= values[0]) return -1;
+            else if (v >= values.Last()) return values.Length;
+
+            // 线性查找
+            if (values.Length < 5)
+            {
+                int i = 1;
+                while (values[i] < v) i++;
+                i--;
+                return i;
+            }
+
+            // 二分查找
+            else
+            {
+                int l = 0, r = values.Length - 1;
+                while (l < r)
+                {
+                    int m = (l + r) / 2;
+                    if (v < values[m]) r = m - 1;
+                    else if (values[m + 1] < v) l = m + 1;
+                    else return m;
+                }
+                return l;
+            }
+        }
+
         // 输出等分点
         public static IEnumerable<double> Linear(double start, double step, int s1, int s2)
         {
