@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MiniGIS.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,24 @@ namespace MiniGIS.Algorithm
             res = Math.Round(val / Math.Pow(10, exp), (int)digit).ToString();
             if (exp != 0) res += "e" + exp.ToString();
             return res;
+        }
+
+        // 计算线段相交
+        public static Tuple<double,double> CheckCross(Vector2 s1A, Vector2 s1B, Vector2 s2A, Vector2 s2B)
+        {
+            double
+                ax = s1A.X, ay = s1A.Y,
+                bx = s1B.X, by = s1B.Y,
+                cx = s2A.X, cy = s2A.Y,
+                dx = s2B.X, dy = s2B.Y;
+
+            // 求解
+            double dom = (ax - bx) * (cy - dy) - (ay - by) * (cx - dx);
+            if (dom == 0) return null;
+            double
+                r1 = ((ax - cx) * (cy - dy) - (ay - cy) * (cx - dx)) / dom,
+                r2 = (-(ax - bx) * (ay - cy) + (ax - cx) * (ay - by)) / dom;
+            return new Tuple<double, double>(r1, r2);
         }
 
         // 获取指定数在有序表内区间

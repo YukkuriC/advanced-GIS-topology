@@ -1,4 +1,4 @@
-﻿using MiniGIS.Data;
+using MiniGIS.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -205,13 +205,30 @@ namespace MiniGIS.Algorithm
         bool updated;
 
         public List<Vector2> data;
-        Rect MBR;
+        public Rect MBR;
 
         public TensionNode(TensionSpline origin, int idx)
         {
             parent = origin;
             index = idx;
             Reset();
+        }
+
+        // 判断相交
+        public bool Crossing(TensionNode other)
+        {
+            if ((MBR & other.MBR) == null) return false;
+            for (int i = 0; i < data.Count - 1; i++)
+            {
+                for (int j = 0; j < other.data.Count - 1; j++)
+                {
+                    var crossing = Utils.CheckCross(data[i], data[i + 1], other.data[j], other.data[j + 1]);
+                    if (crossing != null &&
+                        crossing.Item1 >= 0 && crossing.Item1 <= 1 &&
+                        crossing.Item2 >= 0 && crossing.Item2 <= 1) return true;
+                }
+            }
+            return false;
         }
 
         // 输出点
