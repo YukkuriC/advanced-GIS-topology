@@ -25,7 +25,7 @@ namespace MiniGIS.Control
             templateRich = new Dictionary<Type, string>()
             {
                 [typeof(GridLayer)] = "行数: #{0} (X={3})\n列数: #{1} (X={4})\n交点取值: {2}",
-                [typeof(GeomLayer)] = "ID: #{0}\n周长: {1}\n面积: {2}",
+                [typeof(GeomLayer)] = "ID: #{0}\n周长: {1}\n面积: {2}\n孔洞数: {3}",
             };
         }
 
@@ -132,6 +132,7 @@ namespace MiniGIS.Control
                             {
                                 poly.id,
                                 poly.Circum, poly.Area,
+                                (poly.holes==null?0:poly.holes.Count),
                             };
                         }
                     }

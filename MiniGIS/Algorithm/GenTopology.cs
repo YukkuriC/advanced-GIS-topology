@@ -160,9 +160,6 @@ namespace MiniGIS.Algorithm
             if (arcUsed.Contains(data)) return;
             var res = new List<Tuple<GeomPoint, GeomArc>>();
 
-
-            ApplyID(cPoint.Values); // debug
-
             // 搜索直到首尾相接
             while (true)
             {
@@ -320,9 +317,8 @@ namespace MiniGIS.Algorithm
         static int CompArea(GeomPoly p1, GeomPoly p2) => Math.Sign(p1.OuterArea - p2.OuterArea);
 
         // 列表设置递增ID
-        static void ApplyID(IEnumerable<BaseGeom> geoms)
+        static void ApplyID(IEnumerable<BaseGeom> geoms, ref int i)
         {
-            int i = 0;
             foreach (var g in geoms) g.id = ++i;
         }
 
@@ -353,9 +349,10 @@ namespace MiniGIS.Algorithm
             else points = new List<GeomPoint>(cPoint.Values);
 
             // 指定ID顺序
-            ApplyID(points);
-            ApplyID(arcs);
-            ApplyID(polygons);
+            int i = 0;
+            ApplyID(polygons, ref i);
+            ApplyID(arcs, ref i);
+            ApplyID(points, ref i);
         }
     }
 }
