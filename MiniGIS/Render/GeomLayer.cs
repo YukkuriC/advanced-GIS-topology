@@ -33,6 +33,9 @@ namespace MiniGIS.Render
             }
         }
 
+        // 拓扑信息
+        public Topology topology;
+
         // 外包矩形
         Rect _mbr;
         public Rect MBR

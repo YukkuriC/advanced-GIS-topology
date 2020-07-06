@@ -80,11 +80,18 @@
     <Compile Include="Render\GridLayer.cs" />
     <Compile Include="Render\Layer.cs" />
     <Compile Include="Render\TINLayer.cs" />
+    <Compile Include="Data\GeomExt\Topology.cs" />
     <Compile Include="Widget\ContourSmoothForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Widget\ContourSmoothForm.Designer.cs">
       <DependentUpon>ContourSmoothForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Widget\ExportTopoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Widget\ExportTopoForm.Designer.cs">
+      <DependentUpon>ExportTopoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Widget\GenContourForm.cs">
       <SubType>Form</SubType>
@@ -160,6 +167,9 @@
     </Compile>
     <EmbeddedResource Include="Widget\ContourSmoothForm.resx">
       <DependentUpon>ContourSmoothForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Widget\ExportTopoForm.resx">
+      <DependentUpon>ExportTopoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Widget\GenContourForm.resx">
       <DependentUpon>GenContourForm.cs</DependentUpon>

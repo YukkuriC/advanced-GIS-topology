@@ -352,7 +352,7 @@ namespace MiniGIS.Algorithm
             int i = 0;
             ApplyID(polygons, ref i);
             ApplyID(arcs, ref i);
-            ApplyID(points, ref i);
+            ApplyID(cPoint.Values, ref i);
         }
     }
 }

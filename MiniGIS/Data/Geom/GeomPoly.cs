@@ -145,10 +145,30 @@ namespace MiniGIS.Data
             _area = new Lazy<double>(CalcArea);
         }
 
+        // 判断是否顺时针连接
+        Lazy<bool> _clockwise;
+        public bool Clockwise { get => _clockwise.Value; }
+        bool CalcClockwise()
+        {
+            double
+                firstAngle = double.NaN,
+                angle0 = double.NaN,
+                sum = 0;
+            foreach (var seg in IterSegments())
+            {
+                if (double.IsNaN(firstAngle)) firstAngle = seg.Angle;
+                else sum += (seg.Angle - angle0) % Math.PI; // 值域：(-pi,pi)
+                angle0 = seg.Angle;
+            }
+            sum += (firstAngle - angle0) % Math.PI;
+            return sum > 0;
+        }
+
         public GeomPoly(IEnumerable<GeomArc> _data, int _id = 0, double _value = 0) : base(_id, _value)
         {
             _circum0 = new Lazy<double>(CalcOuterCircum);
             _area0 = new Lazy<double>(CalcOuterArea);
+            _clockwise = new Lazy<bool>(CalcClockwise);
             UpdateHoles();
 
             List<GeomArc> arc_raw = new List<GeomArc>(_data);

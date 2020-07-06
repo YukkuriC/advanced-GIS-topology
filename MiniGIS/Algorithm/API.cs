@@ -3,8 +3,10 @@ using MiniGIS.Render;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MiniGIS.Algorithm
 {
@@ -125,8 +127,27 @@ namespace MiniGIS.Algorithm
         {
             GeomLayer newLayer = new GeomLayer(GeomType.Polygon, layer.Name + "_拓扑");
             GenTopology.Entry(layer.arcs, layer.MBR, out newLayer.points, out newLayer.arcs, out newLayer.polygons);
+            new Topology(newLayer); // 生成拓扑记录
 
             return newLayer;
+        }
+
+        // 导出图层拓扑关系至文件
+        public static bool ExportTopology(GeomLayer layer)
+        {
+            var dial = new SaveFileDialog();
+            dial.Filter = "文本文件（*.txt）|*.txt|所有文件（*.*）|*.*";
+            if (dial.ShowDialog() == DialogResult.OK)
+            {
+                using (var fs = new FileStream(dial.FileName, FileMode.Create))
+                {
+                    var writer = new StreamWriter(fs);
+                    layer.topology.ExportContent(writer);
+                    writer.Flush();
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

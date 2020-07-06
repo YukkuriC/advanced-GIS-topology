@@ -40,6 +40,8 @@
             this.menuGenContour = new System.Windows.Forms.ToolStripMenuItem();
             this.menuContourSmooth = new System.Windows.Forms.ToolStripMenuItem();
             this.controlSet = new System.Windows.Forms.ToolStripComboBox();
+            this.menuTopology = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuGenTopology = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.layerView = new System.Windows.Forms.TreeView();
             this.splitter1 = new System.Windows.Forms.Splitter();
@@ -47,8 +49,7 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.rendererPort = new System.Windows.Forms.PictureBox();
             this.labelInfo = new System.Windows.Forms.Label();
-            this.menuTopology = new System.Windows.Forms.ToolStripDropDownButton();
-            this.menuGenTopology = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuExportTopology = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -140,13 +141,13 @@
             // menuGenContour
             // 
             this.menuGenContour.Name = "menuGenContour";
-            this.menuGenContour.Size = new System.Drawing.Size(152, 22);
+            this.menuGenContour.Size = new System.Drawing.Size(136, 22);
             this.menuGenContour.Text = "生成等值线";
             // 
             // menuContourSmooth
             // 
             this.menuContourSmooth.Name = "menuContourSmooth";
-            this.menuContourSmooth.Size = new System.Drawing.Size(152, 22);
+            this.menuContourSmooth.Size = new System.Drawing.Size(136, 22);
             this.menuContourSmooth.Text = "等值线平滑";
             // 
             // controlSet
@@ -158,6 +159,23 @@
             "对象查看"});
             this.controlSet.Name = "controlSet";
             this.controlSet.Size = new System.Drawing.Size(121, 25);
+            // 
+            // menuTopology
+            // 
+            this.menuTopology.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuTopology.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuGenTopology,
+            this.menuExportTopology});
+            this.menuTopology.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuTopology.Name = "menuTopology";
+            this.menuTopology.Size = new System.Drawing.Size(69, 22);
+            this.menuTopology.Text = "拓扑生成";
+            // 
+            // menuGenTopology
+            // 
+            this.menuGenTopology.Name = "menuGenTopology";
+            this.menuGenTopology.Size = new System.Drawing.Size(152, 22);
+            this.menuGenTopology.Text = "生成拓扑图层";
             // 
             // panel1
             // 
@@ -231,21 +249,11 @@
             this.labelInfo.TabIndex = 1;
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // menuTopology
+            // menuExportTopology
             // 
-            this.menuTopology.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.menuTopology.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuGenTopology});
-            this.menuTopology.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.menuTopology.Name = "menuTopology";
-            this.menuTopology.Size = new System.Drawing.Size(69, 22);
-            this.menuTopology.Text = "拓扑生成";
-            // 
-            // menuGenTopology
-            // 
-            this.menuGenTopology.Name = "menuGenTopology";
-            this.menuGenTopology.Size = new System.Drawing.Size(152, 22);
-            this.menuGenTopology.Text = "生成拓扑图层";
+            this.menuExportTopology.Name = "menuExportTopology";
+            this.menuExportTopology.Size = new System.Drawing.Size(152, 22);
+            this.menuExportTopology.Text = "导出拓扑关系";
             // 
             // MainForm
             // 
@@ -294,6 +302,7 @@
         private System.Windows.Forms.ToolStripComboBox controlSet;
         private System.Windows.Forms.ToolStripDropDownButton menuTopology;
         private System.Windows.Forms.ToolStripMenuItem menuGenTopology;
+        private System.Windows.Forms.ToolStripMenuItem menuExportTopology;
     }
 }
 
