@@ -18,7 +18,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, (from l in MainForm.instance.layerView.Nodes.OfType<GeomLayer>() where l.arcs != null select l));
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, LayerTag.Grid | LayerTag.Contour);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -26,8 +26,8 @@ namespace MiniGIS.Widget
 
         private void GenTopo(object sender, EventArgs e)
         {
-            var layer=API.Arc2Topology(comboLayer.SelectedItem as GeomLayer);
-            layer.Add();
+            var layer = API.Arc2Topology(comboLayer.SelectedItem as GeomLayer);
+            layer.Add(LayerTag.Topo);
 
             // TODO: 默认样式
 

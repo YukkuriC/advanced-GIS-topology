@@ -19,7 +19,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, (from l in MainForm.instance.layerView.Nodes.OfType<GeomLayer>() where l.arcs != null select l));
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, LayerTag.Contour);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -27,7 +27,7 @@ namespace MiniGIS.Widget
 
         private void GenSmooth(object sender, EventArgs e)
         {
-            API.ContourSmooth(comboLayer.SelectedItem as GeomLayer).Add();
+            API.ContourSmooth(comboLayer.SelectedItem as GeomLayer).Add(LayerTag.Smooth);
             Close();
         }
     }

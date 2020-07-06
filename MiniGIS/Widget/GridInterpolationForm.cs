@@ -23,7 +23,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<GridLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<GridLayer>(comboLayer, LayerTag.Grid);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -32,7 +32,7 @@ namespace MiniGIS.Widget
         // 运行算法并创建图层
         private void GenGridLayer(object sender, EventArgs e)
         {
-            API.GridInterpolation(comboLayer.SelectedItem as GridLayer, (uint)numericXStep.Value, (uint)numericYStep.Value).Add();
+            API.GridInterpolation(comboLayer.SelectedItem as GridLayer, (uint)numericXStep.Value, (uint)numericYStep.Value).Add(LayerTag.Grid);
             Close();
         }
     }

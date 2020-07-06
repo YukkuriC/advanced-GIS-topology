@@ -18,7 +18,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, (from l in MainForm.instance.layerView.Nodes.OfType<GeomLayer>() where l.topology != null select l));
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, LayerTag.Topo);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;

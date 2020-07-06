@@ -67,6 +67,7 @@
     <Compile Include="Data\DataStructure\Rect.cs" />
     <Compile Include="Data\DataStructure\Vector2.cs" />
     <Compile Include="Data\DataStructure\Triangle.cs" />
+    <Compile Include="Layer\LayerTag.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

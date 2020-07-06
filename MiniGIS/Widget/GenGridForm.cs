@@ -54,7 +54,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<GeomLayer>(comboLayer, LayerTag.Points);
 
             // 初状态
             comboMethod.SelectedIndex = 0;
@@ -80,7 +80,7 @@ namespace MiniGIS.Widget
             API.Point2Grid(comboLayer.SelectedItem as GeomLayer, comboMethod.SelectedItem.ToString(),
                 (double)numericXMin.Value, (double)numericXMax.Value,
                 (double)numericYMin.Value, (double)numericYMax.Value,
-                (uint)numericXSplit.Value, (uint)numericYSplit.Value).Add();
+                (uint)numericXSplit.Value, (uint)numericYSplit.Value).Add(LayerTag.Grid);
 
             Close();
         }

@@ -15,6 +15,7 @@ namespace MiniGIS.Layer
         // 图层属性
         public virtual string layerType { get { return "图层"; } }
         public int seed;
+        public LayerTag tag = 0;
 
         // 控制参数
         bool _visible = true;
@@ -74,9 +75,10 @@ namespace MiniGIS.Layer
             Text = res;
         }
 
-        // 添加图层
-        public BaseLayer Add()
+        // 添加图层并设置Tag
+        public BaseLayer Add(LayerTag _tag)
         {
+            tag = _tag;
             MainForm.instance.layerView.Nodes.Insert(0, this);
             UpdateText();
             GetSelected();

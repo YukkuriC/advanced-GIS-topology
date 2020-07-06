@@ -22,7 +22,7 @@ namespace MiniGIS.Widget
             InitializeComponent();
 
             // 绑定图层
-            var layers = FormUtils.BindLayers<ValueLayer>(comboLayer);
+            var layers = FormUtils.BindLayers<ValueLayer>(comboLayer, 0);
 
             // 初状态
             btnGen.Enabled = layers.Count > 0;
@@ -69,8 +69,9 @@ namespace MiniGIS.Widget
             }
 
             // 创建图层
-            API.Value2Contour(comboLayer.SelectedItem as ValueLayer, targetSplits,
-                String.Format("_等值线({0},{1})", (double)inputSplitBase.Value, (double)inputSplitSize.Value)).Add();
+            var layer = comboLayer.SelectedItem as ValueLayer;
+            API.Value2Contour(layer, targetSplits,
+                String.Format("_等值线({0},{1})", (double)inputSplitBase.Value, (double)inputSplitSize.Value)).Add(layer.tag | LayerTag.Contour);
 
             // 结束
             Close();
