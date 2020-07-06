@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 
-namespace MiniGIS.Render
+namespace MiniGIS.Layer
 {
     /// <summary>
     /// TIN渲染层

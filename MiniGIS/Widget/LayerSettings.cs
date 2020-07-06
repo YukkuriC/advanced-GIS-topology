@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Widget
 {
@@ -13,7 +13,7 @@ namespace MiniGIS.Widget
         #region method
 
         // 绑定标题设置
-        public static void BindTitle(Layer origin, TextBox input, Form form)
+        public static void BindTitle(BaseLayer origin, TextBox input, Form form)
         {
             input.TextChanged += (object s, EventArgs e) =>
             {
@@ -25,7 +25,7 @@ namespace MiniGIS.Widget
         }
 
         // 绑定选择颜色按钮
-        public static void BindColor(Layer origin, Button btnChange, string key, Panel neon)
+        public static void BindColor(BaseLayer origin, Button btnChange, string key, Panel neon)
         {
             // 设置初始颜色
             neon.BackColor = origin.GetColor(key);
@@ -43,7 +43,7 @@ namespace MiniGIS.Widget
         }
 
         // 绑定设置大小控件
-        public static void BindSize(Layer origin, NumericUpDown input, string key)
+        public static void BindSize(BaseLayer origin, NumericUpDown input, string key)
         {
             // 设置初始数值
             input.Value = (decimal)origin.GetSize(key);

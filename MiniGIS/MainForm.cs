@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 using MiniGIS.Data;
 using MiniGIS.Control;
 using MiniGIS.Widget;
@@ -30,7 +30,7 @@ namespace MiniGIS
             random = new Random();
 
             // 绑定事件
-            port = new ViewPort(rendererPort, layerView.Nodes.Cast<Layer>());
+            port = new ViewPort(rendererPort, layerView.Nodes.Cast<BaseLayer>());
             controlManager = new ControlManager();
             rendererPort.MouseDown += controlManager.MouseDown;
             rendererPort.MouseUp += controlManager.MouseUp;
@@ -90,7 +90,7 @@ namespace MiniGIS
 
         private void UpdateSelection(object sender, TreeViewEventArgs e)
         {
-            foreach (Layer l in layerView.Nodes.OfType<Layer>()) l.UpdateText();
+            foreach (BaseLayer l in layerView.Nodes.OfType<BaseLayer>()) l.UpdateText();
         }
     }
 }

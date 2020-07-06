@@ -1,4 +1,4 @@
-﻿using MiniGIS.Render;
+﻿using MiniGIS.Layer;
 using System;
 using System.Drawing;
 using System.Windows.Forms;

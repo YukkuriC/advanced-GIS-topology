@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using MiniGIS.Algorithm;
 using MiniGIS.Data;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Widget
 {

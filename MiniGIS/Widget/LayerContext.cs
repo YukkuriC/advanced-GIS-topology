@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Widget
 {
@@ -8,10 +8,10 @@ namespace MiniGIS.Widget
     class LayerContext : ContextMenuStrip
     {
         ToolStripMenuItem btnVis;
-        Layer origin;
+        BaseLayer origin;
 
         // 绑定右键菜单至图层
-        public LayerContext(Layer node)
+        public LayerContext(BaseLayer node)
         {
             origin = node;
             node.ContextMenuStrip = this;

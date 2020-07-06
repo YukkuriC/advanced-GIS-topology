@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using MiniGIS.Widget;
 
-namespace MiniGIS.Render
+namespace MiniGIS.Layer
 {
-    public class Layer : TreeNode
+    public class BaseLayer : TreeNode
     {
         #region prop
 
@@ -75,7 +75,7 @@ namespace MiniGIS.Render
         }
 
         // 添加图层
-        public Layer Add()
+        public BaseLayer Add()
         {
             MainForm.instance.layerView.Nodes.Insert(0, this);
             UpdateText();
@@ -103,7 +103,7 @@ namespace MiniGIS.Render
 
         #endregion
 
-        public Layer(string _name = "图层")
+        public BaseLayer(string _name = "图层")
         {
             Name = _name;
             NodeFont = MainForm.instance.Font;
@@ -130,7 +130,7 @@ namespace MiniGIS.Render
     }
 
     // 栅格图层与TIN图层通用父类
-    public abstract class ValueLayer : Layer
+    public abstract class ValueLayer : BaseLayer
     {
         public abstract double Max { get; }
         public abstract double Min { get; }

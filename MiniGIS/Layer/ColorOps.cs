@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace MiniGIS.Render
+namespace MiniGIS.Layer
 {
     public static class ColorOps
     {

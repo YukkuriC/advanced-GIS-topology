@@ -1,5 +1,5 @@
 ﻿using MiniGIS.Data;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Data
 {

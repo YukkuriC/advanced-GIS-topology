@@ -1,5 +1,5 @@
 ﻿using MiniGIS.Data;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -81,7 +81,7 @@ namespace MiniGIS.Control
             // 获取当前鼠标坐标与激活图层
             MainForm.port.WorldCoord(e.X, e.Y, out double worldX, out double worldY);
             Vector2 pos = new Vector2(worldX, worldY);
-            Layer currLayer = MainForm.instance.layerView.SelectedNode as Layer;
+            BaseLayer currLayer = MainForm.instance.layerView.SelectedNode as BaseLayer;
 
             // 获取图层信息
             string res = rich ? null : DefaultText();
@@ -100,7 +100,7 @@ namespace MiniGIS.Control
 
         #region viewers
 
-        object[] LayerInfo(Layer rawLayer, Vector2 pos)
+        object[] LayerInfo(BaseLayer rawLayer, Vector2 pos)
         {
             selector = null;
             switch (rawLayer)

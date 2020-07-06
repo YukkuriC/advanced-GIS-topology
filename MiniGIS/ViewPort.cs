@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using MiniGIS.Algorithm;
 using MiniGIS.Data;
+using MiniGIS.Layer;
 
-namespace MiniGIS.Render
+namespace MiniGIS
 {
     public class ViewPort
     {
@@ -15,7 +16,7 @@ namespace MiniGIS.Render
 
         #region prop
 
-        public IEnumerable<Layer> layers;
+        public IEnumerable<BaseLayer> layers;
         public PictureBox target;
         public Vector2 center;
         public double zoom = 1;
@@ -53,7 +54,7 @@ namespace MiniGIS.Render
             Bitmap bmp = new Bitmap(target.Width, target.Height);
             Graphics canvas = Graphics.FromImage(bmp);
             canvas.Clear(Color.FromArgb(unchecked((int)0xff66ccff)));
-            foreach (Layer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
+            foreach (BaseLayer l in (from l in layers where l.Visible select l).Reverse()) l.Render(this, canvas); // 列表首元素绘制于顶层 
             target.BackgroundImage = bmp;
             if (updateText) ShowText();
             RenderTop();
@@ -109,7 +110,7 @@ namespace MiniGIS.Render
 
         #endregion
 
-        public ViewPort(PictureBox _target, IEnumerable<Layer> _layers)
+        public ViewPort(PictureBox _target, IEnumerable<BaseLayer> _layers)
         {
             ViewPort.instance = this;
             target = _target;

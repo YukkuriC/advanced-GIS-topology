@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using MiniGIS.Data;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Control
 {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Drawing;
 using MiniGIS.Data;
 
-namespace MiniGIS.Render
+namespace MiniGIS.Layer
 {
     /// <summary>
     /// 矢量渲染层
@@ -19,7 +19,7 @@ namespace MiniGIS.Render
     /// 可见性参数:
     ///     point; arc; polygon
     /// </summary>
-    public class GeomLayer : Layer
+    public class GeomLayer : BaseLayer
     {
         // 显示图层类型
         public override string layerType

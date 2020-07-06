@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 
 namespace MiniGIS.Data
 {

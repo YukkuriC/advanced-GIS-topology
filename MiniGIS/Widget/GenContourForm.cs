@@ -1,4 +1,4 @@
-﻿using MiniGIS.Render;
+﻿using MiniGIS.Layer;
 using MiniGIS.Algorithm;
 using System;
 using System.Collections.Generic;

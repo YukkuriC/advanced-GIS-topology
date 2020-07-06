@@ -1,4 +1,4 @@
-﻿using MiniGIS.Render;
+﻿using MiniGIS.Layer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,8 +12,8 @@ namespace MiniGIS.Widget
 {
     public partial class LayerVisibleChecklist : Form
     {
-        Layer origin;
-        public LayerVisibleChecklist(Layer node)
+        BaseLayer origin;
+        public LayerVisibleChecklist(BaseLayer node)
         {
             InitializeComponent();
 

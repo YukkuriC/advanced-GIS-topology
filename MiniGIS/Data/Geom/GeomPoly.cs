@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using MiniGIS.Render;
+using MiniGIS.Layer;
 using System.Linq;
 
 namespace MiniGIS.Data

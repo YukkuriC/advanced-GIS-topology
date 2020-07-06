@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using MiniGIS.Algorithm;
 using MiniGIS.Data;
 
-namespace MiniGIS.Render
+namespace MiniGIS.Layer
 {
     /// <summary>
     /// 栅格渲染层
