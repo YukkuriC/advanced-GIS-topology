@@ -51,22 +51,22 @@
     <Compile Include="Algorithm\TensionSpline.cs" />
     <Compile Include="Control\GeneralControl.cs" />
     <Compile Include="Control\DataExplorer.cs" />
-    <Compile Include="Data\DataStructure\Edge.cs" />
+    <Compile Include="Data\DataExt\Edge.cs" />
     <Compile Include="Algorithm\GenDelaunay.cs" />
     <Compile Include="Algorithm\GenGrid.cs" />
     <Compile Include="Algorithm\Utils.cs" />
     <Compile Include="Control\ControlManager.cs" />
     <Compile Include="Control\MapControl.cs" />
     <Compile Include="Control\MapViewer.cs" />
-    <Compile Include="Data\Geom\BaseGeom.cs" />
-    <Compile Include="Data\Geom\GeomArc.cs" />
-    <Compile Include="Data\Geom\GeomPoint.cs" />
-    <Compile Include="Data\Geom\GeomPoly.cs" />
-    <Compile Include="Data\DataStructure\Grid.cs" />
-    <Compile Include="Data\GeomExt\LineSegment.cs" />
-    <Compile Include="Data\DataStructure\Rect.cs" />
-    <Compile Include="Data\DataStructure\Vector2.cs" />
-    <Compile Include="Data\DataStructure\Triangle.cs" />
+    <Compile Include="Data\BaseGeom.cs" />
+    <Compile Include="Data\GeomArc.cs" />
+    <Compile Include="Data\GeomPoint.cs" />
+    <Compile Include="Data\GeomPoly.cs" />
+    <Compile Include="Data\Grid.cs" />
+    <Compile Include="Data\DataExt\LineSegment.cs" />
+    <Compile Include="Data\DataExt\Rect.cs" />
+    <Compile Include="Data\DataExt\Vector2.cs" />
+    <Compile Include="Data\Triangle.cs" />
     <Compile Include="Layer\LayerTag.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -81,7 +81,7 @@
     <Compile Include="Layer\GridLayer.cs" />
     <Compile Include="Layer\BaseLayer.cs" />
     <Compile Include="Layer\TINLayer.cs" />
-    <Compile Include="Data\GeomExt\Topology.cs" />
+    <Compile Include="Data\DataExt\Topology.cs" />
     <Compile Include="Widget\ContourSmoothForm.cs">
       <SubType>Form</SubType>
     </Compile>
