@@ -56,8 +56,8 @@ namespace MiniGIS.Data
             // 点：起始弧段
             foreach (var arc in parent.arcs)
             {
-                AddList(originArcs, arc.First, arc);
-                AddList(originArcs, arc.Last, arc);
+                foreach (var pt in arc.points)
+                    AddList(originArcs, pt, arc);
             }
 
             // 弧段：左右多边形
@@ -99,17 +99,13 @@ namespace MiniGIS.Data
             }
 
             fs.WriteLine("#POINT\tx\ty\tarcs");
-            var allPoints = new HashSet<GeomPoint>();
-            foreach (var arc in parent.arcs) foreach (var pt in arc.points) allPoints.Add(pt);
-            foreach (var point in allPoints)
+            foreach (var point in originArcs.Keys)
             {
                 fs.WriteLine("{0}\t{1}\t{2}\t{3}",
                     point.id,
                     point.X,
                     point.Y,
-                    originArcs.ContainsKey(point) ?
-                    string.Join(",", from a in originArcs[point] select a.id) :
-                    "NULL"
+                    string.Join(",", from a in originArcs[point] select a.id)
                     );
             }
         }
